@@ -20,7 +20,6 @@
     }
 
     html { scroll-behavior: smooth; }
-
     body {
       font-family: 'DM Mono', 'Courier New', monospace;
       background: var(--white);
@@ -35,7 +34,7 @@
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
-      z-index: 100;
+      z-index: 200;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -144,11 +143,7 @@
       padding-bottom: 28px;
       border-bottom: 1px solid var(--border);
     }
-    .section-num {
-      font-size: 10px;
-      color: var(--mid);
-      letter-spacing: 0.14em;
-    }
+    .section-num { font-size: 10px; color: var(--mid); letter-spacing: 0.14em; }
     .section-title {
       font-family: 'Cormorant Garant', serif;
       font-size: clamp(32px, 4vw, 48px);
@@ -174,15 +169,8 @@
       max-width: 860px;
       margin-bottom: 56px;
     }
-    .chairman-quote em {
-      font-style: italic;
-      color: var(--mid);
-    }
-    .byline {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-    }
+    .chairman-quote em { font-style: italic; color: var(--mid); }
+    .byline { display: flex; align-items: center; gap: 24px; }
     .byline-line { width: 32px; height: 1px; background: var(--black); flex-shrink: 0; }
     .byline-name { font-size: 13px; letter-spacing: 0.06em; margin-bottom: 4px; }
     .byline-title { font-size: 10px; color: var(--mid); letter-spacing: 0.1em; }
@@ -194,14 +182,8 @@
       grid-template-columns: repeat(4, 1fr);
       gap: 2px;
     }
-    .org-card {
-      background: var(--white);
-      padding: 36px 32px;
-    }
-    .org-card.dark {
-      background: var(--black);
-      color: var(--white);
-    }
+    .org-card { background: var(--white); padding: 36px 32px; }
+    .org-card.dark { background: var(--black); color: var(--white); }
     .org-card.span-3 { grid-column: span 3; }
     .org-role {
       font-size: 10px;
@@ -211,18 +193,8 @@
       margin-bottom: 14px;
     }
     .org-card.dark .org-role { color: rgba(255,255,255,0.32); }
-    .org-name {
-      font-family: 'Cormorant Garant', serif;
-      font-size: 30px;
-      font-weight: 400;
-      margin-bottom: 10px;
-      line-height: 1.1;
-    }
-    .org-desc {
-      font-size: 11px;
-      color: var(--mid);
-      line-height: 1.6;
-    }
+    .org-name { font-family: 'Cormorant Garant', serif; font-size: 30px; font-weight: 400; margin-bottom: 10px; line-height: 1.1; }
+    .org-desc { font-size: 11px; color: var(--mid); line-height: 1.6; }
     .org-card.dark .org-desc { color: rgba(255,255,255,0.42); }
     .org-badge {
       display: inline-block;
@@ -238,150 +210,366 @@
 
     /* ── PROJECTS ── */
     .projects { background: var(--white); }
-    .project-grid {
+    .project-layout {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2px;
-    }
-    .project-card {
-      padding: 60px 52px;
+      grid-template-columns: 220px 1fr;
+      gap: 0;
       border: 1px solid var(--border);
-      cursor: default;
-      transition: background 0.35s, color 0.35s, border-color 0.35s;
+      min-height: 520px;
+    }
+
+    /* Sidebar tabs */
+    .proj-sidebar {
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+    .proj-tab {
+      padding: 32px 28px;
+      cursor: pointer;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
       position: relative;
     }
-    .project-card:hover { background: var(--black); color: var(--white); border-color: var(--black); }
-    .project-idx {
+    .proj-tab:last-child { border-bottom: none; }
+    .proj-tab:hover { background: var(--gray); }
+    .proj-tab.active { background: var(--black); color: var(--white); }
+    .proj-tab-num {
       font-size: 10px;
       color: var(--mid);
       letter-spacing: 0.14em;
-      margin-bottom: 36px;
-      transition: color 0.35s;
+      margin-bottom: 12px;
     }
-    .project-card:hover .project-idx { color: rgba(255,255,255,0.28); }
-    .project-name-en {
+    .proj-tab.active .proj-tab-num { color: rgba(255,255,255,0.3); }
+    .proj-tab-name {
       font-family: 'Cormorant Garant', serif;
-      font-size: clamp(48px, 6vw, 72px);
+      font-size: 22px;
+      font-weight: 400;
+      margin-bottom: 4px;
+      line-height: 1.1;
+    }
+    .proj-tab-sub {
+      font-size: 10px;
+      color: var(--mid);
+      letter-spacing: 0.06em;
+    }
+    .proj-tab.active .proj-tab-sub { color: rgba(255,255,255,0.4); }
+    .proj-tab-arrow {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      color: var(--mid);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .proj-tab.active .proj-tab-arrow { opacity: 1; color: rgba(255,255,255,0.5); }
+
+    /* Main panel */
+    .proj-panel {
+      padding: 52px 56px;
+      display: none;
+      flex-direction: column;
+    }
+    .proj-panel.active { display: flex; }
+    .proj-panel-head { margin-bottom: 40px; }
+    .proj-panel-name {
+      font-family: 'Cormorant Garant', serif;
+      font-size: clamp(52px, 6vw, 80px);
       font-weight: 300;
-      line-height: 0.95;
+      line-height: 0.9;
       letter-spacing: -0.02em;
       margin-bottom: 10px;
     }
-    .project-name-ko {
+    .proj-panel-ko {
       font-family: 'Cormorant Garant', serif;
       font-size: 18px;
       font-weight: 300;
       color: var(--mid);
-      margin-bottom: 36px;
-      transition: color 0.35s;
     }
-    .project-card:hover .project-name-ko { color: rgba(255,255,255,0.38); }
-    .project-desc {
+    .proj-panel-desc {
       font-size: 12px;
       color: var(--mid);
-      line-height: 1.9;
+      line-height: 1.95;
+      max-width: 560px;
       margin-bottom: 40px;
-      max-width: 380px;
-      transition: color 0.35s;
     }
-    .project-card:hover .project-desc { color: rgba(255,255,255,0.48); }
-    .project-status {
+    .proj-meta {
+      display: flex;
+      gap: 48px;
+      margin-bottom: 40px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+    .proj-meta-item { display: flex; flex-direction: column; gap: 6px; }
+    .proj-meta-label {
       font-size: 10px;
       letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--mid);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      transition: color 0.35s;
     }
-    .project-card:hover .project-status { color: rgba(255,255,255,0.4); }
-    .dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
+    .proj-meta-val { font-size: 12px; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; display: inline-block; margin-right: 8px; vertical-align: middle; }
     .dot.green { background: #22c55e; }
     .dot.amber { background: #f59e0b; }
-    .project-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 28px;
-    }
+    .proj-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 40px; }
     .tag {
       font-size: 10px;
       letter-spacing: 0.1em;
       padding: 5px 14px;
       border: 1px solid var(--border);
       color: var(--mid);
-      transition: border-color 0.35s, color 0.35s;
     }
-    .project-card:hover .tag { border-color: rgba(255,255,255,0.16); color: rgba(255,255,255,0.4); }
+    .proj-panel-foot {
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .btn-detail {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 14px 28px;
+      background: var(--black);
+      color: var(--white);
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .btn-detail:hover { opacity: 0.75; }
+    .btn-link {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: var(--mid);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+    .btn-link:hover { color: var(--black); }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      background: rgba(10,10,10,0.6);
+      backdrop-filter: blur(4px);
+      display: flex;
+      justify-content: flex-end;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal-panel {
+      width: min(680px, 100vw);
+      height: 100vh;
+      background: var(--white);
+      overflow-y: auto;
+      padding: 64px 56px;
+      transform: translateX(100%);
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .modal-overlay.open .modal-panel { transform: translateX(0); }
+    .modal-close {
+      position: absolute;
+      top: 32px;
+      right: 40px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 22px;
+      color: var(--mid);
+      transition: color 0.2s;
+      font-family: 'DM Mono', monospace;
+    }
+    .modal-close:hover { color: var(--black); }
+    .modal-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 16px;
+    }
+    .modal-title {
+      font-family: 'Cormorant Garant', serif;
+      font-size: clamp(48px, 6vw, 72px);
+      font-weight: 300;
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    .modal-subtitle {
+      font-family: 'Cormorant Garant', serif;
+      font-size: 20px;
+      font-weight: 300;
+      color: var(--mid);
+      margin-bottom: 40px;
+    }
+    .modal-divider { height: 1px; background: var(--border); margin: 36px 0; }
+    .modal-section-label {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 16px;
+    }
+    .modal-desc {
+      font-size: 12px;
+      color: #444;
+      line-height: 2;
+      margin-bottom: 32px;
+    }
+    .modal-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    .modal-features li {
+      font-size: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .modal-features li::before {
+      content: '—';
+      color: var(--mid);
+      flex-shrink: 0;
+    }
+    .progress-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-bottom: 32px;
+    }
+    .progress-item {
+      padding: 20px 24px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+    }
+    .progress-item.done { border-left: 3px solid #22c55e; }
+    .progress-item.pending { border-left: 3px solid var(--border); }
+    .progress-badge {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      white-space: nowrap;
+      color: var(--mid);
+      padding-top: 2px;
+    }
+    .progress-item.done .progress-badge { color: #22c55e; }
+    .progress-content { flex: 1; }
+    .progress-title { font-size: 12px; margin-bottom: 4px; }
+    .progress-desc { font-size: 11px; color: var(--mid); line-height: 1.6; }
+    .modal-links { display: flex; gap: 12px; flex-wrap: wrap; }
+    .modal-btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 12px 24px;
+      text-decoration: none;
+      border: 1px solid;
+      transition: background 0.2s, color 0.2s;
+    }
+    .modal-btn.primary { background: var(--black); color: var(--white); border-color: var(--black); }
+    .modal-btn.primary:hover { opacity: 0.75; }
+    .modal-btn.secondary { background: transparent; color: var(--black); border-color: var(--border); }
+    .modal-btn.secondary:hover { background: var(--gray); }
+
+    /* ── CONTACT ── */
+    .contact { background: var(--black); color: var(--white); }
+    .contact .section-header { border-bottom-color: rgba(255,255,255,0.1); }
+    .contact .section-num { color: rgba(255,255,255,0.3); }
+    .contact .section-sub { color: rgba(255,255,255,0.3); }
+    .contact-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: end;
+    }
+    .contact-left { }
+    .contact-tagline {
+      font-family: 'Cormorant Garant', serif;
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 300;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+      margin-bottom: 32px;
+      color: var(--white);
+    }
+    .contact-tagline em { font-style: italic; color: rgba(255,255,255,0.45); }
+    .contact-note {
+      font-size: 12px;
+      color: rgba(255,255,255,0.35);
+      line-height: 1.8;
+    }
+    .contact-right { }
+    .contact-email-label {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.28);
+      margin-bottom: 16px;
+    }
+    .contact-email {
+      font-family: 'Cormorant Garant', serif;
+      font-size: clamp(22px, 2.8vw, 36px);
+      font-weight: 300;
+      letter-spacing: 0;
+      text-decoration: none;
+      color: var(--white);
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      padding-bottom: 16px;
+      display: block;
+      margin-bottom: 32px;
+      transition: border-color 0.2s;
+    }
+    .contact-email:hover { border-bottom-color: rgba(255,255,255,0.6); }
+    .contact-links {
+      display: flex;
+      gap: 24px;
+    }
+    .contact-link {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.4);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .contact-link:hover { color: var(--white); }
 
     /* ── FOOTER ── */
     footer {
       background: var(--black);
       color: var(--white);
-      padding: 80px 64px 56px;
+      padding: 0 64px 56px;
+      border-top: 1px solid rgba(255,255,255,0.06);
     }
-    .footer-top {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 64px;
-      margin-bottom: 64px;
-      padding-bottom: 48px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-    .footer-logo {
-      font-family: 'Cormorant Garant', serif;
-      font-size: 64px;
-      font-weight: 300;
-      line-height: 1;
-      letter-spacing: -0.02em;
-      margin-bottom: 20px;
-    }
-    .footer-tagline {
-      font-size: 12px;
-      color: rgba(255,255,255,0.35);
-      letter-spacing: 0.08em;
-    }
-    .footer-right {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      align-items: flex-end;
-      text-align: right;
-    }
-    .footer-info {
-      font-size: 11px;
-      color: rgba(255,255,255,0.3);
-      line-height: 2.2;
-    }
-    .footer-info a {
-      color: rgba(255,255,255,0.5);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .footer-info a:hover { color: var(--white); }
     .footer-bottom {
       display: flex;
       justify-content: space-between;
       font-size: 10px;
       color: rgba(255,255,255,0.18);
       letter-spacing: 0.1em;
+      padding-top: 32px;
     }
 
-    /* ── FADE-IN ── */
+    /* ── REVEAL ── */
     .reveal {
       opacity: 0;
       transform: translateY(24px);
       transition: opacity 0.7s ease, transform 0.7s ease;
     }
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
@@ -392,13 +580,19 @@
       .hero-bottom { grid-template-columns: 1fr; gap: 32px; }
       .org-grid { grid-template-columns: repeat(2, 1fr); }
       .org-card.span-3 { grid-column: span 2; }
-      .project-grid { grid-template-columns: 1fr; }
-      .footer-top { grid-template-columns: 1fr; }
-      .footer-right { align-items: flex-start; text-align: left; }
+      .project-layout { grid-template-columns: 1fr; }
+      .proj-sidebar { flex-direction: row; border-right: none; border-bottom: 1px solid var(--border); overflow-x: auto; }
+      .proj-tab { border-bottom: none; border-right: 1px solid var(--border); min-width: 140px; }
+      .proj-tab:last-child { border-right: none; }
+      .proj-tab-arrow { display: none; }
+      .proj-panel { padding: 36px 28px; }
+      .contact-body { grid-template-columns: 1fr; gap: 48px; }
+      footer { padding: 0 28px 40px; }
     }
     @media (max-width: 560px) {
       .org-grid { grid-template-columns: 1fr; }
       .org-card.span-3 { grid-column: span 1; }
+      .proj-meta { flex-direction: column; gap: 20px; }
     }
   </style>
 </head>
@@ -433,7 +627,7 @@
     </div>
   </section>
 
-  <!-- CHAIRMAN MESSAGE -->
+  <!-- CHAIRMAN -->
   <section class="chairman" id="about">
     <div class="section-header reveal">
       <span class="section-num">01</span>
@@ -463,21 +657,18 @@
       <span class="section-sub">조직 구조</span>
     </div>
     <div class="org-grid reveal">
-      <!-- Founder -->
       <div class="org-card dark">
         <div class="org-role">Founder &amp; Chairman</div>
         <div class="org-name">강경구</div>
         <div class="org-desc">비전 설정, 전략 결정,<br>전체 방향 주도</div>
         <div class="org-badge">Human</div>
       </div>
-      <!-- CEO Alpha -->
       <div class="org-card dark span-3">
         <div class="org-role">Chief Executive Officer</div>
         <div class="org-name">Alpha</div>
         <div class="org-desc">C-레벨 총괄 조율 · 회장 단독 보고 체계 · AI 기반 전사 실행 관리</div>
         <div class="org-badge">AI Agent &nbsp;·&nbsp; CEO</div>
       </div>
-      <!-- C-Level -->
       <div class="org-card">
         <div class="org-role">CTO</div>
         <div class="org-name">Chief<br>Technology</div>
@@ -520,10 +711,10 @@
         <div class="org-desc">법무 · 계약 · 규제 · IP</div>
         <div class="org-badge">AI Agent</div>
       </div>
-      <div class="org-card" style="background:var(--gray); border:none; display:flex; align-items:center; justify-content:center;">
-        <div style="text-align:center; color:var(--mid);">
-          <div style="font-size:10px; letter-spacing:0.14em; text-transform:uppercase; margin-bottom:8px;">Structure</div>
-          <div style="font-family:'Cormorant Garant',serif; font-size:18px; font-weight:300;">1 Human · 8 AI</div>
+      <div class="org-card" style="background:var(--gray);display:flex;align-items:center;justify-content:center;">
+        <div style="text-align:center;color:var(--mid);">
+          <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:8px;">Structure</div>
+          <div style="font-family:'Cormorant Garant',serif;font-size:18px;font-weight:300;">1 Human · 8 AI</div>
         </div>
       </div>
     </div>
@@ -536,90 +727,260 @@
       <h2 class="section-title">Projects</h2>
       <span class="section-sub">진행 중인 프로젝트</span>
     </div>
-    <div class="project-grid reveal">
-      <div class="project-card">
-        <div class="project-idx">01 / 02</div>
-        <div class="project-name-en">MyFit</div>
-        <div class="project-name-ko">AI 가상 피팅 플랫폼</div>
-        <p class="project-desc">
-          AI 기반 3D 가상 피팅 기술로 온라인 쇼핑의 핏 문제를 해결합니다.
-          내 몸에 옷을 입혀보고, 사이즈 실수 없이 구매하세요.
-        </p>
-        <div class="project-status">
-          <span class="dot green"></span>Phase 1 — Active Development
+    <div class="project-layout reveal">
+
+      <!-- Sidebar -->
+      <div class="proj-sidebar">
+        <div class="proj-tab active" onclick="selectProject('myfit')">
+          <div class="proj-tab-num">01</div>
+          <div class="proj-tab-name">MyFit</div>
+          <div class="proj-tab-sub">AI Virtual Fitting</div>
+          <span class="proj-tab-arrow">›</span>
         </div>
-        <div class="project-tags">
-          <span class="tag">3D Modeling</span>
-          <span class="tag">AI / ML</span>
-          <span class="tag">Fashion Tech</span>
+        <div class="proj-tab" onclick="selectProject('cinderella')">
+          <div class="proj-tab-num">02</div>
+          <div class="proj-tab-name">신데렐라</div>
+          <div class="proj-tab-sub">P2P Luxury Rental</div>
+          <span class="proj-tab-arrow">›</span>
         </div>
       </div>
-      <div class="project-card">
-        <div class="project-idx">02 / 02</div>
-        <div class="project-name-en">신데렐라</div>
-        <div class="project-name-ko">P2P 명품 렌탈 플랫폼</div>
-        <p class="project-desc">
-          개인 간 명품 렌탈 마켓플레이스. 당신의 명품을 빌려주고,
-          필요할 때 원하는 명품을 빌리세요. 소유 없이 누리는 럭셔리.
-        </p>
-        <div class="project-status">
-          <span class="dot amber"></span>Prototype Complete
+
+      <!-- MyFit Panel -->
+      <div class="proj-panel active" id="panel-myfit">
+        <div class="proj-panel-head">
+          <div class="proj-panel-name">MyFit</div>
+          <div class="proj-panel-ko">AI 가상 피팅 플랫폼</div>
         </div>
-        <div class="project-tags">
+        <p class="proj-panel-desc">
+          AI 기반 3D 가상 피팅 기술로 온라인 쇼핑의 핏 문제를 해결합니다.
+          내 사이즈와 체형을 입력하면 실시간으로 옷을 입혀보고,
+          구매 전 핏을 확인할 수 있습니다. 반품 없는 쇼핑의 시작.
+        </p>
+        <div class="proj-meta">
+          <div class="proj-meta-item">
+            <span class="proj-meta-label">Status</span>
+            <span class="proj-meta-val"><span class="dot green"></span>Phase 1 Active</span>
+          </div>
+          <div class="proj-meta-item">
+            <span class="proj-meta-label">Category</span>
+            <span class="proj-meta-val">Fashion Tech</span>
+          </div>
+          <div class="proj-meta-item">
+            <span class="proj-meta-label">Stage</span>
+            <span class="proj-meta-val">개발 중</span>
+          </div>
+        </div>
+        <div class="proj-tags">
+          <span class="tag">3D Modeling</span>
+          <span class="tag">AI / ML</span>
+          <span class="tag">Three.js</span>
+          <span class="tag">Fashion Tech</span>
+        </div>
+        <div class="proj-panel-foot">
+          <button class="btn-detail" onclick="openModal('myfit')">상세보기 →</button>
+          <a href="https://kgg2512.github.io/MyFit/" target="_blank" class="btn-link">Live Demo ↗</a>
+        </div>
+      </div>
+
+      <!-- Cinderella Panel -->
+      <div class="proj-panel" id="panel-cinderella">
+        <div class="proj-panel-head">
+          <div class="proj-panel-name">신데렐라</div>
+          <div class="proj-panel-ko">P2P 명품 렌탈 플랫폼</div>
+        </div>
+        <p class="proj-panel-desc">
+          개인 간 명품 렌탈 마켓플레이스. 당신의 명품을 필요한 사람에게 빌려주고,
+          원하는 명품을 합리적인 가격에 빌리세요.
+          소유하지 않아도 원할 때 럭셔리를 경험할 수 있습니다.
+        </p>
+        <div class="proj-meta">
+          <div class="proj-meta-item">
+            <span class="proj-meta-label">Status</span>
+            <span class="proj-meta-val"><span class="dot amber"></span>Prototype Done</span>
+          </div>
+          <div class="proj-meta-item">
+            <span class="proj-meta-label">Category</span>
+            <span class="proj-meta-val">Luxury Marketplace</span>
+          </div>
+          <div class="proj-meta-item">
+            <span class="proj-meta-label">Stage</span>
+            <span class="proj-meta-val">프로토타입</span>
+          </div>
+        </div>
+        <div class="proj-tags">
           <span class="tag">P2P Marketplace</span>
           <span class="tag">Luxury</span>
           <span class="tag">Mobile</span>
+          <span class="tag">당근마켓 구조</span>
+        </div>
+        <div class="proj-panel-foot">
+          <button class="btn-detail" onclick="openModal('cinderella')">상세보기 →</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="section-header reveal">
+      <span class="section-num">04</span>
+      <h2 class="section-title" style="color:var(--white);">Contact</h2>
+      <span class="section-sub">연락처</span>
+    </div>
+    <div class="contact-body reveal">
+      <div class="contact-left">
+        <p class="contact-tagline">
+          작은 생각이<br>있으신가요?<br>
+          <em>말씀해주세요.</em>
+        </p>
+        <p class="contact-note">
+          협업 제안, 투자 문의, 파트너십 등<br>
+          어떤 연락이든 환영합니다.
+        </p>
+      </div>
+      <div class="contact-right">
+        <div class="contact-email-label">Email</div>
+        <a href="mailto:kgg2512@gmail.com" class="contact-email">kgg2512@gmail.com</a>
+        <div class="contact-links">
+          <a href="https://github.com/kgg2512" target="_blank" class="contact-link">GitHub ↗</a>
+          <a href="https://kgg2512.github.io/MyFit/" target="_blank" class="contact-link">MyFit Demo ↗</a>
         </div>
       </div>
     </div>
   </section>
 
   <!-- FOOTER -->
-  <footer id="contact">
-    <div class="footer-top">
-      <div>
-        <div class="footer-logo">G2</div>
-        <div class="footer-tagline">Small ideas. Big change.</div>
-      </div>
-      <div class="footer-right">
-        <div class="footer-info">
-          G2 Company Ltd<br>
-          Seoul, Republic of Korea<br>
-          <a href="mailto:kgg2512@gmail.com">kgg2512@gmail.com</a><br>
-          <a href="https://github.com/kgg2512" target="_blank">github.com/kgg2512</a>
-        </div>
-      </div>
-    </div>
+  <footer>
     <div class="footer-bottom">
       <span>© 2025 G2 Company Ltd. All rights reserved.</span>
       <span>Think it. Do it.</span>
     </div>
   </footer>
 
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modal" onclick="handleOverlayClick(event)">
+    <div class="modal-panel" id="modal-panel">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
   <script>
-    // Nav color switch
+    /* ── Project Data ── */
+    const projects = {
+      myfit: {
+        name: 'MyFit',
+        nameKo: 'AI 가상 피팅 플랫폼',
+        eyebrow: 'Project 01 — Fashion Tech',
+        desc: 'AI와 3D 기술을 결합해 온라인 쇼핑의 고질적인 문제, "핏 실패"를 해결합니다. 사용자의 체형 데이터를 기반으로 실시간 가상 착의를 제공하고, AI가 최적의 사이즈를 추천합니다. 반품률을 줄이고, 구매 확신을 높이는 것이 목표입니다.',
+        features: [
+          '3D 아바타 생성 — 체형 입력 기반 개인화 모델',
+          'AI 핏 분석 — 의류 착용 시뮬레이션 및 핏 점수 제공',
+          '사이즈 추천 — 브랜드별 실측 데이터 기반 매칭',
+          '가상 착의 UI — 웹 기반 3D 뷰어 (Three.js)',
+          '모두의창업 신청 완료 — 외부 검증 진행 중',
+        ],
+        progress: [
+          { done: true,  phase: 'Phase 1', title: '3D 모델링 + 기본 피팅 UI', desc: '3D 마네킹, 의류 착의 기능, 미리보기 인터페이스 구현 완료' },
+          { done: true,  phase: 'Phase 1', title: '모두의창업 신청', desc: '스타트업 프로그램 신청 완료, 심사 대기 중' },
+          { done: false, phase: 'Phase 2', title: 'AI 핏 분석 고도화', desc: '딥러닝 기반 체형-의류 매칭 모델 학습 및 통합' },
+          { done: false, phase: 'Phase 3', title: '브랜드 파트너십', desc: '쇼핑몰 API 연동, 실제 상품 데이터 통합' },
+        ],
+        links: [
+          { label: 'Live Demo', url: 'https://kgg2512.github.io/MyFit/', primary: true },
+          { label: 'GitHub', url: 'https://github.com/kgg2512/MyFit', primary: false },
+        ]
+      },
+      cinderella: {
+        name: '신데렐라',
+        nameKo: 'P2P 명품 렌탈 플랫폼',
+        eyebrow: 'Project 02 — Luxury Marketplace',
+        desc: '개인 간(P2P) 명품 렌탈 마켓플레이스. 명품을 소유하고 있는 사람과 필요한 사람을 연결합니다. 당근마켓의 로컬 거래 구조를 명품 렌탈에 적용, 신뢰 기반의 럭셔리 경험을 대중화합니다.',
+        features: [
+          '개인 렌탈 등록 — 내 명품을 일/주 단위로 빌려주기',
+          '신뢰 거래 시스템 — 보증금 + 리뷰 기반 평판 관리',
+          '카테고리 탐색 — 가방, 시계, 주얼리, 의류 분류',
+          '근거리 매칭 — 위치 기반 대여자 탐색 (당근마켓 구조)',
+          '프로토타입 완성 — cinderella_prototype.html 구현 완료',
+        ],
+        progress: [
+          { done: true,  phase: 'MVP',     title: '프로토타입 완성', desc: 'HTML/CSS 기반 UI 프로토타입 cinderella_prototype.html 완성' },
+          { done: true,  phase: 'MVP',     title: '서비스 개념 검증', desc: '렌탈 흐름, 상품 카드, 거래 UI 설계 완료' },
+          { done: false, phase: 'Phase 1', title: '백엔드 + 실제 거래', desc: '사용자 인증, 결제, 보증금 시스템 구축' },
+          { done: false, phase: 'Phase 2', title: '모바일 앱 전환', desc: 'React Native 기반 iOS/Android 앱 개발' },
+        ],
+        links: []
+      }
+    };
+
+    /* ── Tab switch ── */
+    function selectProject(id) {
+      document.querySelectorAll('.proj-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.proj-panel').forEach(p => p.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      document.getElementById('panel-' + id).classList.add('active');
+    }
+
+    /* ── Modal ── */
+    function openModal(id) {
+      const p = projects[id];
+      const progressHTML = p.progress.map(item => `
+        <div class="progress-item ${item.done ? 'done' : 'pending'}">
+          <div class="progress-badge">${item.done ? '✓ ' : '○ '}${item.phase}</div>
+          <div class="progress-content">
+            <div class="progress-title">${item.title}</div>
+            <div class="progress-desc">${item.desc}</div>
+          </div>
+        </div>`).join('');
+
+      const featuresHTML = p.features.map(f => `<li>${f}</li>`).join('');
+      const linksHTML = p.links.map(l =>
+        `<a href="${l.url}" target="_blank" class="modal-btn ${l.primary ? 'primary' : 'secondary'}">${l.label} ↗</a>`
+      ).join('');
+
+      document.getElementById('modal-content').innerHTML = `
+        <div class="modal-eyebrow">${p.eyebrow}</div>
+        <div class="modal-title">${p.name}</div>
+        <div class="modal-subtitle">${p.nameKo}</div>
+        <div class="modal-divider"></div>
+        <div class="modal-section-label">Overview</div>
+        <p class="modal-desc">${p.desc}</p>
+        <div class="modal-section-label">핵심 기능</div>
+        <ul class="modal-features">${featuresHTML}</ul>
+        <div class="modal-divider"></div>
+        <div class="modal-section-label">개발 현황</div>
+        <div class="progress-list">${progressHTML}</div>
+        ${linksHTML ? `<div class="modal-divider"></div><div class="modal-links">${linksHTML}</div>` : ''}
+      `;
+
+      document.getElementById('modal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function handleOverlayClick(e) {
+      if (e.target === document.getElementById('modal')) closeModal();
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    /* ── Nav scroll ── */
     const nav = document.getElementById('nav');
     const hero = document.querySelector('.hero');
-    function updateNav() {
-      if (window.scrollY > hero.offsetHeight - 80) {
-        nav.className = 'on-light';
-      } else {
-        nav.className = 'on-dark';
-      }
-    }
-    window.addEventListener('scroll', updateNav, { passive: true });
+    window.addEventListener('scroll', () => {
+      nav.className = window.scrollY > hero.offsetHeight - 80 ? 'on-light' : 'on-dark';
+    }, { passive: true });
 
-    // Reveal on scroll
-    const reveals = document.querySelectorAll('.reveal');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          observer.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.12 });
-    reveals.forEach(el => observer.observe(el));
+    /* ── Reveal ── */
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   </script>
 </body>
 </html>
