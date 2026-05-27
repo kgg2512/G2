@@ -1,0 +1,23 @@
+{
+  "owner": "kgg2512",
+  "company": "G2 Company Ltd",
+  "updated": "2026-05-27",
+  "projects": [
+    {
+      "name": "MyFit",
+      "description": "AI 기반 가상 피팅 앱 - 사진 3장으로 3D 신체 측정 후 나이키/아디다스 등 실제 의류 가상 피팅",
+      "status": "Phase 1 진행 중",
+      "url": "https://kgg2512.github.io/MyFit/",
+      "repo": "https://github.com/kgg2512/MyFit",
+      "type": "AI / 패션테크"
+    },
+    {
+      "name": "Cinderella",
+      "description": "명품 P2P 렌탈 앱 - 럭셔리 패션 아이템을 빌리고 빌려주는 플랫폼 (당근마켓 구조)",
+      "status": "프로토타입 완성",
+      "url": "https://kgg2512.github.io/Cinderella/",
+      "repo": "https://github.com/kgg2512/Cinderella",
+      "type": "P2P / 럭셔리 렌탈"
+    }
+  ]
+}
