@@ -577,12 +577,12 @@
   </div>
   <div class="scroll">
     <div class="my-profile">
-      <div class="my-av"><img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=100&q=80" alt=""/></div>
+      <div class="my-av"><img id="my-display-photo" src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=100&q=80" alt=""/></div>
       <div style="flex:1">
-        <div class="my-name">강경구 님</div>
-        <div class="my-email">user@example.com · Google 계정</div>
+        <div class="my-name" id="my-display-name">사용자 님</div>
+        <div class="my-email" id="my-display-email">· Google 계정</div>
       </div>
-      <div class="my-edit">편집</div>
+      <button class="my-edit" onclick="doLogout()">로그아웃</button>
     </div>
     <div class="my-temp-card">
       <div class="my-temp-row">
@@ -985,15 +985,21 @@ function renderLooks(eventKey) {
 // ═══════════════════════════════════
 // 화면 전환
 // ═══════════════════════════════════
-function doLogin() {
+// doLogin / doLogout → 하단 Google Auth 모듈에서 정의됨
+function afterLoginUI(user) {
   document.getElementById('screen-login').classList.remove('active');
   document.getElementById('navbar').style.display = 'flex';
+  document.getElementById('my-display-name').textContent = (user.name || user.displayName || '사용자') + ' 님';
+  document.getElementById('my-display-email').textContent = (user.email || '') + ' · Google 계정';
+  if (user.picture || user.photoURL) {
+    document.getElementById('my-display-photo').src = user.picture || user.photoURL;
+  }
   goScreen('home', 0);
   refreshHome();
   renderList('search-list', ITEMS);
   document.getElementById('search-count').textContent = ITEMS.length + '개 아이템';
   renderLooks('wedding');
-  showToast('Google 계정으로 로그인되었습니다');
+  showToast((user.name || user.displayName || '사용자') + '님, 환영합니다 ✨');
 }
 
 function refreshHome() {
@@ -1188,6 +1194,78 @@ function updateEarn() {
   const day = Math.round(v*2*.85), month = day*20;
   document.getElementById('earn-day').textContent='₩'+day.toLocaleString();
   document.getElementById('earn-month').textContent='₩'+month.toLocaleString();
+}
+</script>
+
+<!-- ═══════════════════════════════════════════════════════
+  Google 실제 로그인 (Firebase Authentication)
+  설정 방법:
+  1. https://console.firebase.google.com → 새 프로젝트
+  2. Authentication → 로그인 방법 → Google 활성화
+  3. 프로젝트 설정 → 웹 앱 → firebaseConfig 복사 → 아래 붙여넣기
+  4. Authentication → Settings → 승인된 도메인 → g2company.netlify.app 추가
+════════════════════════════════════════════════════════ -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+// ⚠️ 여기에 Firebase 설정 붙여넣기
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+
+let auth, provider;
+
+try {
+  const app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' });
+
+  // 이미 로그인된 세션 감지 → 로그인 화면 스킵
+  onAuthStateChanged(auth, (user) => {
+    if (user) afterLoginUI({ name: user.displayName, email: user.email, photoURL: user.photoURL });
+  });
+
+  window.doLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      afterLoginUI({ name: result.user.displayName, email: result.user.email, photoURL: result.user.photoURL });
+    } catch (e) {
+      if (e.code === 'auth/configuration-not-found' || e.code === 'auth/invalid-api-key') {
+        // Firebase 미설정 → 데모 모드로 폴백
+        demoLogin();
+      } else if (e.code !== 'auth/popup-closed-by-user') {
+        showToast('로그인 오류: ' + e.message);
+      }
+    }
+  };
+
+  window.doLogout = async () => {
+    await signOut(auth);
+    document.getElementById('navbar').style.display = 'none';
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-login').classList.add('active');
+    showToast('로그아웃되었습니다');
+  };
+
+} catch (e) {
+  // Firebase 미설정 시 데모 모드
+  window.doLogin = demoLogin;
+  window.doLogout = () => {
+    document.getElementById('navbar').style.display = 'none';
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-login').classList.add('active');
+  };
+}
+
+function demoLogin() {
+  afterLoginUI({ name: '데모 사용자', email: 'demo@example.com' });
 }
 </script>
 </body>
