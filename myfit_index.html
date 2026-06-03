@@ -433,6 +433,33 @@ let selProduct = null, selSize = 'L';
 let scene3d, camera3d, renderer3d, bodyGroup, clothingGroup, animFrameId3d;
 let userBodyMeasurements = null;
 
+// ===== 신체 측정 localStorage (btoa 인코딩, TTL 90일) =====
+function saveBodyData(data) {
+  try {
+    const payload = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+    localStorage.setItem('myfit_body', payload);
+    const exp = Date.now() + 90 * 24 * 60 * 60 * 1000;
+    localStorage.setItem('myfit_body_exp', exp.toString());
+    if (!localStorage.getItem('myfit_consent')) {
+      localStorage.setItem('myfit_consent', '1');
+      showToast('신체 정보는 이 기기에만 저장됩니다');
+    }
+  } catch(e) {}
+}
+function loadBodyData() {
+  try {
+    const exp = parseInt(localStorage.getItem('myfit_body_exp') || '0', 10);
+    if (exp && Date.now() > exp) {
+      localStorage.removeItem('myfit_body');
+      localStorage.removeItem('myfit_body_exp');
+      return null;
+    }
+    const raw = localStorage.getItem('myfit_body');
+    if (!raw) return null;
+    return JSON.parse(decodeURIComponent(escape(atob(raw))));
+  } catch(e) { return null; }
+}
+
 // ===== NAVIGATION =====
 function goTo(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -468,7 +495,21 @@ function goTo(id) {
 // ===== S1 LOGIN =====
 function doGoogleLogin() {
   showToast('Google 계정으로 로그인 중...');
-  setTimeout(() => { showToast('강경구님 환영합니다! 👋'); goTo('s-photo'); }, 1200);
+  setTimeout(() => {
+    showToast('강경구님 환영합니다! 👋');
+    restoreBodyInputs();
+    goTo('s-photo');
+  }, 1200);
+}
+
+function restoreBodyInputs() {
+  const saved = loadBodyData();
+  if (!saved) return;
+  userBodyMeasurements = saved;
+  const hEl = document.getElementById('inp-height');
+  const wEl = document.getElementById('inp-weight');
+  if (hEl && saved.height_cm) hEl.value = Math.round(saved.height_cm);
+  if (wEl && saved.weight_kg) wEl.value = Math.round(saved.weight_kg);
 }
 
 // ===== S2 PHOTO =====
@@ -542,7 +583,10 @@ async function startAnalysis() {
     };
   }
 
-  setTimeout(() => goTo('s-body'), 4000);
+  setTimeout(() => {
+    if (userBodyMeasurements) saveBodyData(userBodyMeasurements);
+    goTo('s-body');
+  }, 4000);
 }
 
 // ===== S5 SEARCH =====

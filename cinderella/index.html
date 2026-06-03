@@ -914,6 +914,30 @@ const LOOKS = {
 // 상태
 // ═══════════════════════════════════
 let curItem=0, wishlisted=false, calYear=2026, calMonth=4, selHours=4;
+
+// ═══════════════════════════════════
+// 위시리스트 localStorage (TTL 30일)
+// ═══════════════════════════════════
+function saveWish(ids) {
+  try {
+    localStorage.setItem('cinderella_wish', JSON.stringify(ids));
+    const exp = Date.now() + 30 * 24 * 60 * 60 * 1000;
+    localStorage.setItem('cinderella_wish_exp', exp.toString());
+  } catch(e) {}
+}
+function loadWish() {
+  try {
+    const exp = parseInt(localStorage.getItem('cinderella_wish_exp') || '0', 10);
+    if (exp && Date.now() > exp) {
+      localStorage.removeItem('cinderella_wish');
+      localStorage.removeItem('cinderella_wish_exp');
+      return [];
+    }
+    const raw = localStorage.getItem('cinderella_wish');
+    return raw ? JSON.parse(raw) : [];
+  } catch(e) { return []; }
+}
+let wishIds = loadWish();
 let homeCatFilter='all', homeBrandFilter='all', searchBrandFilter='all';
 let curImgs=[], curImgIdx=0;
 let curEvent='wedding';
@@ -999,6 +1023,8 @@ function afterLoginUI(user) {
   renderList('search-list', ITEMS);
   document.getElementById('search-count').textContent = ITEMS.length + '개 아이템';
   renderLooks('wedding');
+  wishIds = loadWish();
+  renderWishScreen();
   showToast((user.name || user.displayName || '사용자') + '님, 환영합니다 ✨');
 }
 
@@ -1059,7 +1085,7 @@ function setEvent(el, eventKey) {
 // 상세 화면
 // ═══════════════════════════════════
 function openDetail(idx) {
-  curItem = idx; wishlisted = false;
+  curItem = idx; wishlisted = wishIds.includes(idx);
   const it = ITEMS[idx];
   curImgs = it.imgs;
   curImgIdx = 0;
@@ -1081,8 +1107,8 @@ function openDetail(idx) {
   document.getElementById('det-temp-emoji').textContent = it.owner.emoji;
   document.getElementById('det-temp-bar').style.width = Math.min(it.owner.temp, 100) + '%';
   document.getElementById('det-owner-loc').textContent = it.owner.loc + ' · ' + it.dist;
-  document.getElementById('det-wish-btn').textContent = '♡';
-  document.getElementById('cta-wish-btn').textContent = '♡';
+  document.getElementById('det-wish-btn').textContent = wishlisted ? '♥' : '♡';
+  document.getElementById('cta-wish-btn').textContent = wishlisted ? '♥' : '♡';
   renderCal();
   goScreen('detail', null);
   document.getElementById('screen-detail').scrollTop = 0;
@@ -1118,7 +1144,60 @@ function toggleWish() {
   const h = wishlisted ? '♥' : '♡';
   document.getElementById('det-wish-btn').textContent = h;
   document.getElementById('cta-wish-btn').textContent = h;
-  if (wishlisted) showToast('좋아요에 추가됐습니다 ♥');
+  if (wishlisted) {
+    if (!wishIds.includes(curItem)) wishIds.push(curItem);
+    showToast('좋아요에 추가됐습니다 ♥');
+  } else {
+    wishIds = wishIds.filter(id => id !== curItem);
+  }
+  saveWish(wishIds);
+  renderWishScreen();
+}
+
+function renderWishScreen() {
+  const el = document.getElementById('screen-wish');
+  const scroll = el.querySelector('.scroll') || el;
+  // 기존 wish-list 제거
+  const old = el.querySelector('.wish-list');
+  if (old) old.remove();
+  const empty = el.querySelector('.wish-empty');
+  if (!wishIds.length) {
+    if (empty) empty.style.display = '';
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+  const wishItems = wishIds.map(id => ITEMS[id]).filter(Boolean);
+  const listEl = document.createElement('div');
+  listEl.className = 'wish-list item-list';
+  listEl.innerHTML = wishItems.map(it => `
+    <div class="item-row" onclick="openDetail(${it.id})">
+      <div class="item-thumb">
+        <img src="${it.imgs[0].replace('w=800','w=300')}" alt="${it.brand} ${it.name}" loading="lazy"/>
+        <div class="item-grade-badge">${it.grade}</div>
+        <div class="item-wish-btn" onclick="event.stopPropagation();removeWishById(${it.id})">♥</div>
+      </div>
+      <div class="item-info">
+        <div class="item-brand">${it.brand}</div>
+        <div class="item-name">${it.name}</div>
+        <div class="item-location">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          ${it.area} · ${it.dist} · ${it.posted}
+        </div>
+        <div class="item-price-row">
+          <div class="item-price">₩${it.price.toLocaleString()}</div>
+          <div class="item-per">/ 4시간~</div>
+        </div>
+      </div>
+    </div>`).join('');
+  el.appendChild(listEl);
+}
+
+function removeWishById(id) {
+  wishIds = wishIds.filter(i => i !== id);
+  saveWish(wishIds);
+  if (curItem === id) { wishlisted = false; document.getElementById('det-wish-btn').textContent = '♡'; document.getElementById('cta-wish-btn').textContent = '♡'; }
+  renderWishScreen();
+  showToast('좋아요에서 삭제됐습니다');
 }
 
 // ═══════════════════════════════════
