@@ -500,7 +500,7 @@
   </div>
   <div class="wish-empty">
     <div class="wish-empty-icon">♡</div>
-    <div class="wish-empty-txt">아직 찜한 아이템이 없습니다.<br/>마음에 드는 명품을 찜해보세요.</div>
+    <div class="wish-empty-txt">아직 찜한 아이템이 없어요.<br/>마음에 드는 명품의 ♡를 눌러보세요.</div>
   </div>
 </div>
 
@@ -1146,7 +1146,7 @@ function toggleWish() {
   document.getElementById('cta-wish-btn').textContent = h;
   if (wishlisted) {
     if (!wishIds.includes(curItem)) wishIds.push(curItem);
-    showToast('좋아요에 추가됐습니다 ♥');
+    showToast('찜 목록에 추가됐습니다 ♥');
   } else {
     wishIds = wishIds.filter(id => id !== curItem);
   }
@@ -1197,7 +1197,7 @@ function removeWishById(id) {
   saveWish(wishIds);
   if (curItem === id) { wishlisted = false; document.getElementById('det-wish-btn').textContent = '♡'; document.getElementById('cta-wish-btn').textContent = '♡'; }
   renderWishScreen();
-  showToast('좋아요에서 삭제됐습니다');
+  showToast('찜 목록에서 삭제됐습니다');
 }
 
 // ═══════════════════════════════════

@@ -510,6 +510,7 @@ function restoreBodyInputs() {
   const wEl = document.getElementById('inp-weight');
   if (hEl && saved.height_cm) hEl.value = Math.round(saved.height_cm);
   if (wEl && saved.weight_kg) wEl.value = Math.round(saved.weight_kg);
+  setTimeout(() => showToast('이전 측정값을 불러왔습니다 ✓'), 1400);
 }
 
 // ===== S2 PHOTO =====
