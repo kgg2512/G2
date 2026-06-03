@@ -548,6 +548,11 @@
     font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
   }
   footer .mark{font-family:var(--serif);font-size:18px;letter-spacing:.04em;text-transform:none;color:#fff}
+  footer .mark .dot{display:inline-block;width:4px;height:4px;border-radius:50%;background:#fff;margin-left:4px;vertical-align:middle}
+  footer a{color:rgba(255,255,255,.45);text-decoration:none;letter-spacing:.1em}
+  footer a:hover{color:rgba(255,255,255,.8)}
+  footer .footer-contact{color:inherit}
+  footer .footer-links{display:flex;gap:16px;align-items:center}
 
   /* ---------- Reduced motion ---------- */
   @media(prefers-reduced-motion:reduce){
@@ -866,9 +871,12 @@
 
 <!-- Footer -->
 <footer>
-  <div class="mark">G2<span style="display:inline-block;width:4px;height:4px;border-radius:50%;background:#fff;margin-left:4px;vertical-align:middle"></span></div>
-  <span>© 2026 G2 Company Ltd. · Seoul</span>
-  <span>Small ideas. Big change.</span>
+  <div class="mark">G2<span class="dot"></span></div>
+  <span>© 2026 G2 Company Ltd. · 대표: 강경구 · <a class="footer-contact" href="mailto:kgg2512@gmail.com">kgg2512@gmail.com</a></span>
+  <span class="footer-links">
+    <a href="terms.html">이용약관</a>
+    <a href="privacy.html">개인정보처리방침</a>
+  </span>
 </footer>
 
 <script>
