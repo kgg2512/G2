@@ -3,2215 +3,1191 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
-  <title>Cinderella — Luxury Rental App</title>
+  <title>Cinderella</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Playfair+Display:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
-    :root{
-      --gold:#B8963E;--gold-lt:#D4B86A;--gold-dk:#8A6E2A;
-      --gold-grd:linear-gradient(135deg,#C9A04A,#8A6E2A);
-      --cream:#FAF8F3;--ivory:#F0EBE1;
-      --black:#0F0E0C;--charcoal:#1C1A18;--mid:#5A5248;--muted:#9B9089;
-      --border:#E2D9CC;--white:#FFFFFF;
-      --green:#2E7D32;--green-bg:#E8F5E9;
-      --shadow-sm:0 1px 8px rgba(15,14,12,.07);
-      --shadow-md:0 6px 24px rgba(15,14,12,.11);
-      --shadow-gold:0 6px 24px rgba(184,150,62,.28);
-      --r-sm:8px;--r-md:14px;--r-lg:20px;--r-xl:26px;
-      --nav:62px;--max:430px;
+    :root {
+      --cream:#FAF9F7;--ivory:#F3F0EB;--border:#E8E3DC;
+      --gold:#B8963E;--gold-lt:#D4B86A;
+      --charcoal:#1A1816;--mid:#6B6159;--muted:#A09589;--white:#FFFFFF;
+      --green:#2E7D32;--green-bg:#F1F8F1;
+      --nav:64px;--max:430px;
       --f-display:'Cormorant Garamond',serif;
-      --f-serif:'Playfair Display',serif;
       --f-body:'Noto Sans KR',sans-serif;
-      /* Dark surfaces */
-      --bg:#0D0B09;--surface:#141210;--card:#1C1915;
-      --ai-bg:#0D0B09;--ai-surface:#181410;--ai-card:#201C17;
-      --ai-border:rgba(184,150,62,.22);--ai-border-glow:rgba(184,150,62,.55);
-      --ai-text:#F2EDE4;--ai-muted:#9B8E7F;
-      --prem-bg:#0A0908;--prem-surface:#141210;--prem-card:#1A1714;
-      --prem-accent:#D4B86A;
+      --shadow:0 2px 12px rgba(26,24,22,.07);
+      --shadow-lg:0 8px 32px rgba(26,24,22,.11);
     }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%;background:#111}
-    body{font-family:var(--f-body);color:var(--ai-text);max-width:var(--max);margin:0 auto;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+    html,body{height:100%}
+    body{font-family:var(--f-body);background:var(--cream);color:var(--charcoal);max-width:var(--max);margin:0 auto;overflow-x:hidden;-webkit-font-smoothing:antialiased}
     button{cursor:pointer;border:none;background:none;font-family:var(--f-body)}
-    a{text-decoration:none;color:inherit}
-    input,textarea{font-family:var(--f-body)}
+    img{display:block;width:100%;object-fit:cover}
+    input,select,textarea{font-family:var(--f-body)}
 
-    /* ── Screen system ── */
-    .screen{display:none;flex-direction:column;min-height:100vh;padding-bottom:var(--nav);background:var(--bg)}
+    .screen{display:none;flex-direction:column;min-height:100vh;padding-bottom:var(--nav)}
     .screen.active{display:flex}
+    #screen-login,#screen-detail{padding-bottom:0}
+
+    /* LOGIN */
+    .login-wrap{flex:1;display:flex;flex-direction:column}
+    .login-hero{position:relative;height:56vh;overflow:hidden}
+    .login-hero img{height:100%;object-fit:cover}
+    .login-hero-overlay{position:absolute;inset:0;background:linear-gradient(170deg,rgba(26,24,22,.04) 30%,rgba(26,24,22,.65) 100%)}
+    .login-brand{position:absolute;bottom:32px;left:28px;right:28px;color:#fff}
+    .login-brand-name{font-family:var(--f-display);font-size:48px;font-weight:300;font-style:italic;letter-spacing:.04em;line-height:1}
+    .login-brand-sub{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-top:8px}
+    .login-body{flex:1;background:var(--white);padding:32px 24px 44px;display:flex;flex-direction:column;gap:20px}
+    .login-desc{font-size:14px;color:var(--mid);line-height:1.85}
+    .login-desc strong{color:var(--charcoal);font-weight:600}
+    .btn-google{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;padding:15px;border-radius:12px;border:1.5px solid var(--border);background:var(--white);font-size:14px;color:var(--charcoal);font-weight:500;cursor:pointer;transition:box-shadow .2s,transform .15s;box-shadow:var(--shadow)}
+    .btn-google:active{transform:scale(.98)}
+    .login-terms{font-size:10px;color:var(--muted);text-align:center;line-height:2}
+    .login-terms a{color:var(--gold);text-decoration:none}
+
+    /* TOPBAR */
+    .topbar{position:sticky;top:0;z-index:100;background:rgba(250,249,247,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:52px;display:flex;align-items:center;padding:0 18px;gap:12px}
+    .topbar-logo{font-family:var(--f-display);font-size:18px;font-weight:400;font-style:italic;letter-spacing:.08em;color:var(--charcoal);flex:1}
+    .topbar-icons{display:flex;gap:2px}
+    .topbar-icons button{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--charcoal);transition:background .15s;position:relative}
+    .topbar-icons button:active{background:var(--ivory)}
+    .badge{position:absolute;top:4px;right:4px;width:16px;height:16px;border-radius:50%;background:var(--charcoal);color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center}
+
+    /* NAVBAR */
+    .navbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:var(--max);height:var(--nav);background:rgba(250,249,247,.98);backdrop-filter:blur(24px);border-top:1px solid var(--border);display:flex;z-index:200}
+    .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--muted);font-size:9px;letter-spacing:.04em;transition:color .2s;padding-bottom:2px}
+    .nav-btn.active{color:var(--charcoal)}
+    .nav-btn.active svg{stroke:var(--charcoal)}
+    .nav-btn svg{stroke:currentColor;transition:stroke .2s}
+    .nav-center{background:var(--charcoal);border-radius:50%;width:48px;height:48px;margin-bottom:12px}
+    .nav-center svg{stroke:#fff !important}
+    .nav-center.active{background:var(--gold)}
+
     .scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
     .scroll::-webkit-scrollbar{display:none}
 
-    /* ── Bottom Navigation ── */
-    .demo-nav{
-      position:fixed;bottom:0;left:50%;transform:translateX(-50%);
-      width:100%;max-width:var(--max);
-      background:rgba(13,11,9,.97);backdrop-filter:blur(24px);
-      border-top:1px solid rgba(184,150,62,.18);
-      display:flex;height:var(--nav);z-index:200;
-      padding-bottom:env(safe-area-inset-bottom,0)
-    }
-    .nav-btn{
-      flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-      gap:4px;color:#6A6158;font-size:9px;letter-spacing:.04em;
-      transition:color .2s;font-family:var(--f-body);position:relative
-    }
-    .nav-btn.active{color:var(--gold)}
-    .nav-btn svg{stroke:currentColor;fill:none;stroke-width:1.7;transition:stroke .2s}
-    .nav-btn.active svg{stroke:var(--gold)}
-    .nav-btn.active::after{
-      content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
-      width:24px;height:2px;background:var(--gold-grd);border-radius:2px
-    }
-    .nav-dot{width:4px;height:4px;border-radius:50%;background:var(--gold);
-      position:absolute;top:6px;right:calc(50% - 14px);display:none}
-    .nav-dot.show{display:block}
+    /* HOME HERO */
+    .home-hero{padding:20px 20px 14px;background:var(--white);border-bottom:1px solid var(--border)}
+    .home-hero-eyebrow{font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:8px}
+    .home-hero-headline{font-family:var(--f-display);font-size:32px;font-weight:300;line-height:1.2;color:var(--charcoal);margin-bottom:6px}
+    .home-hero-headline em{font-style:italic}
+    .home-hero-sub{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:10px}
+    .cert-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+    .cert-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;font-size:10.5px;font-weight:700;letter-spacing:.02em}
+    .cert-badge-auth{background:var(--green-bg);color:var(--green);border:1px solid rgba(46,125,50,.25)}
+    .cert-badge-ins{background:rgba(184,150,62,.08);color:var(--gold);border:1px solid rgba(184,150,62,.22)}
 
-    /* ── Common header ── */
-    .c-header{
-      padding:20px 20px 16px;
-      background:linear-gradient(180deg,var(--bg) 0%,rgba(13,11,9,0) 100%);
-      position:sticky;top:0;z-index:10
-    }
-    .c-header-row{display:flex;align-items:center;justify-content:space-between}
-    .c-logo{
-      font-family:var(--f-display);font-size:22px;font-weight:300;font-style:italic;
-      color:var(--gold-lt);letter-spacing:.06em
-    }
-    .c-header-btn{
-      width:36px;height:36px;border-radius:50%;
-      background:rgba(184,150,62,.08);border:1px solid rgba(184,150,62,.18);
-      display:flex;align-items:center;justify-content:center;
-      transition:background .2s
-    }
-    .c-header-btn svg{stroke:var(--gold-lt);fill:none;stroke-width:1.7}
-    .c-header-btn:active{background:rgba(184,150,62,.18)}
+    /* FILTERS */
+    .filter-section{background:var(--white);border-bottom:1px solid var(--border);padding:0 0 12px}
+    .cat-pills{display:flex;gap:7px;padding:14px 16px 0;overflow-x:auto}
+    .cat-pills::-webkit-scrollbar{display:none}
+    .cat-pill{flex-shrink:0;padding:7px 16px;border-radius:20px;border:1.5px solid var(--border);font-size:12.5px;font-weight:500;color:var(--mid);background:var(--white);cursor:pointer;transition:all .16s;white-space:nowrap}
+    .cat-pill.active{background:var(--charcoal);color:#fff;border-color:var(--charcoal)}
+    .brand-pills{display:flex;gap:7px;padding:10px 16px 0;overflow-x:auto}
+    .brand-pills::-webkit-scrollbar{display:none}
+    .brand-pill{flex-shrink:0;padding:5px 13px;border-radius:16px;border:1px solid var(--border);font-size:11.5px;color:var(--mid);background:var(--white);cursor:pointer;transition:all .16s;white-space:nowrap}
+    .brand-pill.active{background:var(--charcoal);color:#fff;border-color:var(--charcoal)}
+    .sort-row{display:flex;align-items:center;justify-content:space-between;padding:10px 18px 0}
+    .results-txt{font-size:11.5px;color:var(--muted)}
+    .sort-pills{display:flex;gap:5px;overflow-x:auto}
+    .sort-pills::-webkit-scrollbar{display:none}
+    .sort-pill{flex-shrink:0;font-size:11.5px;color:var(--muted);padding:4px 10px;border-radius:12px;cursor:pointer;transition:all .15s;font-weight:500}
+    .sort-pill.active{color:var(--charcoal);background:var(--ivory);font-weight:700}
 
-    /* ═══════════════════════
-       SCREEN 1 — HOME
-    ═══════════════════════ */
-    #screen-home{background:var(--bg)}
-    .home-hero{
-      position:relative;overflow:hidden;margin:0 16px 20px;
-      border-radius:var(--r-xl);height:220px;
-      background:linear-gradient(160deg,#1C1510 0%,#0A0806 100%);
-    }
-    .home-hero-bg{
-      position:absolute;inset:0;
-      background:radial-gradient(ellipse at 70% 30%,rgba(184,150,62,.18) 0%,transparent 60%);
-      pointer-events:none
-    }
-    .home-hero-content{
-      position:relative;z-index:2;padding:28px 24px;height:100%;
-      display:flex;flex-direction:column;justify-content:flex-end
-    }
-    .home-hero-eyebrow{
-      font-size:10px;letter-spacing:.2em;text-transform:uppercase;
-      color:var(--gold-lt);margin-bottom:8px
-    }
-    .home-hero-title{
-      font-family:var(--f-display);font-size:32px;font-weight:300;font-style:italic;
-      color:var(--ai-text);line-height:1.15;margin-bottom:14px
-    }
-    .home-hero-btn{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:10px 20px;border-radius:24px;
-      background:var(--gold-grd);color:#fff;
-      font-size:12px;font-weight:700;letter-spacing:.06em;
-      box-shadow:var(--shadow-gold);transition:opacity .2s,transform .12s
-    }
-    .home-hero-btn:active{opacity:.88;transform:scale(.98)}
-    .home-section-title{
-      font-family:var(--f-display);font-size:18px;font-weight:400;font-style:italic;
-      color:var(--ai-text);margin-bottom:4px
-    }
-    .home-section-sub{font-size:11px;color:var(--ai-muted);letter-spacing:.04em}
-    .home-section-header{
-      display:flex;align-items:flex-end;justify-content:space-between;
-      padding:0 20px;margin-bottom:14px
-    }
-    .home-see-all{
-      font-size:11px;color:var(--gold-lt);letter-spacing:.06em;
-      border-bottom:1px solid rgba(212,184,106,.3)
-    }
-    /* Category chips */
-    .home-cats{
-      display:flex;gap:8px;padding:0 20px;overflow-x:auto;margin-bottom:24px
-    }
-    .home-cats::-webkit-scrollbar{display:none}
-    .home-cat{
-      flex-shrink:0;padding:8px 16px;border-radius:20px;
-      border:1px solid rgba(184,150,62,.22);background:rgba(184,150,62,.06);
-      font-size:11px;color:var(--ai-muted);cursor:pointer;transition:all .2s;
-      font-family:var(--f-display);font-style:italic;letter-spacing:.04em
-    }
-    .home-cat.active{background:var(--gold-grd);color:#fff;border-color:transparent;box-shadow:0 4px 16px rgba(184,150,62,.3)}
-    /* Horizontal scroll cards */
-    .home-hscroll{display:flex;gap:12px;padding:0 20px;overflow-x:auto}
-    .home-hscroll::-webkit-scrollbar{display:none}
-    .home-hcard{
-      flex-shrink:0;width:148px;border-radius:var(--r-lg);
-      background:var(--prem-card);border:1px solid rgba(212,184,106,.12);
-      overflow:hidden;cursor:pointer;transition:border-color .2s,transform .15s
-    }
-    .home-hcard:active{transform:scale(.97)}
-    .home-hcard-img{
-      width:100%;height:160px;position:relative;overflow:hidden;background:#1A1714
-    }
-    .home-hcard-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
-    .home-hcard:hover .home-hcard-img img{transform:scale(1.04)}
-    .home-hcard-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,9,8,.9) 0%,transparent 50%)}
-    .home-hcard-ins{
-      position:absolute;top:8px;right:8px;
-      padding:3px 7px;border-radius:10px;
-      background:rgba(46,125,50,.85);backdrop-filter:blur(8px);
-      font-size:8px;font-weight:700;color:#A5D6A7;letter-spacing:.06em
-    }
-    .home-hcard-body{padding:10px 12px 13px}
-    .home-hcard-brand{font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--prem-accent);font-weight:700;margin-bottom:3px}
-    .home-hcard-name{font-family:var(--f-display);font-size:12px;font-weight:400;font-style:italic;color:rgba(242,237,228,.88);line-height:1.3;margin-bottom:8px}
-    .home-hcard-price{font-size:12px;font-weight:700;color:rgba(242,237,228,.9)}
-    .home-hcard-price span{font-size:9px;font-weight:400;color:rgba(212,184,106,.55);margin-left:1px}
-    /* Stats bar */
-    .home-stats{
-      display:flex;gap:1px;margin:0 16px 24px;border-radius:var(--r-md);
-      overflow:hidden;border:1px solid rgba(184,150,62,.14)
-    }
-    .home-stat{
-      flex:1;padding:16px 12px;background:var(--card);
-      display:flex;flex-direction:column;align-items:center;gap:5px
-    }
-    .home-stat:not(:last-child){border-right:1px solid rgba(184,150,62,.1)}
-    .home-stat-num{font-family:var(--f-display);font-size:22px;font-weight:600;color:var(--gold-lt);letter-spacing:.02em}
-    .home-stat-label{font-size:9.5px;color:var(--ai-muted);letter-spacing:.08em;text-align:center}
+    /* ITEM LIST */
+    .item-list{padding:0}
+    .item-row{display:flex;gap:14px;padding:16px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;align-items:flex-start;background:var(--white)}
+    .item-row:active{background:var(--ivory)}
+    .item-thumb{width:96px;height:96px;border-radius:12px;overflow:hidden;flex-shrink:0;background:var(--ivory);position:relative}
+    .item-thumb img{width:100%;height:100%;object-fit:cover}
+    .item-grade-badge{position:absolute;top:6px;left:6px;background:rgba(26,24,22,.72);color:#fff;font-size:7px;letter-spacing:.1em;font-weight:700;padding:2px 7px;border-radius:8px}
+    .item-wish-btn{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;font-size:13px;line-height:1;cursor:pointer}
+    .item-info{flex:1;overflow:hidden}
+    .item-brand{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:4px}
+    .item-name{font-size:13.5px;font-weight:500;color:var(--charcoal);margin-bottom:4px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .item-location{font-size:11px;color:var(--muted);margin-bottom:7px;display:flex;align-items:center;gap:4px}
+    .item-price-row{display:flex;align-items:baseline;gap:4px;margin-bottom:6px}
+    .item-price{font-size:16px;font-weight:700;color:var(--charcoal)}
+    .item-per{font-size:11px;color:var(--muted)}
+    .item-stats{display:flex;align-items:center;gap:8px}
+    .item-stars{font-size:10px;color:var(--gold);letter-spacing:1px}
+    .item-review-cnt{font-size:10px;color:var(--muted)}
+    .empty-state{padding:60px 24px;text-align:center}
+    .empty-icon{font-size:36px;margin-bottom:12px;opacity:.4}
+    .empty-txt{font-size:13px;color:var(--muted);line-height:1.7}
 
-    /* ═══════════════════════
-       SCREEN 2 — AI STYLIST
-    ═══════════════════════ */
-    #screen-ai{background:var(--ai-bg)}
-    .ai-header{padding:20px 20px 0;position:relative;z-index:10}
-    .ai-header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
-    .ai-title-group{display:flex;align-items:center;gap:10px}
-    .ai-wand-icon{
-      width:38px;height:38px;border-radius:12px;
-      background:var(--gold-grd);display:flex;align-items:center;justify-content:center;
-      box-shadow:var(--shadow-gold);flex-shrink:0
-    }
-    .ai-wand-icon svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2}
-    .ai-title{font-family:var(--f-display);font-size:26px;font-weight:300;font-style:italic;color:var(--ai-text);letter-spacing:.04em;line-height:1}
-    .ai-title-sub{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-lt);margin-top:3px}
-    .ai-badge{padding:5px 12px;border-radius:20px;border:1px solid rgba(184,150,62,.55);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-lt);background:rgba(184,150,62,.10)}
-    .ai-occasion-section{padding:0 20px 4px}
-    .ai-section-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ai-muted);margin-bottom:12px}
-    .ai-chips{display:flex;flex-wrap:wrap;gap:8px}
-    .ai-chip{
-      padding:9px 16px;border-radius:24px;border:1px solid rgba(184,150,62,.22);
-      background:rgba(184,150,62,.10);font-size:12px;color:#9B8E7F;cursor:pointer;
-      transition:all .2s;font-family:var(--f-body);display:flex;align-items:center;gap:6px
-    }
-    .ai-chip .chip-emoji{font-size:14px;line-height:1}
-    .ai-chip.selected{border-color:var(--gold);background:rgba(184,150,62,.22);color:var(--gold-lt);box-shadow:0 0 16px rgba(184,150,62,.18)}
-    .ai-chip:active{transform:scale(.96)}
-    .ai-divider{margin:20px 20px;height:1px;background:linear-gradient(to right,transparent,rgba(184,150,62,.22),transparent)}
-    .ai-analyzing{
-      display:flex;align-items:center;gap:10px;padding:14px 20px;
-      margin:0 20px 20px;border-radius:var(--r-md);
-      border:1px solid rgba(184,150,62,.55);background:var(--ai-card)
-    }
-    .ai-analyzing-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);animation:pulse-dot 1.4s ease-in-out infinite;flex-shrink:0}
-    @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
-    .ai-analyzing-text{font-size:12px;color:var(--gold-lt);letter-spacing:.04em}
-    .ai-result-label{display:flex;align-items:center;justify-content:space-between;padding:0 20px;margin-bottom:14px}
-    .ai-result-title{font-size:13px;font-weight:600;color:var(--ai-text)}
-    .ai-result-count{font-size:11px;color:var(--gold-lt);background:rgba(184,150,62,.10);border:1px solid rgba(184,150,62,.22);padding:3px 10px;border-radius:12px}
-    .ai-cards{display:flex;flex-direction:column;gap:14px;padding:0 20px}
-    .ai-card{border-radius:var(--r-lg);background:var(--ai-card);border:1px solid rgba(184,150,62,.22);overflow:hidden;transition:border-color .2s,box-shadow .2s;cursor:pointer}
-    .ai-card:hover,.ai-card:active{border-color:rgba(184,150,62,.55);box-shadow:0 0 28px rgba(184,150,62,.12)}
-    .ai-card.picked{border-color:var(--gold);box-shadow:0 0 32px rgba(184,150,62,.2),inset 0 0 0 1px rgba(184,150,62,.15)}
-    .ai-card-inner{display:flex}
-    .ai-card-img{width:110px;height:140px;flex-shrink:0;position:relative;overflow:hidden}
-    .ai-card-img img{width:100%;height:100%;object-fit:cover}
-    .ai-card-img-overlay{position:absolute;inset:0;background:linear-gradient(to right,transparent 60%,var(--ai-card))}
-    .ai-card-rank{position:absolute;top:10px;left:10px;width:22px;height:22px;border-radius:50%;background:var(--gold-grd);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;box-shadow:0 2px 8px rgba(184,150,62,.4)}
-    .ai-card-body{flex:1;padding:14px 14px 14px 10px;display:flex;flex-direction:column;justify-content:space-between}
-    .ai-card-brand{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-lt);font-weight:700;margin-bottom:4px}
-    .ai-card-name{font-family:var(--f-display);font-size:15px;font-weight:400;font-style:italic;color:var(--ai-text);line-height:1.3;margin-bottom:8px}
-    .ai-card-reason{font-size:11px;color:#9B8E7F;line-height:1.6;margin-bottom:10px}
-    .ai-card-footer{display:flex;align-items:center;justify-content:space-between}
-    .ai-card-price{font-size:14px;font-weight:700;color:var(--ai-text)}
-    .ai-card-price span{font-size:10px;font-weight:400;color:#9B8E7F}
-    .ai-card-match{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--gold-lt);background:rgba(184,150,62,.12);border:1px solid rgba(184,150,62,.22);padding:3px 9px;border-radius:12px}
-    .ai-card-match::before{content:'✦';font-size:8px}
-    .ai-cta-wrap{padding:20px 20px 0;margin-top:10px}
-    .ai-cta-btn{
-      width:100%;padding:17px;background:var(--gold-grd);border-radius:var(--r-md);
-      color:#fff;font-size:14px;font-weight:700;letter-spacing:.08em;
-      box-shadow:var(--shadow-gold);border:none;cursor:pointer;
-      transition:opacity .2s,transform .12s;display:flex;align-items:center;justify-content:center;gap:8px
-    }
-    .ai-cta-btn:active{opacity:.88;transform:scale(.99)}
-    .ai-cta-sub{text-align:center;font-size:10px;color:#9B8E7F;margin-top:10px;letter-spacing:.04em}
+    /* DETAIL */
+    .detail-img-wrap{position:relative;height:360px;background:var(--ivory);overflow:hidden;user-select:none}
+    .detail-img-wrap img{height:100%;object-fit:cover;transition:opacity .2s}
+    .det-back{position:absolute;top:14px;left:14px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.94);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;z-index:2}
+    .det-wish{position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.94);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;font-size:18px;z-index:2}
+    .img-dots{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:2}
+    .dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.45)}
+    .dot.on{background:#fff;width:18px;border-radius:3px}
+    .img-prev,.img-next{position:absolute;top:50%;transform:translateY(-50%);width:32px;height:32px;background:rgba(255,255,255,.75);border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:2;font-size:16px;color:var(--charcoal)}
+    .img-prev{left:10px}
+    .img-next{right:10px}
 
-    /* ═══════════════════════
-       SCREEN 3 — DETAIL
-    ═══════════════════════ */
-    #screen-detail{background:var(--prem-bg)}
-    .detail-img-wrap{
-      position:relative;height:320px;overflow:hidden;
-      background:linear-gradient(160deg,#1A1410,#0A0908)
-    }
-    .detail-img-wrap img{width:100%;height:100%;object-fit:cover}
-    .detail-img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,9,8,.85) 0%,transparent 50%)}
-    .detail-back-btn{
-      position:absolute;top:20px;left:20px;z-index:10;
-      width:38px;height:38px;border-radius:50%;
-      background:rgba(13,11,9,.75);backdrop-filter:blur(12px);
-      border:1px solid rgba(255,255,255,.1);
-      display:flex;align-items:center;justify-content:center
-    }
-    .detail-back-btn svg{stroke:var(--ai-text);fill:none;stroke-width:2}
-    .detail-wish-btn{
-      position:absolute;top:20px;right:20px;z-index:10;
-      width:38px;height:38px;border-radius:50%;
-      background:rgba(13,11,9,.75);backdrop-filter:blur(12px);
-      border:1px solid rgba(255,255,255,.1);
-      display:flex;align-items:center;justify-content:center;
-      transition:all .2s
-    }
-    .detail-wish-btn.liked{background:rgba(184,150,62,.2);border-color:rgba(184,150,62,.5)}
-    .detail-wish-btn svg{stroke:var(--ai-muted);fill:none;stroke-width:1.8}
-    .detail-wish-btn.liked svg{stroke:var(--gold);fill:rgba(184,150,62,.2)}
-    .detail-img-badges{position:absolute;bottom:20px;left:20px;display:flex;gap:8px;z-index:2}
-    .detail-badge{
-      padding:5px 12px;border-radius:14px;font-size:10px;font-weight:700;letter-spacing:.06em;
-      backdrop-filter:blur(8px)
-    }
-    .detail-badge-gold{background:var(--gold-grd);color:#fff;box-shadow:0 3px 12px rgba(184,150,62,.4)}
-    .detail-badge-ins{background:rgba(46,125,50,.85);color:#A5D6A7}
-    .detail-body{padding:22px 20px}
-    .detail-brand{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--prem-accent);font-weight:700;margin-bottom:6px}
-    .detail-name{font-family:var(--f-display);font-size:28px;font-weight:300;font-style:italic;color:var(--ai-text);line-height:1.25;margin-bottom:8px}
-    .detail-desc{font-size:13px;color:var(--ai-muted);line-height:1.75;margin-bottom:20px}
-    .detail-price-row{display:flex;align-items:baseline;gap:6px;margin-bottom:20px}
-    .detail-price{font-size:26px;font-weight:700;color:var(--ai-text)}
-    .detail-price-unit{font-size:12px;color:var(--ai-muted)}
-    .detail-price-retail{font-size:12px;color:var(--ai-muted);text-decoration:line-through}
-    .detail-section-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ai-muted);margin-bottom:12px}
-    /* Duration selector */
-    .detail-duration-row{display:flex;gap:8px;margin-bottom:20px}
-    .detail-dur-btn{
-      flex:1;padding:11px 8px;border-radius:var(--r-sm);
-      border:1px solid rgba(184,150,62,.22);background:rgba(184,150,62,.06);
-      font-size:12px;color:var(--ai-muted);cursor:pointer;transition:all .2s;
-      text-align:center;font-family:var(--f-body)
-    }
-    .detail-dur-btn.active{border-color:var(--gold);background:rgba(184,150,62,.18);color:var(--gold-lt)}
-    .detail-dur-price{display:block;font-size:13px;font-weight:700;color:var(--ai-text);margin-top:3px}
-    /* Spec grid */
-    .detail-spec-grid{
-      display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px
-    }
-    .detail-spec-item{
-      padding:12px 14px;border-radius:var(--r-sm);
-      background:var(--ai-card);border:1px solid rgba(184,150,62,.12)
-    }
-    .detail-spec-key{font-size:9.5px;color:var(--ai-muted);margin-bottom:4px;letter-spacing:.06em}
-    .detail-spec-val{font-size:13px;font-weight:600;color:var(--ai-text)}
-    /* CTA */
-    .detail-cta-row{display:flex;gap:10px;margin-top:4px}
-    .detail-cta-primary{
-      flex:1;padding:16px;background:var(--gold-grd);border-radius:var(--r-md);
-      color:#fff;font-size:14px;font-weight:700;letter-spacing:.08em;
-      box-shadow:var(--shadow-gold);transition:opacity .2s
-    }
-    .detail-cta-primary:active{opacity:.85}
-    .detail-cta-secondary{
-      width:52px;height:52px;border-radius:var(--r-md);
-      background:var(--ai-card);border:1px solid rgba(184,150,62,.22);
-      display:flex;align-items:center;justify-content:center;
-      flex-shrink:0
-    }
-    .detail-cta-secondary svg{stroke:var(--gold-lt);fill:none;stroke-width:1.7}
+    .det-body{background:var(--white)}
+    .det-header{padding:20px 18px 16px;border-bottom:1px solid var(--border)}
+    .det-badges{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+    .badge-brand{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700;background:rgba(184,150,62,.1);border:1px solid rgba(184,150,62,.2);padding:4px 11px;border-radius:10px}
+    .badge-grade{font-size:9px;font-weight:700;background:var(--green-bg);color:var(--green);border:1px solid rgba(46,125,50,.15);padding:4px 11px;border-radius:10px}
+    .badge-auth{font-size:9px;font-weight:700;background:rgba(25,118,210,.08);color:#1976D2;border:1px solid rgba(25,118,210,.18);padding:4px 11px;border-radius:10px}
+    .det-name{font-family:var(--f-display);font-size:28px;font-weight:300;font-style:italic;line-height:1.2;color:var(--charcoal);margin-bottom:10px}
+    .det-price-row{display:flex;align-items:baseline;gap:6px}
+    .det-price{font-size:24px;font-weight:700}
+    .det-per{font-size:12px;color:var(--muted)}
+    .det-stars-row{display:flex;align-items:center;gap:7px;padding:12px 18px;border-bottom:1px solid var(--border)}
+    .det-stars{color:var(--gold);font-size:12px;letter-spacing:2px}
+    .det-reviews{font-size:11.5px;color:var(--muted)}
+    .seller-card{display:flex;align-items:center;gap:13px;padding:14px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s}
+    .seller-card:active{background:var(--ivory)}
+    .seller-av{width:44px;height:44px;border-radius:50%;overflow:hidden;border:2px solid var(--border);flex-shrink:0}
+    .seller-av img{width:100%;height:100%;object-fit:cover}
+    .seller-info{flex:1}
+    .seller-name{font-size:14px;font-weight:600;margin-bottom:3px}
+    .seller-temp{display:flex;align-items:center;gap:6px}
+    .temp-num{font-size:12.5px;font-weight:700;color:#FF6B00}
+    .temp-bar-wrap{flex:1;max-width:70px;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+    .temp-bar-fill{height:100%;background:linear-gradient(to right,#FFB800,#FF6B00);border-radius:2px}
+    .seller-loc-txt{font-size:11px;color:var(--muted);margin-top:3px}
+    .seller-chat-btn{padding:8px 16px;border:1.5px solid var(--border);border-radius:20px;font-size:12px;color:var(--mid);font-weight:500}
+    .det-section{padding:18px 18px 0}
+    .section-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:10px}
+    .det-desc{font-size:13.5px;color:var(--mid);line-height:1.85;margin-bottom:14px}
+    .spec-chips{display:flex;gap:7px;flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid var(--border)}
+    .spec-chip{padding:6px 14px;border-radius:20px;border:1px solid var(--border);font-size:11.5px;color:var(--mid)}
+    .ins-box{margin:16px 18px;padding:14px 16px;border-radius:14px;background:var(--green-bg);border:1px solid rgba(46,125,50,.2)}
+    .ins-box-title{font-size:11px;font-weight:700;color:var(--green);margin-bottom:4px}
+    .ins-box-desc{font-size:11px;color:var(--mid);line-height:1.6}
+    .cal-wrap{padding:18px}
+    .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+    .cal-month{font-size:14px;font-weight:700}
+    .cal-nav{width:30px;height:30px;border-radius:50%;background:var(--ivory);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--mid);cursor:pointer}
+    .cal-grid-labels{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:4px}
+    .cal-grid-label{font-size:9px;text-align:center;color:var(--muted);font-weight:600;text-transform:uppercase;padding:3px 0}
+    .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+    .cal-cell{aspect-ratio:1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;transition:all .12s}
+    .cal-cell:hover:not(.taken){background:var(--ivory)}
+    .cal-cell.taken{color:var(--muted);text-decoration:line-through;pointer-events:none;opacity:.4}
+    .cal-cell.sel{background:var(--charcoal);color:#fff}
+    .cal-cell.today{font-weight:700;color:var(--gold)}
+    .det-cta{position:sticky;bottom:0;background:var(--white);border-top:1px solid var(--border);padding:12px 18px 28px;display:flex;gap:10px}
+    .cta-wish{width:48px;height:48px;border-radius:12px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+    .cta-rent{flex:1;padding:14px;background:var(--charcoal);color:#fff;border-radius:12px;font-size:14px;font-weight:600;letter-spacing:.07em}
 
-    /* ═══════════════════════
-       SCREEN 4 — CHECKOUT
-    ═══════════════════════ */
-    #screen-checkout{background:var(--bg)}
-    .checkout-header{padding:20px 20px 16px;display:flex;align-items:center;gap:14px}
-    .checkout-back{
-      width:36px;height:36px;border-radius:50%;
-      background:var(--card);border:1px solid rgba(184,150,62,.15);
-      display:flex;align-items:center;justify-content:center;flex-shrink:0
-    }
-    .checkout-back svg{stroke:var(--ai-text);fill:none;stroke-width:2}
-    .checkout-title{font-family:var(--f-display);font-size:20px;font-weight:400;font-style:italic;color:var(--ai-text)}
-    /* Steps */
-    .checkout-steps{display:flex;align-items:center;padding:0 20px 20px;gap:0}
-    .checkout-step{
-      display:flex;flex-direction:column;align-items:center;gap:4px;flex:1
-    }
-    .checkout-step-circle{
-      width:26px;height:26px;border-radius:50%;
-      background:rgba(184,150,62,.08);border:1px solid rgba(184,150,62,.22);
-      display:flex;align-items:center;justify-content:center;
-      font-size:11px;font-weight:700;color:var(--ai-muted)
-    }
-    .checkout-step.active .checkout-step-circle{background:var(--gold-grd);border-color:transparent;color:#fff}
-    .checkout-step.done .checkout-step-circle{background:rgba(46,125,50,.2);border-color:rgba(46,125,50,.4);color:#66BB6A}
-    .checkout-step-label{font-size:9px;color:var(--ai-muted);letter-spacing:.06em}
-    .checkout-step.active .checkout-step-label{color:var(--gold-lt)}
-    .checkout-step-line{flex:1;height:1px;background:rgba(184,150,62,.15);margin-bottom:16px}
-    /* Order summary card */
-    .co-summary{
-      margin:0 20px 16px;padding:16px;
-      background:var(--card);border-radius:var(--r-lg);
-      border:1px solid rgba(184,150,62,.14)
-    }
-    .co-summary-row{display:flex;align-items:center;gap:14px}
-    .co-summary-img{
-      width:70px;height:70px;border-radius:var(--r-sm);overflow:hidden;flex-shrink:0;
-      background:var(--ai-card)
-    }
-    .co-summary-img img{width:100%;height:100%;object-fit:cover}
-    .co-summary-info{flex:1}
-    .co-summary-brand{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--prem-accent);font-weight:700;margin-bottom:3px}
-    .co-summary-name{font-family:var(--f-display);font-size:14px;font-style:italic;color:var(--ai-text);margin-bottom:6px}
-    .co-summary-tags{display:flex;gap:6px}
-    .co-tag{
-      padding:3px 9px;border-radius:10px;font-size:9.5px;font-weight:600;letter-spacing:.04em
-    }
-    .co-tag-gold{background:rgba(184,150,62,.12);border:1px solid rgba(184,150,62,.25);color:var(--gold-lt)}
-    .co-tag-green{background:rgba(46,125,50,.12);border:1px solid rgba(46,125,50,.3);color:#66BB6A}
-    /* Form section */
-    .co-section{margin:0 20px 16px}
-    .co-section-title{font-size:11px;font-weight:600;color:var(--ai-text);letter-spacing:.08em;margin-bottom:12px;display:flex;align-items:center;gap:8px}
-    .co-section-title::after{content:'';flex:1;height:1px;background:rgba(184,150,62,.12)}
-    .co-input-group{
-      background:var(--card);border:1px solid rgba(184,150,62,.12);
-      border-radius:var(--r-md);overflow:hidden;margin-bottom:1px
-    }
-    .co-input{
-      width:100%;padding:14px 16px;background:transparent;
-      border:none;outline:none;font-size:13px;color:var(--ai-text);
-      letter-spacing:.02em
-    }
-    .co-input::placeholder{color:var(--ai-muted)}
-    .co-input-label{
-      padding:8px 16px 0;font-size:9.5px;color:var(--ai-muted);
-      letter-spacing:.1em;text-transform:uppercase
-    }
-    /* Payment methods */
-    .co-pay-methods{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
-    .co-pay-btn{
-      padding:12px 14px;border-radius:var(--r-sm);
-      background:var(--card);border:1px solid rgba(184,150,62,.12);
-      display:flex;align-items:center;gap:8px;cursor:pointer;transition:all .2s
-    }
-    .co-pay-btn.active{border-color:var(--gold);background:rgba(184,150,62,.12)}
-    .co-pay-btn svg{stroke:var(--ai-muted);fill:none;stroke-width:1.6;flex-shrink:0}
-    .co-pay-btn.active svg{stroke:var(--gold-lt)}
-    .co-pay-label{font-size:12px;color:var(--ai-muted)}
-    .co-pay-btn.active .co-pay-label{color:var(--gold-lt)}
-    /* Price breakdown */
-    .co-price-card{
-      margin:0 20px 20px;padding:16px;
-      background:var(--card);border-radius:var(--r-lg);
-      border:1px solid rgba(184,150,62,.14)
-    }
-    .co-price-row{
-      display:flex;justify-content:space-between;padding:7px 0;font-size:13px;
-      border-bottom:1px solid rgba(184,150,62,.08)
-    }
-    .co-price-row:last-child{border-bottom:none}
-    .co-price-label{color:var(--ai-muted)}
-    .co-price-value{color:var(--ai-text);font-weight:500}
-    .co-price-value.green{color:#66BB6A}
-    .co-price-total-row{display:flex;justify-content:space-between;align-items:baseline;padding-top:12px;margin-top:4px;border-top:1px solid rgba(184,150,62,.2)}
-    .co-price-total-label{font-size:12px;color:var(--ai-muted)}
-    .co-price-total{font-size:22px;font-weight:700;color:var(--ai-text)}
-    .co-submit-btn{
-      margin:0 20px;width:calc(100% - 40px);padding:17px;
-      background:var(--gold-grd);border-radius:var(--r-md);
-      color:#fff;font-size:14px;font-weight:700;letter-spacing:.08em;
-      box-shadow:var(--shadow-gold);transition:opacity .2s,transform .12s;
-      display:flex;align-items:center;justify-content:center;gap:8px
-    }
-    .co-submit-btn:active{opacity:.85;transform:scale(.99)}
-    /* Success overlay */
-    .co-success{
-      position:fixed;inset:0;background:var(--bg);z-index:300;
-      display:none;flex-direction:column;align-items:center;justify-content:center;
-      padding:40px;text-align:center;max-width:var(--max);margin:0 auto
-    }
-    .co-success.show{display:flex}
-    .co-success-ring{
-      width:88px;height:88px;border-radius:50%;
-      background:rgba(184,150,62,.1);border:2px solid var(--gold);
-      display:flex;align-items:center;justify-content:center;
-      box-shadow:0 0 40px rgba(184,150,62,.25);
-      animation:co-pop .4s cubic-bezier(.4,0,.2,1);margin-bottom:24px
-    }
-    @keyframes co-pop{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
-    .co-success-title{font-family:var(--f-display);font-size:32px;font-weight:300;font-style:italic;color:var(--gold-lt);margin-bottom:8px}
-    .co-success-sub{font-size:13px;color:var(--ai-muted);line-height:1.7;margin-bottom:28px}
-    .co-success-order{
-      background:var(--card);border:1px solid rgba(184,150,62,.2);
-      border-radius:var(--r-md);padding:16px 24px;margin-bottom:24px;width:100%
-    }
-    .co-success-order-label{font-size:9px;color:var(--ai-muted);letter-spacing:.14em;text-transform:uppercase;margin-bottom:4px}
-    .co-success-order-num{font-size:18px;font-weight:700;color:var(--gold-lt);letter-spacing:.1em}
-    .co-success-restart{
-      padding:14px 32px;border-radius:24px;
-      border:1px solid rgba(184,150,62,.35);color:var(--gold-lt);
-      font-size:13px;font-weight:600;letter-spacing:.06em;
-      transition:all .2s
-    }
-    .co-success-restart:active{background:rgba(184,150,62,.1)}
+    /* REGISTER */
+    .reg-header{padding:24px 18px 0}
+    .reg-title{font-family:var(--f-display);font-size:26px;font-weight:300;font-style:italic;margin-bottom:5px}
+    .reg-sub{font-size:12px;color:var(--muted);line-height:1.65;margin-bottom:24px}
+    .form-wrap{padding:0 18px 32px}
+    .form-group{margin-bottom:22px}
+    .form-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--mid);font-weight:700;margin-bottom:9px;display:block}
+    .form-input{width:100%;padding:13px 15px;border:1.5px solid var(--border);border-radius:12px;font-size:13.5px;color:var(--charcoal);background:var(--white);outline:none;transition:border-color .18s}
+    .form-input:focus{border-color:var(--charcoal)}
+    .form-textarea{width:100%;padding:13px 15px;border:1.5px solid var(--border);border-radius:12px;font-size:13.5px;color:var(--charcoal);background:var(--white);min-height:90px;resize:none;outline:none;transition:border-color .18s}
+    .form-textarea:focus{border-color:var(--charcoal)}
+    .chip-row{display:flex;flex-wrap:wrap;gap:8px}
+    .chip{padding:8px 17px;border-radius:20px;border:1.5px solid var(--border);font-size:12.5px;color:var(--mid);font-weight:500;cursor:pointer;transition:all .15s}
+    .chip.sel{background:var(--charcoal);color:#fff;border-color:var(--charcoal)}
+    .grade-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+    .grade-btn{padding:11px 0;border-radius:10px;border:1.5px solid var(--border);font-size:12px;font-weight:600;color:var(--mid);cursor:pointer;text-align:center;transition:all .15s;line-height:1.5}
+    .grade-btn small{display:block;font-size:9px;font-weight:400;opacity:.7}
+    .grade-btn.sel{background:var(--charcoal);color:#fff;border-color:var(--charcoal)}
+    .upload-zone{border:1.5px dashed var(--border);border-radius:14px;height:112px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:border-color .18s}
+    .upload-zone:hover{border-color:var(--charcoal)}
+    .upload-label{font-size:12px;color:var(--muted)}
+    .earn-box{background:var(--charcoal);border-radius:14px;padding:20px;margin-bottom:20px}
+    .earn-eyebrow{font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.38);font-weight:700;margin-bottom:14px}
+    .earn-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+    .earn-desc{font-size:12px;color:rgba(255,255,255,.55)}
+    .earn-val{font-family:var(--f-display);font-size:17px;color:var(--gold-lt)}
+    .btn-primary{width:100%;padding:15px;background:var(--charcoal);color:#fff;border-radius:12px;font-size:14px;font-weight:600;letter-spacing:.06em;border:none;cursor:pointer;transition:opacity .15s}
+    .btn-primary:active{opacity:.8}
+    .price-inline{display:flex;align-items:center;gap:10px}
+    .price-inline .form-input{flex:1}
+    .price-unit-txt{font-size:12px;color:var(--muted);white-space:nowrap}
 
-    /* ═══════════════════════
-       SCREEN 5 — MY PAGE
-    ═══════════════════════ */
-    #screen-my{background:var(--bg)}
-    .my-profile{
-      padding:28px 20px 24px;
-      background:linear-gradient(160deg,#1C1510 0%,var(--bg) 100%);
-      border-bottom:1px solid rgba(184,150,62,.1)
-    }
-    .my-avatar-row{display:flex;align-items:center;gap:16px;margin-bottom:20px}
-    .my-avatar{
-      width:64px;height:64px;border-radius:50%;
-      background:var(--gold-grd);display:flex;align-items:center;justify-content:center;
-      font-family:var(--f-display);font-size:26px;color:#fff;font-style:italic;
-      box-shadow:0 4px 20px rgba(184,150,62,.35);flex-shrink:0
-    }
-    .my-name{font-family:var(--f-display);font-size:22px;font-weight:400;font-style:italic;color:var(--ai-text);margin-bottom:3px}
-    .my-email{font-size:12px;color:var(--ai-muted)}
-    .my-member-badge{
-      display:inline-flex;align-items:center;gap:5px;
-      padding:5px 12px;border-radius:14px;
-      background:var(--gold-grd);color:#fff;
-      font-size:10px;font-weight:700;letter-spacing:.08em;
-      box-shadow:0 3px 12px rgba(184,150,62,.35);margin-top:4px
-    }
-    .my-stats{display:flex;gap:1px}
-    .my-stat{
-      flex:1;padding:14px;background:rgba(184,150,62,.05);
-      border:1px solid rgba(184,150,62,.1);
-      display:flex;flex-direction:column;align-items:center;gap:4px
-    }
-    .my-stat:first-child{border-radius:var(--r-sm) 0 0 var(--r-sm)}
-    .my-stat:last-child{border-radius:0 var(--r-sm) var(--r-sm) 0}
-    .my-stat-num{font-family:var(--f-display);font-size:20px;font-weight:600;color:var(--gold-lt)}
-    .my-stat-label{font-size:9px;color:var(--ai-muted);letter-spacing:.06em}
-    /* Rental history */
-    .my-section{padding:20px 20px 0}
-    .my-section-title{
-      font-family:var(--f-display);font-size:16px;font-weight:400;font-style:italic;
-      color:var(--ai-text);margin-bottom:14px;padding-bottom:8px;
-      border-bottom:1px solid rgba(184,150,62,.12)
-    }
-    .my-rental-card{
-      display:flex;gap:12px;padding:14px;
-      background:var(--card);border-radius:var(--r-md);
-      border:1px solid rgba(184,150,62,.1);margin-bottom:10px;cursor:pointer;
-      transition:border-color .2s
-    }
-    .my-rental-card:hover{border-color:rgba(184,150,62,.3)}
-    .my-rental-img{
-      width:56px;height:56px;border-radius:var(--r-sm);overflow:hidden;flex-shrink:0;background:#1A1714
-    }
-    .my-rental-img img{width:100%;height:100%;object-fit:cover}
-    .my-rental-info{flex:1}
-    .my-rental-brand{font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--prem-accent);font-weight:700;margin-bottom:2px}
-    .my-rental-name{font-family:var(--f-display);font-size:13px;font-style:italic;color:var(--ai-text);margin-bottom:5px}
-    .my-rental-meta{display:flex;align-items:center;gap:6px}
-    .my-rental-status{
-      padding:2px 8px;border-radius:8px;font-size:9.5px;font-weight:700;letter-spacing:.04em
-    }
-    .status-active{background:rgba(46,125,50,.15);color:#66BB6A;border:1px solid rgba(46,125,50,.3)}
-    .status-done{background:rgba(184,150,62,.1);color:var(--gold-lt);border:1px solid rgba(184,150,62,.2)}
-    .my-rental-date{font-size:10px;color:var(--ai-muted)}
-    .my-rental-price{font-size:13px;font-weight:700;color:var(--ai-text);align-self:center;margin-left:auto}
-    /* Menu list */
-    .my-menu-list{margin:0 20px 20px}
-    .my-menu-item{
-      display:flex;align-items:center;gap:12px;padding:15px 0;
-      border-bottom:1px solid rgba(184,150,62,.08);cursor:pointer;transition:opacity .2s
-    }
-    .my-menu-item:last-child{border-bottom:none}
-    .my-menu-item:active{opacity:.7}
-    .my-menu-icon{
-      width:36px;height:36px;border-radius:10px;
-      background:rgba(184,150,62,.08);border:1px solid rgba(184,150,62,.15);
-      display:flex;align-items:center;justify-content:center;flex-shrink:0
-    }
-    .my-menu-icon svg{stroke:var(--gold-lt);fill:none;stroke-width:1.7}
-    .my-menu-label{font-size:13px;color:var(--ai-text);flex:1}
-    .my-menu-badge{
-      padding:2px 8px;border-radius:8px;background:var(--gold-grd);
-      color:#fff;font-size:9px;font-weight:700
-    }
-    .my-menu-arrow{color:var(--ai-muted)}
+    /* WISHLIST / 좋아요 */
+    .wish-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:40px}
+    .wish-empty-icon{font-size:40px;opacity:.3}
+    .wish-empty-txt{font-size:13px;color:var(--muted);text-align:center;line-height:1.8}
 
-    /* ── Toast ── */
-    .toast{
-      position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(8px);
-      background:rgba(20,18,15,.95);backdrop-filter:blur(16px);
-      color:#F2EDE4;font-size:13px;padding:11px 20px;border-radius:24px;
-      border:1px solid rgba(184,150,62,.55);white-space:nowrap;
-      z-index:999;opacity:0;transition:opacity .22s,transform .22s;pointer-events:none
-    }
-    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    /* MYPAGE */
+    .my-profile{display:flex;align-items:center;gap:14px;padding:22px 18px;border-bottom:1px solid var(--border);background:var(--white)}
+    .my-av{width:54px;height:54px;border-radius:50%;overflow:hidden;border:2px solid var(--border);flex-shrink:0}
+    .my-av img{width:100%;height:100%;object-fit:cover}
+    .my-name{font-size:17px;font-weight:700;margin-bottom:3px}
+    .my-email{font-size:11.5px;color:var(--muted)}
+    .my-edit{padding:7px 15px;border:1.5px solid var(--border);border-radius:16px;font-size:12px;color:var(--mid);font-weight:500}
+    .my-temp-card{margin:14px 18px;padding:18px;border:1px solid var(--border);border-radius:16px;background:var(--white)}
+    .my-temp-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+    .my-temp-num{font-size:30px;font-weight:700;color:#FF6B00}
+    .my-temp-emoji{font-size:24px}
+    .my-temp-label{font-size:12px;color:var(--mid);flex:1;line-height:1.5}
+    .my-temp-bar-wrap{height:7px;background:var(--border);border-radius:4px;overflow:hidden}
+    .my-temp-bar{height:100%;background:linear-gradient(to right,#FFB800,#FF6B00);border-radius:4px}
+    .my-role-row{display:flex;gap:10px;padding:14px 18px;border-bottom:1px solid var(--border)}
+    .role-card{flex:1;padding:16px;border:1.5px solid var(--border);border-radius:14px;text-align:center;cursor:pointer;transition:all .18s}
+    .role-card.active{border-color:var(--charcoal);background:var(--ivory)}
+    .role-icon{font-size:22px;margin-bottom:7px}
+    .role-name{font-size:13px;font-weight:700}
+    .role-desc{font-size:10px;color:var(--muted);margin-top:3px}
+    .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--border)}
+    .stat-cell{padding:16px 0;text-align:center;border-right:1px solid var(--border)}
+    .stat-cell:last-child{border-right:none}
+    .stat-val{font-size:22px;font-weight:700}
+    .stat-label{font-size:9.5px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:3px}
+    .my-section-title{font-size:13px;font-weight:700;color:var(--charcoal);padding:18px 18px 10px;letter-spacing:.04em}
+    .rental-row{display:flex;gap:13px;align-items:center;padding:13px 18px;border-bottom:1px solid var(--border);cursor:pointer}
+    .rental-row:active{background:var(--ivory)}
+    .rental-thumb{width:50px;height:50px;border-radius:10px;overflow:hidden;flex-shrink:0}
+    .rental-thumb img{width:100%;height:100%;object-fit:cover}
+    .rental-info{flex:1}
+    .rental-brand{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:2px}
+    .rental-name{font-size:13px;font-weight:500;margin-bottom:2px}
+    .rental-date{font-size:10.5px;color:var(--muted)}
+    .status-pill{font-size:10px;padding:4px 11px;border-radius:12px;font-weight:600;white-space:nowrap}
+    .s-active{background:var(--green-bg);color:var(--green)}
+    .s-end{background:var(--ivory);color:var(--muted)}
 
-    /* ════════════════════════
-       FAIRY (요정) MODE
-    ════════════════════════ */
+    /* AI 스타일 화면 */
+    #screen-style{background:var(--cream)}
+    .style-header{padding:20px 18px 0;background:var(--white);border-bottom:1px solid var(--border)}
+    .style-question{font-family:var(--f-display);font-size:22px;font-weight:300;font-style:italic;color:var(--charcoal);margin-bottom:12px}
+    .event-pills{display:flex;gap:7px;padding-bottom:14px;overflow-x:auto}
+    .event-pills::-webkit-scrollbar{display:none}
+    .event-pill{flex-shrink:0;padding:8px 18px;border-radius:20px;border:1.5px solid var(--border);font-size:12.5px;font-weight:500;color:var(--mid);cursor:pointer;transition:all .15s;background:var(--white)}
+    .event-pill.active{background:var(--charcoal);color:#fff;border-color:var(--charcoal)}
+    .look-section-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:18px 18px 10px}
+    .look-cards{padding:0 0 20px}
+    .look-card{background:var(--white);border-bottom:1px solid var(--border);margin-bottom:8px}
+    .look-hero-img{width:100%;height:220px;object-fit:cover}
+    .look-body{padding:16px 18px}
+    .look-name{font-family:var(--f-display);font-size:20px;font-weight:300;font-style:italic;color:var(--charcoal);margin-bottom:4px}
+    .look-occasion{font-size:11px;color:var(--gold);font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
+    .look-items{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+    .look-item{display:flex;gap:12px;align-items:center;cursor:pointer;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--cream);transition:background .15s}
+    .look-item:active{background:var(--ivory)}
+    .look-item-thumb{width:52px;height:52px;border-radius:10px;overflow:hidden;flex-shrink:0;background:var(--ivory)}
+    .look-item-thumb img{width:100%;height:100%;object-fit:cover}
+    .look-item-info{flex:1;overflow:hidden}
+    .look-item-brand{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:2px}
+    .look-item-name{font-size:12.5px;font-weight:500;color:var(--charcoal);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+    .look-item-price{font-size:11.5px;color:var(--mid);font-weight:600}
+    .look-total-btn{width:100%;padding:13px;background:var(--ivory);color:var(--charcoal);border-radius:12px;font-size:13px;font-weight:600;border:1.5px solid var(--border);cursor:pointer;transition:all .15s}
+    .look-total-btn:active{background:var(--charcoal);color:#fff;border-color:var(--charcoal)}
 
-    /* Mode toggle button */
-    .fairy-toggle-btn{
-      display:flex;align-items:center;gap:8px;
-      margin:16px 20px 0;padding:13px 18px;border-radius:var(--r-md);
-      background:linear-gradient(135deg,rgba(184,150,62,.12),rgba(212,184,106,.06));
-      border:1px solid rgba(184,150,62,.35);cursor:pointer;
-      transition:all .25s;width:calc(100% - 40px)
-    }
-    .fairy-toggle-btn:active{opacity:.85;transform:scale(.99)}
-    .fairy-toggle-btn-icon{font-size:18px;line-height:1}
-    .fairy-toggle-btn-text{flex:1;text-align:left}
-    .fairy-toggle-btn-title{font-size:13px;font-weight:600;color:var(--gold-lt);display:block;margin-bottom:2px}
-    .fairy-toggle-btn-sub{font-size:10px;color:var(--ai-muted);display:block;letter-spacing:.03em}
-    .fairy-toggle-btn-arrow{color:var(--gold-lt);font-size:14px}
+    /* BOOKING SHEET */
+    .overlay{position:fixed;inset:0;background:rgba(26,24,22,.58);z-index:500;display:none;align-items:flex-end;backdrop-filter:blur(3px)}
+    .overlay.show{display:flex}
+    .sheet{background:var(--white);border-radius:22px 22px 0 0;padding:6px 18px 44px;width:100%;max-width:var(--max);margin:0 auto}
+    .sheet-handle{width:34px;height:4px;background:var(--border);border-radius:2px;margin:14px auto 20px}
+    .sheet-name{font-family:var(--f-display);font-size:18px;font-style:italic;font-weight:300;margin-bottom:4px}
+    .sheet-sub{font-size:12px;color:var(--muted);margin-bottom:20px}
+    .hour-btns{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:20px}
+    .hour-btn{padding:9px 16px;border-radius:10px;border:1.5px solid var(--border);font-size:12.5px;color:var(--mid);cursor:pointer;font-weight:500;transition:all .15s}
+    .hour-btn.sel{background:var(--charcoal);color:#fff;border-color:var(--charcoal)}
+    .price-sum{background:var(--cream);border-radius:12px;padding:16px;margin-bottom:18px;border:1px solid var(--border)}
+    .ps-row{display:flex;justify-content:space-between;font-size:13px;color:var(--mid);margin-bottom:8px}
+    .ps-total{margin-bottom:0;margin-top:4px;padding-top:12px;border-top:1px solid var(--border);font-weight:700;font-size:15px;color:var(--charcoal)}
 
-    /* Fairy mode badge in header */
-    .fairy-mode-badge{
-      display:none;align-items:center;gap:5px;
-      padding:5px 12px;border-radius:14px;
-      background:var(--gold-grd);color:#fff;
-      font-size:10px;font-weight:700;letter-spacing:.08em;
-      box-shadow:0 3px 12px rgba(184,150,62,.4)
-    }
-    body.fairy-mode .fairy-mode-badge{display:flex}
-    body.fairy-mode .fairy-mode-badge-hide{display:none}
-
-    /* Fairy nav — hidden by default, shown in fairy mode */
-    .fairy-nav{
-      position:fixed;bottom:0;left:50%;transform:translateX(-50%);
-      width:100%;max-width:var(--max);
-      background:rgba(10,8,5,.97);backdrop-filter:blur(24px);
-      border-top:2px solid rgba(184,150,62,.45);
-      display:none;height:var(--nav);z-index:201;
-      padding-bottom:env(safe-area-inset-bottom,0)
-    }
-    body.fairy-mode .demo-nav{display:none}
-    body.fairy-mode .fairy-nav{display:flex}
-
-    /* Fairy screens hidden by default */
-    .fairy-screen{display:none;flex-direction:column;min-height:100vh;padding-bottom:var(--nav);background:var(--bg)}
-    body.fairy-mode .fairy-screen.active{display:flex}
-    /* Hide cinderella screens in fairy mode */
-    body.fairy-mode .screen{display:none!important}
-
-    /* ── Fairy common header ── */
-    .f-header{
-      padding:20px 20px 16px;
-      background:linear-gradient(180deg,rgba(13,11,9,.98) 0%,rgba(13,11,9,0) 100%);
-      position:sticky;top:0;z-index:10
-    }
-    .f-header-row{display:flex;align-items:center;justify-content:space-between}
-    .f-logo{
-      font-family:var(--f-display);font-size:20px;font-weight:300;font-style:italic;
-      color:var(--gold-lt);letter-spacing:.06em;display:flex;align-items:center;gap:8px
-    }
-    .f-badge{
-      padding:3px 10px;border-radius:10px;
-      background:var(--gold-grd);color:#fff;
-      font-size:9px;font-weight:700;letter-spacing:.08em;
-      box-shadow:0 2px 8px rgba(184,150,62,.4)
-    }
-
-    /* ── Fairy Home (수익 현황) ── */
-    .f-home-hero{
-      margin:0 16px 20px;padding:24px;border-radius:var(--r-xl);
-      background:linear-gradient(135deg,#1A1208 0%,#0E0A04 100%);
-      border:1px solid rgba(184,150,62,.3);position:relative;overflow:hidden
-    }
-    .f-home-hero::before{
-      content:'';position:absolute;top:-40px;right:-40px;
-      width:160px;height:160px;border-radius:50%;
-      background:radial-gradient(circle,rgba(184,150,62,.18) 0%,transparent 70%)
-    }
-    .f-hero-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ai-muted);margin-bottom:8px}
-    .f-hero-amount{font-family:var(--f-display);font-size:38px;font-weight:600;color:var(--gold-lt);line-height:1;margin-bottom:6px}
-    .f-hero-sub{font-size:11px;color:var(--ai-muted);margin-bottom:18px}
-    .f-hero-stats{display:flex;gap:16px}
-    .f-hero-stat{display:flex;flex-direction:column;gap:3px}
-    .f-hero-stat-num{font-size:16px;font-weight:700;color:var(--ai-text)}
-    .f-hero-stat-label{font-size:9px;color:var(--ai-muted);letter-spacing:.06em}
-
-    /* Quick stats row */
-    .f-stat-row{
-      display:flex;gap:10px;margin:0 16px 20px
-    }
-    .f-stat-card{
-      flex:1;padding:14px 12px;border-radius:var(--r-md);
-      background:var(--card);border:1px solid rgba(184,150,62,.12);
-      display:flex;flex-direction:column;align-items:center;gap:4px
-    }
-    .f-stat-icon{font-size:16px;margin-bottom:2px}
-    .f-stat-num{font-size:16px;font-weight:700;color:var(--gold-lt)}
-    .f-stat-label{font-size:9px;color:var(--ai-muted);letter-spacing:.05em;text-align:center}
-
-    /* Recent activity */
-    .f-activity-item{
-      display:flex;align-items:center;gap:12px;padding:13px 16px;
-      background:var(--card);border-radius:var(--r-md);
-      border:1px solid rgba(184,150,62,.1);margin-bottom:8px
-    }
-    .f-activity-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-    .f-activity-dot.green{background:#66BB6A;box-shadow:0 0 8px rgba(102,187,106,.4)}
-    .f-activity-dot.gold{background:var(--gold);box-shadow:0 0 8px rgba(184,150,62,.4)}
-    .f-activity-dot.muted{background:var(--ai-muted)}
-    .f-activity-info{flex:1}
-    .f-activity-title{font-size:12px;color:var(--ai-text);margin-bottom:2px}
-    .f-activity-sub{font-size:10px;color:var(--ai-muted)}
-    .f-activity-amount{font-size:13px;font-weight:700;color:var(--gold-lt)}
-
-    /* ── Fairy Item Register ── */
-    .f-reg-section{padding:0 20px;margin-bottom:20px}
-    .f-reg-title{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ai-muted);margin-bottom:12px}
-    /* Category grid */
-    .f-cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-    .f-cat-btn{
-      padding:14px 8px;border-radius:var(--r-md);
-      background:var(--card);border:1px solid rgba(184,150,62,.12);
-      display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;
-      transition:all .2s;font-family:var(--f-body)
-    }
-    .f-cat-btn.active{border-color:var(--gold);background:rgba(184,150,62,.15);box-shadow:0 0 16px rgba(184,150,62,.18)}
-    .f-cat-btn-icon{font-size:20px;line-height:1}
-    .f-cat-btn-label{font-size:10px;color:var(--ai-muted);letter-spacing:.04em}
-    .f-cat-btn.active .f-cat-btn-label{color:var(--gold-lt)}
-    /* Photo upload area */
-    .f-photo-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
-    .f-photo-row::-webkit-scrollbar{display:none}
-    .f-photo-slot{
-      flex-shrink:0;width:72px;height:72px;border-radius:var(--r-sm);
-      border:1.5px dashed rgba(184,150,62,.35);
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
-      gap:4px;cursor:pointer;transition:all .2s;background:rgba(184,150,62,.04)
-    }
-    .f-photo-slot:active{border-color:var(--gold);background:rgba(184,150,62,.12)}
-    .f-photo-slot-icon{font-size:18px;line-height:1}
-    .f-photo-slot-label{font-size:9px;color:var(--ai-muted)}
-    .f-photo-filled{
-      flex-shrink:0;width:72px;height:72px;border-radius:var(--r-sm);
-      overflow:hidden;border:1.5px solid rgba(184,150,62,.4);position:relative
-    }
-    .f-photo-filled img{width:100%;height:100%;object-fit:cover}
-    .f-photo-del{
-      position:absolute;top:3px;right:3px;width:16px;height:16px;border-radius:50%;
-      background:rgba(13,11,9,.85);display:flex;align-items:center;justify-content:center;
-      font-size:10px;color:#fff;cursor:pointer
-    }
-    /* Input field */
-    .f-input-group{
-      background:var(--card);border:1px solid rgba(184,150,62,.15);
-      border-radius:var(--r-md);overflow:hidden;margin-bottom:10px
-    }
-    .f-input-label{padding:10px 14px 0;font-size:9.5px;color:var(--ai-muted);letter-spacing:.1em;text-transform:uppercase}
-    .f-input{
-      width:100%;padding:8px 14px 12px;background:transparent;
-      border:none;outline:none;font-size:14px;color:var(--ai-text)
-    }
-    .f-input::placeholder{color:rgba(155,144,135,.5)}
-    /* Price slider */
-    .f-price-display{
-      font-family:var(--f-display);font-size:32px;font-weight:600;
-      color:var(--gold-lt);text-align:center;margin:8px 0
-    }
-    .f-slider{
-      width:100%;height:4px;border-radius:2px;
-      background:linear-gradient(to right,var(--gold) 40%,rgba(184,150,62,.2) 40%);
-      outline:none;border:none;-webkit-appearance:none;cursor:pointer
-    }
-    .f-slider::-webkit-slider-thumb{
-      -webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:50%;
-      background:var(--gold-grd);box-shadow:0 2px 8px rgba(184,150,62,.5);cursor:pointer
-    }
-    /* Pickup option */
-    .f-pickup-row{display:flex;gap:10px}
-    .f-pickup-btn{
-      flex:1;padding:14px;border-radius:var(--r-md);
-      background:var(--card);border:1px solid rgba(184,150,62,.12);
-      text-align:center;cursor:pointer;transition:all .2s;font-family:var(--f-body)
-    }
-    .f-pickup-btn.active{border-color:var(--gold);background:rgba(184,150,62,.15)}
-    .f-pickup-icon{font-size:18px;margin-bottom:5px}
-    .f-pickup-label{font-size:11px;color:var(--ai-muted)}
-    .f-pickup-btn.active .f-pickup-label{color:var(--gold-lt)}
-    /* Auth toggle */
-    .f-auth-row{
-      display:flex;align-items:center;justify-content:space-between;
-      padding:14px;background:var(--card);border-radius:var(--r-md);
-      border:1px solid rgba(184,150,62,.12);margin-bottom:10px
-    }
-    .f-auth-info{display:flex;align-items:center;gap:10px}
-    .f-auth-icon{font-size:18px}
-    .f-auth-title{font-size:12px;color:var(--ai-text);margin-bottom:1px}
-    .f-auth-sub{font-size:10px;color:var(--ai-muted)}
-    .f-toggle{
-      width:42px;height:24px;border-radius:12px;background:rgba(184,150,62,.2);
-      position:relative;cursor:pointer;transition:background .25s;flex-shrink:0
-    }
-    .f-toggle.on{background:var(--gold)}
-    .f-toggle::after{
-      content:'';position:absolute;top:3px;left:3px;
-      width:18px;height:18px;border-radius:50%;background:#fff;
-      transition:transform .25s;box-shadow:0 1px 4px rgba(0,0,0,.3)
-    }
-    .f-toggle.on::after{transform:translateX(18px)}
-    /* Register submit btn */
-    .f-submit-btn{
-      margin:0 20px;width:calc(100% - 40px);padding:17px;
-      background:var(--gold-grd);border-radius:var(--r-md);
-      color:#fff;font-size:14px;font-weight:700;letter-spacing:.08em;
-      box-shadow:var(--shadow-gold);transition:opacity .2s,transform .12s;
-      display:flex;align-items:center;justify-content:center;gap:8px
-    }
-    .f-submit-btn:active{opacity:.85;transform:scale(.99)}
-
-    /* ── Fairy Reservation Manager ── */
-    .f-req-card{
-      background:var(--card);border-radius:var(--r-lg);
-      border:1px solid rgba(184,150,62,.15);overflow:hidden;margin-bottom:12px
-    }
-    .f-req-card-top{display:flex;gap:12px;padding:14px}
-    .f-req-img{
-      width:60px;height:60px;border-radius:var(--r-sm);overflow:hidden;
-      flex-shrink:0;background:#1A1714
-    }
-    .f-req-img img{width:100%;height:100%;object-fit:cover}
-    .f-req-info{flex:1}
-    .f-req-user{font-size:12px;font-weight:600;color:var(--ai-text);margin-bottom:2px;display:flex;align-items:center;gap:6px}
-    .f-req-user-badge{
-      padding:2px 7px;border-radius:8px;font-size:9px;font-weight:700;
-      background:rgba(184,150,62,.12);border:1px solid rgba(184,150,62,.25);color:var(--gold-lt)
-    }
-    .f-req-item{font-size:11px;color:var(--ai-muted);margin-bottom:4px}
-    .f-req-meta{display:flex;align-items:center;gap:8px}
-    .f-req-period{font-size:10px;color:var(--ai-muted)}
-    .f-req-amount{font-size:13px;font-weight:700;color:var(--gold-lt);margin-left:auto}
-    .f-req-card-btns{display:flex;gap:1px}
-    .f-req-btn{
-      flex:1;padding:13px;font-size:12px;font-weight:700;letter-spacing:.06em;
-      cursor:pointer;transition:opacity .2s;font-family:var(--f-body)
-    }
-    .f-req-btn-accept{background:var(--gold-grd);color:#fff}
-    .f-req-btn-reject{background:rgba(155,144,135,.1);color:var(--ai-muted)}
-    .f-req-btn:active{opacity:.8}
-    /* Active rental status */
-    .f-active-card{
-      display:flex;gap:12px;padding:14px;
-      background:var(--card);border-radius:var(--r-md);
-      border:1px solid rgba(46,125,50,.25);margin-bottom:8px
-    }
-    .f-active-img{width:50px;height:50px;border-radius:var(--r-sm);overflow:hidden;flex-shrink:0;background:#1A1714}
-    .f-active-img img{width:100%;height:100%;object-fit:cover}
-    .f-active-info{flex:1}
-    .f-active-name{font-size:12px;color:var(--ai-text);margin-bottom:3px}
-    .f-active-user{font-size:10px;color:var(--ai-muted);margin-bottom:4px}
-    .f-active-status-row{display:flex;align-items:center;gap:6px}
-    .f-active-status{padding:2px 8px;border-radius:8px;font-size:9px;font-weight:700;background:rgba(46,125,50,.15);color:#66BB6A;border:1px solid rgba(46,125,50,.3)}
-    .f-active-end{font-size:10px;color:var(--ai-muted)}
-    .f-active-amount{font-size:13px;font-weight:700;color:var(--ai-text);align-self:center;margin-left:auto}
-
-    /* ── Fairy Settlement ── */
-    /* Bar chart */
-    .f-chart-wrap{
-      margin:0 16px 20px;padding:16px 16px 12px;
-      background:var(--card);border-radius:var(--r-lg);border:1px solid rgba(184,150,62,.12)
-    }
-    .f-chart-title{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ai-muted);margin-bottom:14px}
-    .f-chart-bars{display:flex;align-items:flex-end;gap:6px;height:80px}
-    .f-chart-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px}
-    .f-chart-bar{
-      width:100%;border-radius:4px 4px 0 0;
-      background:linear-gradient(to top,var(--gold-dk),var(--gold-lt));
-      transition:height .4s ease;min-height:4px
-    }
-    .f-chart-bar.current{background:var(--gold-grd);box-shadow:0 0 16px rgba(184,150,62,.35)}
-    .f-chart-month{font-size:8.5px;color:var(--ai-muted);letter-spacing:.04em}
-    /* Transaction list */
-    .f-tx-item{
-      display:flex;align-items:center;gap:12px;padding:13px 0;
-      border-bottom:1px solid rgba(184,150,62,.07)
-    }
-    .f-tx-item:last-child{border-bottom:none}
-    .f-tx-img{width:40px;height:40px;border-radius:var(--r-sm);overflow:hidden;flex-shrink:0;background:#1A1714}
-    .f-tx-img img{width:100%;height:100%;object-fit:cover}
-    .f-tx-info{flex:1}
-    .f-tx-name{font-size:12px;color:var(--ai-text);margin-bottom:2px}
-    .f-tx-date{font-size:10px;color:var(--ai-muted)}
-    .f-tx-right{text-align:right}
-    .f-tx-amount{font-size:13px;font-weight:700;color:var(--gold-lt)}
-    .f-tx-status{font-size:9px;color:var(--ai-muted);margin-top:2px}
-    /* Withdrawal btn */
-    .f-withdraw-btn{
-      margin:16px 20px 0;width:calc(100% - 40px);padding:15px;
-      background:rgba(184,150,62,.1);border:1px solid rgba(184,150,62,.35);
-      border-radius:var(--r-md);color:var(--gold-lt);
-      font-size:13px;font-weight:700;letter-spacing:.08em;
-      display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;
-      transition:all .2s;font-family:var(--f-body)
-    }
-    .f-withdraw-btn:active{background:rgba(184,150,62,.2)}
-
-    /* ── Fairy My Page ── */
-    .f-my-profile{
-      padding:28px 20px 24px;
-      background:linear-gradient(160deg,#1C1208 0%,var(--bg) 100%);
-      border-bottom:1px solid rgba(184,150,62,.1)
-    }
-    .f-my-avatar-row{display:flex;align-items:center;gap:16px;margin-bottom:16px}
-    .f-my-avatar{
-      width:64px;height:64px;border-radius:50%;
-      background:var(--gold-grd);display:flex;align-items:center;justify-content:center;
-      font-size:28px;box-shadow:0 4px 20px rgba(184,150,62,.35);flex-shrink:0
-    }
-    .f-my-name{font-family:var(--f-display);font-size:22px;font-weight:400;font-style:italic;color:var(--ai-text);margin-bottom:3px}
-    .f-my-email{font-size:12px;color:var(--ai-muted)}
-    /* Fairy grade badge */
-    .f-grade-badge{
-      display:inline-flex;align-items:center;gap:6px;
-      padding:6px 14px;border-radius:14px;
-      background:var(--gold-grd);color:#fff;
-      font-size:11px;font-weight:700;letter-spacing:.08em;
-      box-shadow:0 3px 12px rgba(184,150,62,.4);margin-top:6px
-    }
-    /* Grade progress */
-    .f-grade-progress{
-      margin:0 20px 16px;padding:14px 16px;
-      background:var(--card);border-radius:var(--r-md);border:1px solid rgba(184,150,62,.12)
-    }
-    .f-grade-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-    .f-grade-label{font-size:10px;color:var(--ai-muted)}
-    .f-grade-next{font-size:10px;color:var(--gold-lt)}
-    .f-grade-bar{height:4px;border-radius:2px;background:rgba(184,150,62,.12);overflow:hidden}
-    .f-grade-fill{height:100%;border-radius:2px;background:var(--gold-grd);width:65%}
-    .f-grade-hint{font-size:9px;color:var(--ai-muted);margin-top:6px;text-align:center}
-    /* Stats */
-    .f-my-stats{display:flex;gap:1px;margin:0 16px 16px}
-    .f-my-stat{
-      flex:1;padding:14px;background:rgba(184,150,62,.05);
-      border:1px solid rgba(184,150,62,.1);
-      display:flex;flex-direction:column;align-items:center;gap:4px
-    }
-    .f-my-stat:first-child{border-radius:var(--r-sm) 0 0 var(--r-sm)}
-    .f-my-stat:last-child{border-radius:0 var(--r-sm) var(--r-sm) 0}
-    .f-my-stat-num{font-family:var(--f-display);font-size:18px;font-weight:600;color:var(--gold-lt)}
-    .f-my-stat-label{font-size:9px;color:var(--ai-muted);letter-spacing:.06em;text-align:center}
-    /* Return btn */
-    .f-return-btn{
-      margin:0 20px;width:calc(100% - 40px);padding:15px;
-      background:transparent;border:1px solid rgba(184,150,62,.35);
-      border-radius:var(--r-md);color:var(--gold-lt);
-      font-size:13px;font-weight:600;letter-spacing:.06em;
-      display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;
-      transition:all .2s;font-family:var(--f-body)
-    }
-    .f-return-btn:active{background:rgba(184,150,62,.08)}
+    /* TOAST */
+    .toast{position:fixed;bottom:calc(var(--nav)+14px);left:50%;transform:translateX(-50%);background:rgba(26,24,22,.9);color:#fff;padding:10px 22px;border-radius:22px;font-size:12.5px;white-space:nowrap;z-index:999;opacity:0;transition:opacity .25s;pointer-events:none}
+    .toast.show{opacity:1}
   </style>
 </head>
 <body>
 
-<!-- ════════════════════════════
-     SCREEN 1 — HOME
-════════════════════════════ -->
-<div id="screen-home" class="screen active">
-  <div class="scroll">
-    <div class="c-header">
-      <div class="c-header-row">
-        <div class="c-logo">Cinderella</div>
-        <div style="display:flex;gap:8px">
-          <button class="c-header-btn" onclick="showToast('알림 없음')">
-            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-          </button>
-          <button class="c-header-btn" onclick="goNav('my',4)">
-            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          </button>
-        </div>
+<!-- LOGIN -->
+<div id="screen-login" class="screen active">
+  <div class="login-wrap">
+    <div class="login-hero">
+      <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=860&q=85" alt=""/>
+      <div class="login-hero-overlay"></div>
+      <div class="login-brand">
+        <div class="login-brand-name">Cinderella</div>
+        <div class="login-brand-sub">정품 인증 명품 렌탈 플랫폼</div>
       </div>
     </div>
-    <!-- Hero Banner -->
-    <div class="home-hero" onclick="goNav('detail',2)">
-      <div class="home-hero-bg"></div>
-      <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80" alt="Hero" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35"/>
-      <div class="home-hero-content">
-        <div class="home-hero-eyebrow">이번 주 스페셜 컬렉션</div>
-        <div class="home-hero-title">Chanel Classic<br>Flap Series</div>
-        <button class="home-hero-btn">
-          <svg width="12" height="12" viewBox="0 0 24 24" stroke="#fff" fill="none" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          지금 둘러보기
-        </button>
-      </div>
-    </div>
-    <!-- Stats -->
-    <div class="home-stats">
-      <div class="home-stat">
-        <div class="home-stat-num">2.4K</div>
-        <div class="home-stat-label">명품 아이템</div>
-      </div>
-      <div class="home-stat">
-        <div class="home-stat-num">98%</div>
-        <div class="home-stat-label">인증 정품</div>
-      </div>
-      <div class="home-stat">
-        <div class="home-stat-num">4.9★</div>
-        <div class="home-stat-label">만족도</div>
-      </div>
-    </div>
-    <!-- Category -->
-    <div class="home-section-header">
-      <div>
-        <div class="home-section-title">카테고리</div>
-      </div>
-    </div>
-    <div class="home-cats">
-      <button class="home-cat active" onclick="filterCat(this,'all')">전체</button>
-      <button class="home-cat" onclick="filterCat(this,'bag')">가방</button>
-      <button class="home-cat" onclick="filterCat(this,'watch')">시계</button>
-      <button class="home-cat" onclick="filterCat(this,'jewelry')">주얼리</button>
-      <button class="home-cat" onclick="filterCat(this,'shoes')">슈즈</button>
-      <button class="home-cat" onclick="filterCat(this,'clothing')">의류</button>
-    </div>
-    <!-- Recommended -->
-    <div class="home-section-header">
-      <div>
-        <div class="home-section-title">추천 아이템</div>
-        <div class="home-section-sub">AI가 선별한 오늘의 추천</div>
-      </div>
-      <button class="home-see-all" onclick="goNav('ai',1)">더보기</button>
-    </div>
-    <div class="home-hscroll">
-      <div class="home-hcard" onclick="goNav('detail',2)">
-        <div class="home-hcard-img">
-          <img src="https://images.unsplash.com/photo-1584917865442-de89be144b2d?auto=format&fit=crop&w=400&q=80" alt="Hermès Birkin"/>
-          <div class="home-hcard-overlay"></div>
-          <div class="home-hcard-ins">보험 적용</div>
-        </div>
-        <div class="home-hcard-body">
-          <div class="home-hcard-brand">Hermès</div>
-          <div class="home-hcard-name">Birkin 30 Gold HW</div>
-          <div class="home-hcard-price">₩80,000<span>/일</span></div>
-        </div>
-      </div>
-      <div class="home-hcard" onclick="goNav('detail',2)">
-        <div class="home-hcard-img">
-          <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=400&q=80" alt="Chanel Flap"/>
-          <div class="home-hcard-overlay"></div>
-          <div class="home-hcard-ins">보험 적용</div>
-        </div>
-        <div class="home-hcard-body">
-          <div class="home-hcard-brand">Chanel</div>
-          <div class="home-hcard-name">Classic Flap Medium</div>
-          <div class="home-hcard-price">₩70,000<span>/일</span></div>
-        </div>
-      </div>
-      <div class="home-hcard" onclick="goNav('detail',2)">
-        <div class="home-hcard-img">
-          <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=400&q=80" alt="Cartier"/>
-          <div class="home-hcard-overlay"></div>
-          <div class="home-hcard-ins">보험 적용</div>
-        </div>
-        <div class="home-hcard-body">
-          <div class="home-hcard-brand">Cartier</div>
-          <div class="home-hcard-name">Love Necklace 18K</div>
-          <div class="home-hcard-price">₩35,000<span>/일</span></div>
-        </div>
-      </div>
-      <div class="home-hcard" onclick="goNav('detail',2)">
-        <div class="home-hcard-img">
-          <img src="https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=400&q=80" alt="Dior"/>
-          <div class="home-hcard-overlay"></div>
-          <div class="home-hcard-ins">보험 적용</div>
-        </div>
-        <div class="home-hcard-body">
-          <div class="home-hcard-brand">Dior</div>
-          <div class="home-hcard-name">Saddle Bag Oblique</div>
-          <div class="home-hcard-price">₩55,000<span>/일</span></div>
-        </div>
-      </div>
-    </div>
-    <!-- Near me section -->
-    <div style="height:24px"></div>
-    <div class="home-section-header">
-      <div>
-        <div class="home-section-title">내 주변 렌탈</div>
-        <div class="home-section-sub">강남구 · GPS 기준 2km 이내</div>
-      </div>
-      <button class="home-see-all" onclick="showToast('지도 보기')">지도</button>
-    </div>
-    <div style="margin:0 16px 24px;background:var(--card);border-radius:var(--r-lg);border:1px solid rgba(184,150,62,.12);overflow:hidden">
-      <div style="height:120px;background:linear-gradient(160deg,#181410,#0E0C0A);position:relative;display:flex;align-items:center;justify-content:center">
-        <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 60%,rgba(184,150,62,.1) 0%,transparent 60%)"></div>
-        <div style="text-align:center;position:relative;z-index:1">
-          <div style="font-size:11px;color:var(--ai-muted);margin-bottom:6px;letter-spacing:.06em">GPS 사용 허용 후 이용 가능</div>
-          <button style="padding:8px 20px;border-radius:20px;background:var(--gold-grd);color:#fff;font-size:12px;font-weight:700;box-shadow:var(--shadow-gold)" onclick="showToast('위치 권한 요청 중...')">위치 허용하기</button>
-        </div>
-        <!-- Pin markers -->
-        <div style="position:absolute;top:28px;left:30%;width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px rgba(184,150,62,.6)"></div>
-        <div style="position:absolute;top:50px;right:25%;width:8px;height:8px;border-radius:50%;background:var(--gold-lt);box-shadow:0 0 10px rgba(212,184,106,.5)"></div>
-        <div style="position:absolute;bottom:24px;left:55%;width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px rgba(184,150,62,.5)"></div>
-      </div>
-    </div>
-    <div style="height:8px"></div>
-  </div>
-</div>
-
-<!-- ════════════════════════════
-     SCREEN 2 — AI STYLIST
-════════════════════════════ -->
-<div id="screen-ai" class="screen">
-  <div class="scroll">
-    <div class="ai-header">
-      <div class="ai-header-top">
-        <div class="ai-title-group">
-          <div class="ai-wand-icon">
-            <svg viewBox="0 0 24 24"><path d="M15 4l5 5-9 9-5-5 9-9z"/><line x1="3" y1="21" x2="8" y2="16"/><line x1="19" y1="3" x2="21" y2="5"/><line x1="5" y1="3" x2="7" y2="5"/></svg>
-          </div>
-          <div>
-            <div class="ai-title">AI 스타일리스트</div>
-            <div class="ai-title-sub">Powered by Cinderella AI</div>
-          </div>
-        </div>
-        <div class="ai-badge">BETA</div>
-      </div>
-    </div>
-    <div class="ai-occasion-section">
-      <div class="ai-section-label">오늘의 상황을 선택하세요</div>
-      <div class="ai-chips">
-        <button class="ai-chip selected" onclick="selectChip(this,'wedding')"><span class="chip-emoji">💒</span>결혼식 하객</button>
-        <button class="ai-chip" onclick="selectChip(this,'date')"><span class="chip-emoji">🌹</span>소개팅</button>
-        <button class="ai-chip" onclick="selectChip(this,'interview')"><span class="chip-emoji">💼</span>취업 면접</button>
-        <button class="ai-chip" onclick="selectChip(this,'photo')"><span class="chip-emoji">📸</span>사진 촬영</button>
-        <button class="ai-chip" onclick="selectChip(this,'vip')"><span class="chip-emoji">✨</span>VIP 파티</button>
-        <button class="ai-chip" onclick="selectChip(this,'grad')"><span class="chip-emoji">🎓</span>졸업식</button>
-      </div>
-    </div>
-    <div class="ai-divider"></div>
-    <div class="ai-analyzing" id="ai-analyzing-bar">
-      <div class="ai-analyzing-dot"></div>
-      <div class="ai-analyzing-text">AI가 결혼식 하객 최적 스타일을 분석 중입니다...</div>
-    </div>
-    <div class="ai-result-label">
-      <div class="ai-result-title">추천 착장 3선</div>
-      <div class="ai-result-count">매칭률 상위 3개</div>
-    </div>
-    <div class="ai-cards">
-      <div class="ai-card picked" onclick="pickCard(this)">
-        <div class="ai-card-inner">
-          <div class="ai-card-img">
-            <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=300&q=80" alt="Valentino"/>
-            <div class="ai-card-img-overlay"></div>
-            <div class="ai-card-rank">1</div>
-          </div>
-          <div class="ai-card-body">
-            <div>
-              <div class="ai-card-brand">Valentino</div>
-              <div class="ai-card-name">Garavani Silk Evening Gown</div>
-              <div class="ai-card-reason">결혼식 분위기에 가장 잘 어울리는 프리미엄 실크 소재. 격식과 우아함을 동시에 완성합니다.</div>
-            </div>
-            <div class="ai-card-footer">
-              <div class="ai-card-price">₩55,000<span>/일</span></div>
-              <div class="ai-card-match">98% 매칭</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="ai-card" onclick="pickCard(this)">
-        <div class="ai-card-inner">
-          <div class="ai-card-img">
-            <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=300&q=80" alt="Cartier"/>
-            <div class="ai-card-img-overlay"></div>
-            <div class="ai-card-rank">2</div>
-          </div>
-          <div class="ai-card-body">
-            <div>
-              <div class="ai-card-brand">Cartier</div>
-              <div class="ai-card-name">Love Necklace 18K Yellow Gold</div>
-              <div class="ai-card-reason">어떤 드레스에도 화룡점정. 하객룩의 완성도를 한 단계 끌어올립니다.</div>
-            </div>
-            <div class="ai-card-footer">
-              <div class="ai-card-price">₩35,000<span>/일</span></div>
-              <div class="ai-card-match">94% 매칭</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="ai-card" onclick="pickCard(this)">
-        <div class="ai-card-inner">
-          <div class="ai-card-img">
-            <img src="https://images.unsplash.com/photo-1584917865442-de89be144b2d?auto=format&fit=crop&w=300&q=80" alt="Hermès"/>
-            <div class="ai-card-img-overlay"></div>
-            <div class="ai-card-rank">3</div>
-          </div>
-          <div class="ai-card-body">
-            <div>
-              <div class="ai-card-brand">Hermès</div>
-              <div class="ai-card-name">Birkin 30 Togo Leather Gold HW</div>
-              <div class="ai-card-reason">세계에서 가장 가치 있는 핸드백. 자연스러운 토고 그레인이 클래시한 격조를 더합니다.</div>
-            </div>
-            <div class="ai-card-footer">
-              <div class="ai-card-price">₩80,000<span>/일</span></div>
-              <div class="ai-card-match">91% 매칭</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="ai-cta-wrap">
-      <button class="ai-cta-btn" onclick="aiBookStyle()">
-        <span>✦</span>이 스타일로 예약하기
+    <div class="login-body">
+      <p class="login-desc">요정의 명품을 빌려 <strong>나만의 신데렐라 순간</strong>을 만드세요.<br/>결혼식, 소개팅, 특별한 그 날을 위해.</p>
+      <button class="btn-google" onclick="doLogin()">
+        <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Google 계정으로 시작하기
       </button>
-      <div class="ai-cta-sub">선택된 아이템 · 예약 가능 날짜 자동 확인</div>
+      <p class="login-terms">계속 진행하면 Cinderella의 <a href="#">이용약관</a> 및 <a href="#">개인정보처리방침</a>에 동의합니다.</p>
     </div>
-    <div style="height:24px"></div>
   </div>
 </div>
 
-<!-- ════════════════════════════
-     SCREEN 3 — DETAIL
-════════════════════════════ -->
+<!-- HOME -->
+<div id="screen-home" class="screen">
+  <div class="topbar">
+    <div class="topbar-logo">Cinderella</div>
+    <div class="topbar-icons">
+      <button onclick="goScreen('search',null)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+      <button onclick="goScreen('wish',3)" style="position:relative"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+    </div>
+  </div>
+  <div class="scroll">
+    <div class="home-hero">
+      <div class="home-hero-eyebrow">P2P Luxury Rental Platform</div>
+      <div class="home-hero-headline">럭셔리를 <em>나의 것</em>으로</div>
+      <div class="home-hero-sub">요정들의 명품을 빌려 당신만의 신데렐라 순간을 만드세요</div>
+      <div class="cert-badges">
+        <div class="cert-badge cert-badge-auth">✓ 인증 정품 100% 보장</div>
+        <div class="cert-badge cert-badge-ins">🛡 보험 가입 완료</div>
+      </div>
+    </div>
+    <div class="filter-section">
+      <div class="cat-pills" id="home-cat-pills">
+        <div class="cat-pill active" onclick="setCat(this,'all')">전체</div>
+        <div class="cat-pill" onclick="setCat(this,'bag')">핸드백</div>
+        <div class="cat-pill" onclick="setCat(this,'watch')">시계</div>
+        <div class="cat-pill" onclick="setCat(this,'jewelry')">주얼리</div>
+        <div class="cat-pill" onclick="setCat(this,'shoes')">슈즈</div>
+        <div class="cat-pill" onclick="setCat(this,'dress')">의류</div>
+      </div>
+      <div class="brand-pills" id="home-brand-pills">
+        <div class="brand-pill active" onclick="setBrand(this,'all')">All Brands</div>
+        <div class="brand-pill" onclick="setBrand(this,'Louis Vuitton')">Louis Vuitton</div>
+        <div class="brand-pill" onclick="setBrand(this,'Chanel')">Chanel</div>
+        <div class="brand-pill" onclick="setBrand(this,'Hermès')">Hermès</div>
+        <div class="brand-pill" onclick="setBrand(this,'Dior')">Dior</div>
+        <div class="brand-pill" onclick="setBrand(this,'Gucci')">Gucci</div>
+        <div class="brand-pill" onclick="setBrand(this,'Cartier')">Cartier</div>
+        <div class="brand-pill" onclick="setBrand(this,'Rolex')">Rolex</div>
+        <div class="brand-pill" onclick="setBrand(this,'Valentino')">Valentino</div>
+      </div>
+      <div class="sort-row">
+        <div class="results-txt" id="home-count">0개 아이템</div>
+        <div class="sort-pills">
+          <div class="sort-pill active" onclick="setSort(this,'popular')">인기순</div>
+          <div class="sort-pill" onclick="setSort(this,'price_asc')">낮은가격</div>
+          <div class="sort-pill" onclick="setSort(this,'price_desc')">높은가격</div>
+          <div class="sort-pill" onclick="setSort(this,'new')">신상품</div>
+        </div>
+      </div>
+    </div>
+    <div class="item-list" id="home-list"></div>
+  </div>
+</div>
+
+<!-- SEARCH -->
+<div id="screen-search" class="screen">
+  <div class="topbar">
+    <div style="flex:1;display:flex;align-items:center;gap:9px;padding:8px 10px;background:var(--ivory);border-radius:12px;">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#A09589" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="search-q" placeholder="브랜드, 상품명 검색" oninput="doSearch()" style="flex:1;border:none;background:none;font-size:13.5px;color:var(--charcoal);outline:none;"/>
+    </div>
+    <button onclick="goScreen('home',0)" style="color:var(--mid);font-size:13px;font-weight:500;white-space:nowrap;padding-left:8px">취소</button>
+  </div>
+  <div class="filter-section" style="border-top:none;">
+    <div class="brand-pills" style="padding-top:12px;">
+      <div class="brand-pill active" onclick="setSearchBrand(this,'all')">All</div>
+      <div class="brand-pill" onclick="setSearchBrand(this,'Louis Vuitton')">LV</div>
+      <div class="brand-pill" onclick="setSearchBrand(this,'Chanel')">Chanel</div>
+      <div class="brand-pill" onclick="setSearchBrand(this,'Hermès')">Hermès</div>
+      <div class="brand-pill" onclick="setSearchBrand(this,'Dior')">Dior</div>
+      <div class="brand-pill" onclick="setSearchBrand(this,'Gucci')">Gucci</div>
+      <div class="brand-pill" onclick="setSearchBrand(this,'Cartier')">Cartier</div>
+      <div class="brand-pill" onclick="setSearchBrand(this,'Rolex')">Rolex</div>
+      <div class="brand-pill" onclick="setSearchBrand(this,'Valentino')">Valentino</div>
+    </div>
+    <div class="sort-row">
+      <div class="results-txt" id="search-count">0개 아이템</div>
+    </div>
+  </div>
+  <div class="scroll"><div class="item-list" id="search-list"></div></div>
+</div>
+
+<!-- AI 스타일 화면 -->
+<div id="screen-style" class="screen">
+  <div class="topbar">
+    <div class="topbar-logo">AI 스타일 추천</div>
+  </div>
+  <div class="scroll">
+    <div class="style-header">
+      <div class="style-question">어떤 자리에 가세요?</div>
+      <div class="event-pills" id="event-pills">
+        <div class="event-pill active" onclick="setEvent(this,'wedding')">👰 결혼식</div>
+        <div class="event-pill" onclick="setEvent(this,'date')">💕 소개팅</div>
+        <div class="event-pill" onclick="setEvent(this,'gala')">✨ 갈라파티</div>
+        <div class="event-pill" onclick="setEvent(this,'biz')">💼 비즈니스</div>
+        <div class="event-pill" onclick="setEvent(this,'casual')">☀️ 캐주얼</div>
+      </div>
+    </div>
+    <div class="look-section-label">추천 착장</div>
+    <div class="look-cards" id="look-cards"></div>
+  </div>
+</div>
+
+<!-- DETAIL -->
 <div id="screen-detail" class="screen">
-  <div class="scroll">
-    <div class="detail-img-wrap">
-      <img src="https://images.unsplash.com/photo-1584917865442-de89be144b2d?auto=format&fit=crop&w=800&q=80" alt="Hermès Birkin"/>
-      <div class="detail-img-overlay"></div>
-      <button class="detail-back-btn" onclick="goNav('home',0)">
-        <svg width="18" height="18" viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-      </button>
-      <button class="detail-wish-btn" id="wishBtn" onclick="toggleWish()">
-        <svg width="16" height="16" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-      </button>
-      <div class="detail-img-badges">
-        <div class="detail-badge detail-badge-gold">S급 컨디션</div>
-        <div class="detail-badge detail-badge-ins">보험 적용</div>
+  <div class="detail-img-wrap" id="det-img-wrap">
+    <img id="det-img" src="" alt=""/>
+    <button class="det-back" onclick="goBack()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A1816" stroke-width="2.2"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <button class="det-wish" id="det-wish-btn" onclick="toggleWish()">♡</button>
+    <div class="img-prev" onclick="prevImg()">‹</div>
+    <div class="img-next" onclick="nextImg()">›</div>
+    <div class="img-dots" id="img-dots"></div>
+  </div>
+  <div class="det-body">
+    <div class="det-header">
+      <div class="det-badges">
+        <div class="badge-brand" id="det-brand"></div>
+        <div class="badge-grade" id="det-grade"></div>
+        <div class="badge-auth">✓ 정품 인증</div>
+      </div>
+      <div class="det-name" id="det-name"></div>
+      <div class="det-price-row">
+        <div class="det-price" id="det-price"></div>
+        <div class="det-per">/ 4시간~</div>
+        <div class="det-stars-row" style="padding:0;border:none;margin-left:auto;">
+          <div class="det-stars" id="det-stars"></div>
+          <div class="det-reviews" id="det-reviews"></div>
+        </div>
       </div>
     </div>
-    <div class="detail-body">
-      <div class="detail-brand">Hermès Paris</div>
-      <div class="detail-name">Birkin 30<br>Togo Leather Gold HW</div>
-      <div class="detail-desc">세계에서 가장 아이코닉한 핸드백. 토고 가죽 특유의 자연스러운 그레인 텍스처와 골드 하드웨어의 조화가 타임리스한 럭셔리를 완성합니다. G2 인증 전문가의 3중 검증을 통과한 정품입니다.</div>
-      <div class="detail-price-row">
-        <div class="detail-price" id="detailPriceDisplay">₩80,000</div>
-        <div class="detail-price-unit">/일</div>
-        <div class="detail-price-retail">소비자가 ₩24,000,000</div>
+    <div class="seller-card">
+      <div class="seller-av"><img id="det-owner-img" src="" alt=""/></div>
+      <div class="seller-info">
+        <div class="seller-name" id="det-owner-name"></div>
+        <div class="seller-temp">
+          <div class="temp-num" id="det-temp"></div>
+          <div id="det-temp-emoji"></div>
+          <div class="temp-bar-wrap"><div class="temp-bar-fill" id="det-temp-bar"></div></div>
+        </div>
+        <div class="seller-loc-txt" id="det-owner-loc"></div>
       </div>
-      <div class="detail-section-label">렌탈 기간 선택</div>
-      <div class="detail-duration-row">
-        <button class="detail-dur-btn active" onclick="selectDur(this,1,'₩80,000')">
-          1일<span class="detail-dur-price">₩80,000</span>
-        </button>
-        <button class="detail-dur-btn" onclick="selectDur(this,2,'₩144,000')">
-          2일<span class="detail-dur-price">₩144,000</span>
-        </button>
-        <button class="detail-dur-btn" onclick="selectDur(this,3,'₩192,000')">
-          3일<span class="detail-dur-price">₩192,000</span>
-        </button>
-        <button class="detail-dur-btn" onclick="selectDur(this,7,'₩420,000')">
-          7일<span class="detail-dur-price">₩420,000</span>
-        </button>
-      </div>
-      <div class="detail-section-label">상품 정보</div>
-      <div class="detail-spec-grid">
-        <div class="detail-spec-item">
-          <div class="detail-spec-key">브랜드</div>
-          <div class="detail-spec-val">Hermès</div>
-        </div>
-        <div class="detail-spec-item">
-          <div class="detail-spec-key">소재</div>
-          <div class="detail-spec-val">Togo Leather</div>
-        </div>
-        <div class="detail-spec-item">
-          <div class="detail-spec-key">사이즈</div>
-          <div class="detail-spec-val">30cm</div>
-        </div>
-        <div class="detail-spec-item">
-          <div class="detail-spec-key">컨디션</div>
-          <div class="detail-spec-val">S급 (미사용)</div>
-        </div>
-        <div class="detail-spec-item">
-          <div class="detail-spec-key">하드웨어</div>
-          <div class="detail-spec-val">골드 도금</div>
-        </div>
-        <div class="detail-spec-item">
-          <div class="detail-spec-key">인증</div>
-          <div class="detail-spec-val">G2 정품 인증</div>
-        </div>
-      </div>
-      <div class="detail-cta-row">
-        <button class="detail-cta-primary" onclick="goNav('checkout',3)">예약하기</button>
-        <button class="detail-cta-secondary" onclick="showToast('공유 링크 복사됨')">
-          <svg width="16" height="16" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-        </button>
-      </div>
+      <div class="seller-chat-btn" onclick="showToast('채팅 기능 준비 중입니다')">채팅하기</div>
     </div>
-    <div style="height:16px"></div>
+    <div class="ins-box">
+      <div class="ins-box-title">🛡 보험 가입 완료 · 정품 보증</div>
+      <div class="ins-box-desc">이 아이템은 훼손·분실 보험이 적용됩니다.<br/>정품 감정 완료 제품만 플랫폼에 등록됩니다.</div>
+    </div>
+    <div class="det-section">
+      <div class="section-label">상품 정보</div>
+      <div class="det-desc" id="det-desc"></div>
+      <div class="spec-chips" id="det-specs"></div>
+    </div>
+    <div class="cal-wrap">
+      <div class="section-label">대여 가능 날짜</div>
+      <div class="cal-head">
+        <div class="cal-month" id="cal-month-txt"></div>
+        <div style="display:flex;gap:6px;">
+          <div class="cal-nav" onclick="calPrev()">‹</div>
+          <div class="cal-nav" onclick="calNext()">›</div>
+        </div>
+      </div>
+      <div class="cal-grid-labels" id="cal-labels"></div>
+      <div class="cal-grid" id="cal-cells"></div>
+    </div>
+  </div>
+  <div class="det-cta">
+    <div class="cta-wish" id="cta-wish-btn" onclick="toggleWish()">♡</div>
+    <button class="cta-rent" onclick="showSheet()">지금 빌리기</button>
   </div>
 </div>
 
-<!-- ════════════════════════════
-     SCREEN 4 — CHECKOUT
-════════════════════════════ -->
-<div id="screen-checkout" class="screen">
-  <div class="scroll">
-    <div class="checkout-header">
-      <button class="checkout-back" onclick="goNav('detail',2)">
-        <svg width="18" height="18" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-      </button>
-      <div class="checkout-title">예약 결제</div>
-    </div>
-    <!-- Steps -->
-    <div class="checkout-steps">
-      <div class="checkout-step done">
-        <div class="checkout-step-circle">✓</div>
-        <div class="checkout-step-label">선택</div>
-      </div>
-      <div class="checkout-step-line"></div>
-      <div class="checkout-step active">
-        <div class="checkout-step-circle">2</div>
-        <div class="checkout-step-label">결제</div>
-      </div>
-      <div class="checkout-step-line"></div>
-      <div class="checkout-step">
-        <div class="checkout-step-circle">3</div>
-        <div class="checkout-step-label">완료</div>
-      </div>
-    </div>
-    <!-- Summary -->
-    <div class="co-summary">
-      <div class="co-summary-row">
-        <div class="co-summary-img">
-          <img src="https://images.unsplash.com/photo-1584917865442-de89be144b2d?auto=format&fit=crop&w=200&q=80" alt="Birkin"/>
-        </div>
-        <div class="co-summary-info">
-          <div class="co-summary-brand">Hermès Paris</div>
-          <div class="co-summary-name">Birkin 30 Togo Gold HW</div>
-          <div class="co-summary-tags">
-            <span class="co-tag co-tag-gold" id="coRentalPeriod">1일 렌탈</span>
-            <span class="co-tag co-tag-green">보험 포함</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Address -->
-    <div class="co-section">
-      <div class="co-section-title">배송 주소</div>
-      <div class="co-input-group" style="border-radius:var(--r-md) var(--r-md) 0 0;margin-bottom:1px">
-        <div class="co-input-label">받는 분</div>
-        <input class="co-input" type="text" placeholder="이름 입력"/>
-      </div>
-      <div class="co-input-group" style="border-radius:0;margin-bottom:1px">
-        <div class="co-input-label">연락처</div>
-        <input class="co-input" type="tel" placeholder="010-0000-0000"/>
-      </div>
-      <div class="co-input-group" style="border-radius:0 0 var(--r-md) var(--r-md)">
-        <div class="co-input-label">주소</div>
-        <input class="co-input" type="text" placeholder="주소 검색" onclick="showToast('주소 검색')"/>
-      </div>
-    </div>
-    <!-- Payment method -->
-    <div class="co-section">
-      <div class="co-section-title">결제 수단</div>
-      <div class="co-pay-methods">
-        <button class="co-pay-btn active" onclick="selectPay(this)">
-          <svg width="18" height="18" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-          <span class="co-pay-label">카드 결제</span>
-        </button>
-        <button class="co-pay-btn" onclick="selectPay(this)">
-          <svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M8 12l2 2 4-4"/></svg>
-          <span class="co-pay-label">간편결제</span>
-        </button>
-        <button class="co-pay-btn" onclick="selectPay(this)">
-          <svg width="18" height="18" viewBox="0 0 24 24"><path d="M21 4H3a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><path d="M3 10h18"/></svg>
-          <span class="co-pay-label">계좌이체</span>
-        </button>
-        <button class="co-pay-btn" onclick="selectPay(this)">
-          <svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><path d="M12 6v6l4 2"/></svg>
-          <span class="co-pay-label">후불결제</span>
-        </button>
-      </div>
-    </div>
-    <!-- Price -->
-    <div class="co-price-card">
-      <div class="co-price-row">
-        <span class="co-price-label">렌탈 비용</span>
-        <span class="co-price-value" id="coRentalFee">₩80,000</span>
-      </div>
-      <div class="co-price-row">
-        <span class="co-price-label">보험료</span>
-        <span class="co-price-value green">포함</span>
-      </div>
-      <div class="co-price-row">
-        <span class="co-price-label">배송비</span>
-        <span class="co-price-value green">무료</span>
-      </div>
-      <div class="co-price-total-row">
-        <span class="co-price-total-label">최종 결제금액</span>
-        <span class="co-price-total" id="coFinalPrice">₩80,000</span>
-      </div>
-    </div>
-    <button class="co-submit-btn" onclick="submitOrder()">
-      <span>✦</span>지금 예약하기
-    </button>
-    <div style="height:24px"></div>
+<!-- 좋아요 (위시리스트) -->
+<div id="screen-wish" class="screen">
+  <div class="topbar">
+    <div class="topbar-logo">좋아요</div>
   </div>
-  <!-- Success overlay -->
-  <div class="co-success" id="co-success">
-    <div class="co-success-ring">
-      <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-        <path d="M9 18l6 6 12-12" stroke="#D4B86A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
-    <div class="co-success-title">예약 완료</div>
-    <div class="co-success-sub">Hermès Birkin 30이 내일까지<br>안전하게 배송됩니다.</div>
-    <div class="co-success-order">
-      <div class="co-success-order-label">예약 번호</div>
-      <div class="co-success-order-num" id="orderNum">CND-20260523-0001</div>
-    </div>
-    <button class="co-success-restart" onclick="resetOrder()">홈으로 돌아가기</button>
+  <div class="wish-empty">
+    <div class="wish-empty-icon">♡</div>
+    <div class="wish-empty-txt">아직 찜한 아이템이 없습니다.<br/>마음에 드는 명품을 찜해보세요.</div>
   </div>
 </div>
 
-<!-- ════════════════════════════
-     SCREEN 5 — MY PAGE
-════════════════════════════ -->
-<div id="screen-my" class="screen">
+<!-- REGISTER -->
+<div id="screen-register" class="screen">
+  <div class="topbar">
+    <div class="topbar-logo">내 명품 등록</div>
+  </div>
   <div class="scroll">
-    <!-- Profile -->
+    <div class="reg-header">
+      <div class="reg-title">요정이 되어보세요</div>
+      <div class="reg-sub">사용하지 않는 명품으로 수익을 만들어보세요.<br/>정품 인증 후 플랫폼에 등록되며, 훼손·분실 보험이 적용됩니다.</div>
+    </div>
+    <div class="form-wrap">
+      <div class="form-group">
+        <label class="form-label">카테고리</label>
+        <div class="chip-row">
+          <div class="chip sel" onclick="selChip(this,'cat')">핸드백</div>
+          <div class="chip" onclick="selChip(this,'cat')">시계</div>
+          <div class="chip" onclick="selChip(this,'cat')">주얼리</div>
+          <div class="chip" onclick="selChip(this,'cat')">슈즈</div>
+          <div class="chip" onclick="selChip(this,'cat')">의류</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">브랜드</label>
+        <input class="form-input" placeholder="예: Chanel"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">정식 상품명</label>
+        <input class="form-input" placeholder="예: Classic Flap Medium Caviar Black"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">상태 등급</label>
+        <div class="grade-row">
+          <div class="grade-btn sel" onclick="selChip(this,'grade')">S급<small>새상품급</small></div>
+          <div class="grade-btn" onclick="selChip(this,'grade')">A급<small>상급</small></div>
+          <div class="grade-btn" onclick="selChip(this,'grade')">B급<small>중급</small></div>
+          <div class="grade-btn" onclick="selChip(this,'grade')">C급<small>보통</small></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">실물 사진 (최대 5장)</label>
+        <div class="upload-zone" onclick="showToast('카메라/앨범 연결 예정')">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#A09589" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <div class="upload-label">실물 사진 직접 촬영</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">설명</label>
+        <textarea class="form-textarea" placeholder="구입 시기, 착용 횟수, 보관 상태를 자세히 적어주세요"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">4시간 기준 대여료</label>
+        <div class="price-inline">
+          <input class="form-input" type="number" placeholder="0" id="price-input" oninput="updateEarn()"/>
+          <div class="price-unit-txt">원 / 4시간</div>
+        </div>
+      </div>
+      <div class="earn-box">
+        <div class="earn-eyebrow">예상 수익 (요정 몫 85%)</div>
+        <div class="earn-row"><div class="earn-desc">1일 (4시간×2) 기준</div><div class="earn-val" id="earn-day">₩0</div></div>
+        <div class="earn-row"><div class="earn-desc">월 20일 기준</div><div class="earn-val" id="earn-month">₩0</div></div>
+      </div>
+      <button class="btn-primary" onclick="showToast('등록이 완료되었습니다 ✓')">등록하기</button>
+    </div>
+  </div>
+</div>
+
+<!-- MYPAGE -->
+<div id="screen-mypage" class="screen">
+  <div class="topbar">
+    <div class="topbar-logo">마이페이지</div>
+  </div>
+  <div class="scroll">
     <div class="my-profile">
-      <div class="my-avatar-row">
-        <div class="my-avatar">K</div>
-        <div>
-          <div class="my-name">강경구</div>
-          <div class="my-email">kgg2512@gmail.com</div>
-          <div class="my-member-badge">
-            <svg width="10" height="10" viewBox="0 0 24 24" stroke="#fff" fill="none" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            Gold Member
-          </div>
-        </div>
+      <div class="my-av"><img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=100&q=80" alt=""/></div>
+      <div style="flex:1">
+        <div class="my-name">강경구 님</div>
+        <div class="my-email">user@example.com · Google 계정</div>
       </div>
-      <div class="my-stats">
-        <div class="my-stat">
-          <div class="my-stat-num">12</div>
-          <div class="my-stat-label">총 렌탈</div>
-        </div>
-        <div class="my-stat">
-          <div class="my-stat-num">3</div>
-          <div class="my-stat-label">찜 목록</div>
-        </div>
-        <div class="my-stat">
-          <div class="my-stat-num">Gold</div>
-          <div class="my-stat-label">등급</div>
-        </div>
-        <div class="my-stat">
-          <div class="my-stat-num">4.9</div>
-          <div class="my-stat-label">평점</div>
-        </div>
+      <div class="my-edit">편집</div>
+    </div>
+    <div class="my-temp-card">
+      <div class="my-temp-row">
+        <div class="my-temp-num">42.5°</div>
+        <div class="my-temp-emoji">😊</div>
+        <div class="my-temp-label">요정 온도<br/><span style="font-size:10px;color:var(--muted)">신뢰도 지표</span></div>
+      </div>
+      <div class="my-temp-bar-wrap"><div class="my-temp-bar" style="width:42.5%"></div></div>
+    </div>
+    <div class="my-role-row">
+      <div class="role-card active" onclick="switchRole(this)">
+        <div class="role-icon">👗</div>
+        <div class="role-name">신데렐라</div>
+        <div class="role-desc">명품 빌리기</div>
+      </div>
+      <div class="role-card" onclick="switchRole(this)">
+        <div class="role-icon">✨</div>
+        <div class="role-name">요정</div>
+        <div class="role-desc">명품 빌려주기</div>
       </div>
     </div>
-    <!-- Rental history -->
-    <div class="my-section">
-      <div class="my-section-title">렌탈 내역</div>
-      <div class="my-rental-card" onclick="goNav('detail',2)">
-        <div class="my-rental-img">
-          <img src="https://images.unsplash.com/photo-1584917865442-de89be144b2d?auto=format&fit=crop&w=200&q=80" alt="Birkin"/>
-        </div>
-        <div class="my-rental-info">
-          <div class="my-rental-brand">Hermès</div>
-          <div class="my-rental-name">Birkin 30 Togo Gold HW</div>
-          <div class="my-rental-meta">
-            <span class="my-rental-status status-active">렌탈 중</span>
-            <span class="my-rental-date">~2026.05.25</span>
-          </div>
-        </div>
-        <div class="my-rental-price">₩80,000</div>
-      </div>
-      <div class="my-rental-card" onclick="goNav('detail',2)">
-        <div class="my-rental-img">
-          <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=200&q=80" alt="Chanel"/>
-        </div>
-        <div class="my-rental-info">
-          <div class="my-rental-brand">Chanel</div>
-          <div class="my-rental-name">Classic Flap Medium</div>
-          <div class="my-rental-meta">
-            <span class="my-rental-status status-done">반납 완료</span>
-            <span class="my-rental-date">2026.05.10</span>
-          </div>
-        </div>
-        <div class="my-rental-price">₩70,000</div>
-      </div>
+    <div class="stat-grid">
+      <div class="stat-cell"><div class="stat-val">12</div><div class="stat-label">대여 횟수</div></div>
+      <div class="stat-cell"><div class="stat-val">4.9</div><div class="stat-label">평점</div></div>
+      <div class="stat-cell"><div class="stat-val">7</div><div class="stat-label">좋아요</div></div>
     </div>
-    <!-- Menu -->
-    <div class="my-section">
-      <div class="my-section-title">설정</div>
+    <div class="my-section-title">대여 현황</div>
+    <div class="rental-row">
+      <div class="rental-thumb"><img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=120&q=80" alt=""/></div>
+      <div class="rental-info"><div class="rental-brand">Chanel</div><div class="rental-name">Classic Flap Medium Caviar</div><div class="rental-date">2026.05.20 14:00 – 22:00</div></div>
+      <div class="status-pill s-active">진행중</div>
     </div>
-    <div class="my-menu-list">
-      <div class="my-menu-item" onclick="showToast('찜 목록')">
-        <div class="my-menu-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-        </div>
-        <span class="my-menu-label">찜 목록</span>
-        <span class="my-menu-badge">3</span>
-        <svg class="my-menu-arrow" width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-      </div>
-      <div class="my-menu-item" onclick="showToast('리뷰 관리')">
-        <div class="my-menu-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        </div>
-        <span class="my-menu-label">나의 리뷰</span>
-        <svg class="my-menu-arrow" width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-      </div>
-      <div class="my-menu-item" onclick="showToast('보험 내역')">
-        <div class="my-menu-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
-        <span class="my-menu-label">보험 내역</span>
-        <svg class="my-menu-arrow" width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-      </div>
-      <div class="my-menu-item" onclick="showToast('결제 수단 관리')">
-        <div class="my-menu-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-        </div>
-        <span class="my-menu-label">결제 수단</span>
-        <svg class="my-menu-arrow" width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-      </div>
-      <div class="my-menu-item" onclick="showToast('고객센터 연결 중')">
-        <div class="my-menu-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        </div>
-        <span class="my-menu-label">고객센터</span>
-        <svg class="my-menu-arrow" width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-      </div>
+    <div class="rental-row">
+      <div class="rental-thumb"><img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=120&q=80" alt=""/></div>
+      <div class="rental-info"><div class="rental-brand">Louis Vuitton</div><div class="rental-name">Neverfull MM Monogram</div><div class="rental-date">2026.05.10 12:00 – 18:00</div></div>
+      <div class="status-pill s-end">완료</div>
     </div>
-    <!-- 요정 모드 진입 버튼 -->
-    <div style="padding:0 20px;margin-bottom:16px">
-      <button class="fairy-toggle-btn" onclick="enterFairyMode()">
-        <div class="fairy-toggle-btn-icon">🧚</div>
-        <div class="fairy-toggle-btn-text">
-          <span class="fairy-toggle-btn-title">요정 모드로 전환</span>
-          <span class="fairy-toggle-btn-sub">내 명품을 빌려주고 수익 창출하기</span>
-        </div>
-        <div class="fairy-toggle-btn-arrow">›</div>
-      </button>
-    </div>
-    <div style="height:8px"></div>
-  </div>
-</div>
-
-<!-- ════════════════════════════
-     BOTTOM NAVIGATION
-════════════════════════════ -->
-<!-- ════════════════════════════
-     FAIRY SCREEN 1 — 홈 (수익 현황)
-════════════════════════════ -->
-<div id="fscreen-home" class="fairy-screen active">
-  <div class="scroll">
-    <div class="f-header">
-      <div class="f-header-row">
-        <div class="f-logo">
-          Cinderella
-          <span class="f-badge">🧚 요정 모드</span>
-        </div>
-        <button class="c-header-btn" onclick="showToast('알림 없음')">
-          <svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.7"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-        </button>
-      </div>
-    </div>
-    <!-- 이번 달 수익 히어로 -->
-    <div class="f-home-hero">
-      <div class="f-hero-label">이번 달 수익</div>
-      <div class="f-hero-amount">₩384,000</div>
-      <div class="f-hero-sub">지난 달 대비 +23% 상승</div>
-      <div class="f-hero-stats">
-        <div class="f-hero-stat">
-          <div class="f-hero-stat-num">7건</div>
-          <div class="f-hero-stat-label">예약 건수</div>
-        </div>
-        <div class="f-hero-stat">
-          <div class="f-hero-stat-num">4.9★</div>
-          <div class="f-hero-stat-label">평균 별점</div>
-        </div>
-        <div class="f-hero-stat">
-          <div class="f-hero-stat-num">3개</div>
-          <div class="f-hero-stat-label">등록 아이템</div>
-        </div>
-      </div>
-    </div>
-    <!-- 퀵 스탯 -->
-    <div class="f-stat-row">
-      <div class="f-stat-card">
-        <div class="f-stat-icon">📦</div>
-        <div class="f-stat-num">3</div>
-        <div class="f-stat-label">등록 아이템</div>
-      </div>
-      <div class="f-stat-card">
-        <div class="f-stat-icon">🔄</div>
-        <div class="f-stat-num">1</div>
-        <div class="f-stat-label">렌탈 중</div>
-      </div>
-      <div class="f-stat-card">
-        <div class="f-stat-icon">⏳</div>
-        <div class="f-stat-num">2</div>
-        <div class="f-stat-label">대기 요청</div>
-      </div>
-    </div>
-    <!-- 최근 활동 -->
-    <div style="padding:0 20px">
-      <div style="font-family:var(--f-display);font-size:16px;font-weight:400;font-style:italic;color:var(--ai-text);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(184,150,62,.12)">최근 활동</div>
-      <div class="f-activity-item">
-        <div class="f-activity-dot green"></div>
-        <div class="f-activity-info">
-          <div class="f-activity-title">사용자 kim**** 렌탈 요청</div>
-          <div class="f-activity-sub">Hermès Birkin 30 · 3일 렌탈 · 방금 전</div>
-        </div>
-        <div class="f-activity-amount">₩240,000</div>
-      </div>
-      <div class="f-activity-item">
-        <div class="f-activity-dot gold"></div>
-        <div class="f-activity-info">
-          <div class="f-activity-title">정산 완료</div>
-          <div class="f-activity-sub">Chanel Flap 반납 완료 · 어제</div>
-        </div>
-        <div class="f-activity-amount">₩70,000</div>
-      </div>
-      <div class="f-activity-item">
-        <div class="f-activity-dot muted"></div>
-        <div class="f-activity-info">
-          <div class="f-activity-title">리뷰 등록됨</div>
-          <div class="f-activity-sub">lee**** · 별점 5점 · 2일 전</div>
-        </div>
-        <div class="f-activity-amount">★ 5.0</div>
-      </div>
-    </div>
-    <div style="height:24px"></div>
-  </div>
-</div>
-
-<!-- ════════════════════════════
-     FAIRY SCREEN 2 — 아이템 등록
-════════════════════════════ -->
-<div id="fscreen-register" class="fairy-screen">
-  <div class="scroll">
-    <div class="f-header">
-      <div class="f-header-row">
-        <div class="f-logo">아이템 등록 <span class="f-badge">🧚 요정</span></div>
-      </div>
-    </div>
-    <!-- 카테고리 -->
-    <div class="f-reg-section">
-      <div class="f-reg-title">카테고리 선택</div>
-      <div class="f-cat-grid">
-        <button class="f-cat-btn active" onclick="selectFairyCat(this)">
-          <div class="f-cat-btn-icon">👜</div>
-          <div class="f-cat-btn-label">가방</div>
-        </button>
-        <button class="f-cat-btn" onclick="selectFairyCat(this)">
-          <div class="f-cat-btn-icon">⌚</div>
-          <div class="f-cat-btn-label">시계</div>
-        </button>
-        <button class="f-cat-btn" onclick="selectFairyCat(this)">
-          <div class="f-cat-btn-icon">💍</div>
-          <div class="f-cat-btn-label">주얼리</div>
-        </button>
-        <button class="f-cat-btn" onclick="selectFairyCat(this)">
-          <div class="f-cat-btn-icon">👗</div>
-          <div class="f-cat-btn-label">의류</div>
-        </button>
-        <button class="f-cat-btn" onclick="selectFairyCat(this)">
-          <div class="f-cat-btn-icon">👠</div>
-          <div class="f-cat-btn-label">신발</div>
-        </button>
-        <button class="f-cat-btn" onclick="selectFairyCat(this)">
-          <div class="f-cat-btn-icon">🕶️</div>
-          <div class="f-cat-btn-label">기타</div>
-        </button>
-      </div>
-    </div>
-    <!-- 사진 업로드 -->
-    <div class="f-reg-section">
-      <div class="f-reg-title">사진 업로드 (최대 5장)</div>
-      <div class="f-photo-row">
-        <div class="f-photo-filled">
-          <img src="https://images.unsplash.com/photo-1584917865442-de89be144b2d?auto=format&fit=crop&w=200&q=80" alt="사진1"/>
-          <div class="f-photo-del" onclick="showToast('사진 삭제됨')">×</div>
-        </div>
-        <div class="f-photo-slot" onclick="showToast('사진 선택')">
-          <div class="f-photo-slot-icon">+</div>
-          <div class="f-photo-slot-label">추가</div>
-        </div>
-        <div class="f-photo-slot" onclick="showToast('사진 선택')">
-          <div class="f-photo-slot-icon">+</div>
-          <div class="f-photo-slot-label">추가</div>
-        </div>
-        <div class="f-photo-slot" onclick="showToast('사진 선택')">
-          <div class="f-photo-slot-icon">+</div>
-          <div class="f-photo-slot-label">추가</div>
-        </div>
-        <div class="f-photo-slot" onclick="showToast('사진 선택')">
-          <div class="f-photo-slot-icon">+</div>
-          <div class="f-photo-slot-label">추가</div>
-        </div>
-      </div>
-    </div>
-    <!-- 브랜드/모델명 -->
-    <div class="f-reg-section">
-      <div class="f-reg-title">상품 정보</div>
-      <div class="f-input-group">
-        <div class="f-input-label">브랜드</div>
-        <input class="f-input" type="text" placeholder="예: Hermès, Chanel, Louis Vuitton"/>
-      </div>
-      <div class="f-input-group">
-        <div class="f-input-label">모델명</div>
-        <input class="f-input" type="text" placeholder="예: Birkin 30 Togo Leather Gold HW"/>
-      </div>
-    </div>
-    <!-- 가격 설정 -->
-    <div class="f-reg-section">
-      <div class="f-reg-title">일일 렌탈 가격</div>
-      <div style="background:var(--card);border:1px solid rgba(184,150,62,.15);border-radius:var(--r-md);padding:16px">
-        <div class="f-price-display" id="fairyPriceDisplay">₩50,000</div>
-        <input class="f-slider" type="range" min="10000" max="200000" step="5000" value="50000"
-          oninput="updateFairyPrice(this.value)" style="width:100%"/>
-        <div style="display:flex;justify-content:space-between;margin-top:6px">
-          <span style="font-size:9px;color:var(--ai-muted)">₩10,000</span>
-          <span style="font-size:9px;color:var(--ai-muted)">₩200,000</span>
-        </div>
-      </div>
-    </div>
-    <!-- 보증금 -->
-    <div class="f-reg-section">
-      <div class="f-reg-title">보증금 설정</div>
-      <div class="f-input-group">
-        <div class="f-input-label">보증금 (원)</div>
-        <input class="f-input" type="number" placeholder="예: 500000"/>
-      </div>
-    </div>
-    <!-- 진품 보증서 -->
-    <div class="f-reg-section">
-      <div class="f-reg-title">인증 & 픽업</div>
-      <div class="f-auth-row">
-        <div class="f-auth-info">
-          <div class="f-auth-icon">📜</div>
-          <div>
-            <div class="f-auth-title">진품 보증서 첨부</div>
-            <div class="f-auth-sub">첨부 시 신뢰도 뱃지 부여</div>
-          </div>
-        </div>
-        <div class="f-toggle on" id="authToggle" onclick="toggleFairyAuth()"></div>
-      </div>
-      <!-- 픽업 방식 -->
-      <div class="f-pickup-row">
-        <button class="f-pickup-btn active" onclick="selectPickup(this)">
-          <div class="f-pickup-icon">🤝</div>
-          <div class="f-pickup-label">직접 인수인계</div>
-        </button>
-        <button class="f-pickup-btn" onclick="selectPickup(this)">
-          <div class="f-pickup-icon">📦</div>
-          <div class="f-pickup-label">택배 발송</div>
-        </button>
-      </div>
-    </div>
-    <button class="f-submit-btn" onclick="registerFairyItem()">
-      <span>✦</span>등록 완료
-    </button>
-    <div style="height:28px"></div>
-  </div>
-</div>
-
-<!-- ════════════════════════════
-     FAIRY SCREEN 3 — 예약 관리
-════════════════════════════ -->
-<div id="fscreen-reservations" class="fairy-screen">
-  <div class="scroll">
-    <div class="f-header">
-      <div class="f-header-row">
-        <div class="f-logo">예약 관리 <span class="f-badge">🧚 요정</span></div>
-        <div style="font-size:10px;color:var(--gold-lt);background:rgba(184,150,62,.12);border:1px solid rgba(184,150,62,.25);padding:4px 10px;border-radius:10px">대기 2건</div>
-      </div>
-    </div>
-    <!-- 대기 중 요청 -->
-    <div style="padding:0 20px;margin-bottom:20px">
-      <div style="font-family:var(--f-display);font-size:15px;font-weight:400;font-style:italic;color:var(--ai-text);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(184,150,62,.12)">렌탈 요청 대기</div>
-      <div class="f-req-card">
-        <div class="f-req-card-top">
-          <div class="f-req-img">
-            <img src="https://images.unsplash.com/photo-1584917865442-de89be144b2d?auto=format&fit=crop&w=200&q=80" alt="Birkin"/>
-          </div>
-          <div class="f-req-info">
-            <div class="f-req-user">kim**** <span class="f-req-user-badge">Gold</span></div>
-            <div class="f-req-item">Hermès Birkin 30 Togo Gold HW</div>
-            <div class="f-req-meta">
-              <span class="f-req-period">5.28 – 5.30 (3일)</span>
-              <span class="f-req-amount">₩240,000</span>
-            </div>
-          </div>
-        </div>
-        <div class="f-req-card-btns">
-          <button class="f-req-btn f-req-btn-reject" onclick="rejectRequest(this)">거절</button>
-          <button class="f-req-btn f-req-btn-accept" onclick="acceptRequest(this)">수락</button>
-        </div>
-      </div>
-      <div class="f-req-card">
-        <div class="f-req-card-top">
-          <div class="f-req-img">
-            <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=200&q=80" alt="Chanel"/>
-          </div>
-          <div class="f-req-info">
-            <div class="f-req-user">park**** <span class="f-req-user-badge">Silver</span></div>
-            <div class="f-req-item">Chanel Classic Flap Medium</div>
-            <div class="f-req-meta">
-              <span class="f-req-period">5.29 – 5.30 (2일)</span>
-              <span class="f-req-amount">₩140,000</span>
-            </div>
-          </div>
-        </div>
-        <div class="f-req-card-btns">
-          <button class="f-req-btn f-req-btn-reject" onclick="rejectRequest(this)">거절</button>
-          <button class="f-req-btn f-req-btn-accept" onclick="acceptRequest(this)">수락</button>
-        </div>
-      </div>
-    </div>
-    <!-- 진행 중 렌탈 -->
-    <div style="padding:0 20px">
-      <div style="font-family:var(--f-display);font-size:15px;font-weight:400;font-style:italic;color:var(--ai-text);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(184,150,62,.12)">진행 중 렌탈</div>
-      <div class="f-active-card">
-        <div class="f-active-img">
-          <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=200&q=80" alt="Cartier"/>
-        </div>
-        <div class="f-active-info">
-          <div class="f-active-name">Cartier Love Necklace 18K</div>
-          <div class="f-active-user">lee**** 사용 중</div>
-          <div class="f-active-status-row">
-            <span class="f-active-status">렌탈 중</span>
-            <span class="f-active-end">~5.24 반납</span>
-          </div>
-        </div>
-        <div class="f-active-amount">₩35,000</div>
-      </div>
-    </div>
-    <div style="height:24px"></div>
-  </div>
-</div>
-
-<!-- ════════════════════════════
-     FAIRY SCREEN 4 — 정산
-════════════════════════════ -->
-<div id="fscreen-settlement" class="fairy-screen">
-  <div class="scroll">
-    <div class="f-header">
-      <div class="f-header-row">
-        <div class="f-logo">정산 <span class="f-badge">🧚 요정</span></div>
-        <div style="font-size:11px;color:var(--gold-lt)">출금 가능 ₩384,000</div>
-      </div>
-    </div>
-    <!-- 월별 수익 차트 -->
-    <div class="f-chart-wrap">
-      <div class="f-chart-title">월별 수익 현황</div>
-      <div class="f-chart-bars">
-        <div class="f-chart-bar-wrap">
-          <div class="f-chart-bar" style="height:30%"></div>
-          <div class="f-chart-month">1월</div>
-        </div>
-        <div class="f-chart-bar-wrap">
-          <div class="f-chart-bar" style="height:45%"></div>
-          <div class="f-chart-month">2월</div>
-        </div>
-        <div class="f-chart-bar-wrap">
-          <div class="f-chart-bar" style="height:38%"></div>
-          <div class="f-chart-month">3월</div>
-        </div>
-        <div class="f-chart-bar-wrap">
-          <div class="f-chart-bar" style="height:55%"></div>
-          <div class="f-chart-month">4월</div>
-        </div>
-        <div class="f-chart-bar-wrap">
-          <div class="f-chart-bar current" style="height:82%"></div>
-          <div class="f-chart-month" style="color:var(--gold-lt);font-weight:700">5월</div>
-        </div>
-      </div>
-    </div>
-    <!-- 출금 신청 버튼 -->
-    <button class="f-withdraw-btn" onclick="showToast('출금 신청이 완료됐습니다')">
-      <span>💳</span>₩384,000 출금 신청
-    </button>
-    <!-- 거래 내역 -->
-    <div style="padding:20px 20px 0">
-      <div style="font-family:var(--f-display);font-size:15px;font-weight:400;font-style:italic;color:var(--ai-text);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(184,150,62,.12)">거래 내역</div>
-      <div class="f-tx-item">
-        <div class="f-tx-img">
-          <img src="https://images.unsplash.com/photo-1584917865442-de89be144b2d?auto=format&fit=crop&w=100&q=80" alt="Birkin"/>
-        </div>
-        <div class="f-tx-info">
-          <div class="f-tx-name">Hermès Birkin 30</div>
-          <div class="f-tx-date">2026.05.20 · 2일 렌탈</div>
-        </div>
-        <div class="f-tx-right">
-          <div class="f-tx-amount">+₩160,000</div>
-          <div class="f-tx-status">정산 완료</div>
-        </div>
-      </div>
-      <div class="f-tx-item">
-        <div class="f-tx-img">
-          <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=100&q=80" alt="Chanel"/>
-        </div>
-        <div class="f-tx-info">
-          <div class="f-tx-name">Chanel Classic Flap</div>
-          <div class="f-tx-date">2026.05.10 · 3일 렌탈</div>
-        </div>
-        <div class="f-tx-right">
-          <div class="f-tx-amount">+₩189,000</div>
-          <div class="f-tx-status">정산 완료</div>
-        </div>
-      </div>
-      <div class="f-tx-item">
-        <div class="f-tx-img">
-          <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=100&q=80" alt="Cartier"/>
-        </div>
-        <div class="f-tx-info">
-          <div class="f-tx-name">Cartier Love Necklace</div>
-          <div class="f-tx-date">2026.05.22 · 진행 중</div>
-        </div>
-        <div class="f-tx-right">
-          <div class="f-tx-amount" style="color:var(--ai-muted)">₩35,000</div>
-          <div class="f-tx-status">렌탈 중</div>
-        </div>
-      </div>
-    </div>
-    <div style="height:24px"></div>
-  </div>
-</div>
-
-<!-- ════════════════════════════
-     FAIRY SCREEN 5 — 마이 (요정 프로필)
-════════════════════════════ -->
-<div id="fscreen-my" class="fairy-screen">
-  <div class="scroll">
-    <!-- 프로필 -->
-    <div class="f-my-profile">
-      <div class="f-my-avatar-row">
-        <div class="f-my-avatar">🧚</div>
-        <div>
-          <div class="f-my-name">강경구</div>
-          <div class="f-my-email">kgg2512@gmail.com</div>
-          <div class="f-grade-badge">
-            <span>✦</span> Gold 요정
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- 등급 진행도 -->
-    <div style="height:16px"></div>
-    <div class="f-grade-progress">
-      <div class="f-grade-row">
-        <span class="f-grade-label">Gold 요정</span>
-        <span class="f-grade-next">Diamond까지 3건 남음</span>
-      </div>
-      <div class="f-grade-bar"><div class="f-grade-fill"></div></div>
-      <div class="f-grade-hint">완료 렌탈 13건 / Diamond 기준 16건</div>
-    </div>
-    <!-- 요정 스탯 -->
-    <div class="f-my-stats">
-      <div class="f-my-stat">
-        <div class="f-my-stat-num">3</div>
-        <div class="f-my-stat-label">등록 아이템</div>
-      </div>
-      <div class="f-my-stat">
-        <div class="f-my-stat-num">13</div>
-        <div class="f-my-stat-label">완료 렌탈</div>
-      </div>
-      <div class="f-my-stat">
-        <div class="f-my-stat-num">4.9</div>
-        <div class="f-my-stat-label">평점</div>
-      </div>
-      <div class="f-my-stat">
-        <div class="f-my-stat-num">Gold</div>
-        <div class="f-my-stat-label">등급</div>
-      </div>
-    </div>
-    <!-- 메뉴 -->
-    <div class="my-section">
-      <div class="my-section-title">요정 설정</div>
-    </div>
-    <div class="my-menu-list">
-      <div class="my-menu-item" onclick="goFairyNav('register',1)">
-        <div class="my-menu-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-        </div>
-        <span class="my-menu-label">새 아이템 등록</span>
-        <svg class="my-menu-arrow" width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-      </div>
-      <div class="my-menu-item" onclick="showToast('요정 보험 안내')">
-        <div class="my-menu-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.7"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
-        <span class="my-menu-label">보험 가입 현황</span>
-        <svg class="my-menu-arrow" width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-      </div>
-      <div class="my-menu-item" onclick="showToast('계좌 정보 관리')">
-        <div class="my-menu-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.7"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-        </div>
-        <span class="my-menu-label">출금 계좌 관리</span>
-        <svg class="my-menu-arrow" width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-      </div>
-      <div class="my-menu-item" onclick="showToast('요정 가이드')">
-        <div class="my-menu-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.7"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        </div>
-        <span class="my-menu-label">요정 운영 가이드</span>
-        <svg class="my-menu-arrow" width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-      </div>
-    </div>
-    <!-- 신데렐라 모드 복귀 -->
-    <div style="padding:0 20px;margin-bottom:28px">
-      <button class="f-return-btn" onclick="exitFairyMode()">
-        <span>👸</span>신데렐라 모드로 돌아가기
-      </button>
+    <div class="rental-row">
+      <div class="rental-thumb"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=120&q=80" alt=""/></div>
+      <div class="rental-info"><div class="rental-brand">Rolex</div><div class="rental-name">Datejust 36 Jubilee White Dial</div><div class="rental-date">2026.04.28 15:00 – 21:00</div></div>
+      <div class="status-pill s-end">완료</div>
     </div>
   </div>
 </div>
 
-<!-- ════════════════════════════
-     FAIRY BOTTOM NAVIGATION
-════════════════════════════ -->
-<nav class="fairy-nav">
-  <button class="nav-btn active" onclick="goFairyNav('home',0)">
-    <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.7"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-    홈
-  </button>
-  <button class="nav-btn" onclick="goFairyNav('register',1)">
-    <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-    등록
-  </button>
-  <button class="nav-btn" onclick="goFairyNav('reservations',2)">
-    <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.7"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="12" y2="17"/></svg>
-    예약
-    <div class="nav-dot show"></div>
-  </button>
-  <button class="nav-btn" onclick="goFairyNav('settlement',3)">
-    <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.7"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-    정산
-  </button>
-  <button class="nav-btn" onclick="goFairyNav('my',4)">
-    <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.7"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-    마이
-  </button>
-</nav>
-
-<nav class="demo-nav">
-  <button class="nav-btn active" onclick="goNav('home',0)">
-    <svg width="20" height="20" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-    홈
-  </button>
-  <button class="nav-btn" onclick="goNav('ai',1)">
-    <svg width="20" height="20" viewBox="0 0 24 24"><path d="M15 4l5 5-9 9-5-5 9-9z"/><line x1="3" y1="21" x2="8" y2="16"/></svg>
-    AI 스타일
-  </button>
-  <button class="nav-btn" onclick="goNav('detail',2)">
-    <svg width="20" height="20" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-    상품
-  </button>
-  <button class="nav-btn" onclick="goNav('checkout',3)">
-    <svg width="20" height="20" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-    결제
-  </button>
-  <button class="nav-btn" onclick="goNav('my',4)">
-    <svg width="20" height="20" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-    마이
-  </button>
-</nav>
+<!-- BOOKING SHEET -->
+<div class="overlay" id="sheet-overlay" onclick="hideSheet(event)">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-name" id="sheet-name"></div>
+    <div class="sheet-sub">대여 시간을 선택해주세요 (최소 4시간)</div>
+    <div class="hour-btns">
+      <div class="hour-btn sel" onclick="selHour(this,4)">4시간</div>
+      <div class="hour-btn" onclick="selHour(this,8)">8시간</div>
+      <div class="hour-btn" onclick="selHour(this,12)">12시간</div>
+      <div class="hour-btn" onclick="selHour(this,24)">1일</div>
+      <div class="hour-btn" onclick="selHour(this,48)">2일</div>
+    </div>
+    <div class="price-sum">
+      <div class="ps-row"><span>대여 시간</span><span id="sh-hrs">4시간</span></div>
+      <div class="ps-row"><span>4시간 기준 금액</span><span id="sh-rate"></span></div>
+      <div class="ps-row"><span>서비스 수수료 (15%)</span><span id="sh-fee"></span></div>
+      <div class="ps-row ps-total"><span>총 결제 금액</span><span id="sh-total"></span></div>
+    </div>
+    <button class="btn-primary" onclick="confirmBook()">결제하기</button>
+  </div>
+</div>
 
 <div class="toast" id="toast"></div>
 
+<nav class="navbar" id="navbar" style="display:none">
+  <button class="nav-btn active" onclick="goScreen('home',0)">
+    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>홈
+  </button>
+  <button class="nav-btn" onclick="goScreen('style',1)">
+    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>AI스타일
+  </button>
+  <button class="nav-btn nav-center" onclick="goScreen('register',2)">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>등록
+  </button>
+  <button class="nav-btn" onclick="goScreen('wish',3)">
+    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>좋아요
+  </button>
+  <button class="nav-btn" onclick="goScreen('mypage',4)">
+    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>마이
+  </button>
+</nav>
+
 <script>
-/* ── Navigation ── */
-const screenMap = {home:'screen-home',ai:'screen-ai',detail:'screen-detail',checkout:'screen-checkout',my:'screen-my'};
-const navBtns = document.querySelectorAll('.nav-btn');
+// ═══════════════════════════════════
+// 상품 데이터 (카테고리별 최소 1개 + 여러 이미지)
+// ═══════════════════════════════════
+const ITEMS = [
+  // ── 핸드백 (bag) ──
+  { id:0, brand:'Louis Vuitton', name:'Neverfull MM Monogram Canvas', cat:'bag', price:28000, grade:'S급', stars:'★★★★★', reviewCount:47,
+    img:'https://images.unsplash.com/photo-1529025530948-67e8a5c69b58?auto=format&fit=crop&w=800&q=82',
+    imgs:[
+      'https://images.unsplash.com/photo-1529025530948-67e8a5c69b58?auto=format&fit=crop&w=800&q=82',
+      'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=800&q=82',
+      'https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&w=800&q=82'
+    ],
+    desc:'2022년 구입, 착용 3회 미만. LV 모노그램 캔버스 광택 살아있으며 내부 오염 없음. 소개팅·결혼식·비즈니스 미팅에 모두 어울리는 만능 클래식 토트백.',
+    specs:['S급','모노그램 캔버스','MM 사이즈','올데이 토트','정품 보증서'],
+    dist:'0.8km', posted:'10분 전', area:'역삼동',
+    owner:{name:'박지현', temp:47.3, emoji:'😊', loc:'역삼동 인증', img:'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=100&q=80'} },
 
-function goNav(id, idx){
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  const el = document.getElementById(screenMap[id]);
-  if(el) el.classList.add('active');
-  navBtns.forEach((b,i) => b.classList.toggle('active', i === idx));
-  window.scrollTo(0,0);
-}
+  { id:1, brand:'Chanel', name:'Classic Flap Medium Caviar Black', cat:'bag', price:45000, grade:'S급', stars:'★★★★★', reviewCount:62,
+    img:'https://images.unsplash.com/photo-1593418632104-71bd668d1af1?auto=format&fit=crop&w=800&q=82',
+    imgs:[
+      'https://images.unsplash.com/photo-1593418632104-71bd668d1af1?auto=format&fit=crop&w=800&q=82',
+      'https://images.unsplash.com/photo-1584917865442-de89be144b2d?auto=format&fit=crop&w=800&q=82',
+      'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=82'
+    ],
+    desc:'2021년 구입 S급. 블랙 카비어 가죽으로 사용감 거의 없음. 골드 체인 변색 없음. 결혼식·고급 디너·VIP 파티에 완벽한 아이코닉 샤넬 클래식 플랩백.',
+    specs:['S급','블랙 카비어 레더','골드 하드웨어','클래식 플랩 M','정품 보증서'],
+    dist:'1.2km', posted:'34분 전', area:'논현동',
+    owner:{name:'김하은', temp:52.1, emoji:'😄', loc:'논현동 인증', img:'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=100&q=80'} },
 
-/* ── Home ── */
-function filterCat(el, cat){
-  document.querySelectorAll('.home-cat').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  showToast(cat === 'all' ? '전체 아이템 표시' : cat + ' 카테고리');
-}
+  { id:2, brand:'Hermès', name:'Birkin 30 Togo Fauve Gold HW', cat:'bag', price:90000, grade:'A급', stars:'★★★★☆', reviewCount:28,
+    img:'https://images.unsplash.com/photo-1691480250099-a63081ecfcb8?auto=format&fit=crop&w=800&q=82',
+    imgs:[
+      'https://images.unsplash.com/photo-1691480250099-a63081ecfcb8?auto=format&fit=crop&w=800&q=82',
+      'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?auto=format&fit=crop&w=800&q=82',
+      'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=800&q=82'
+    ],
+    desc:'2020년 구입 A급. 에르메스 버킨 30 토고 레더 포브 컬러. 자연스러운 그레인 살아있음. 골드 HW 완벽 유지. 세계에서 가장 아이코닉한 에르메스 버킨백.',
+    specs:['A급','에르메스 토고 레더','골드 HW','버킨 30','정품 영수증'],
+    dist:'2.1km', posted:'1시간 전', area:'청담동',
+    owner:{name:'이서연', temp:38.5, emoji:'😐', loc:'청담동 인증', img:'https://images.unsplash.com/photo-1524250502761-1ac6f2e30d43?auto=format&fit=crop&w=100&q=80'} },
 
-/* ── AI Stylist ── */
-const occasionLabels = {wedding:'결혼식 하객',date:'소개팅',interview:'취업 면접',photo:'사진 촬영',vip:'VIP 파티',grad:'졸업식'};
-function selectChip(el, occasion){
-  document.querySelectorAll('.ai-chip').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-  const label = occasionLabels[occasion] || occasion;
-  document.querySelector('#ai-analyzing-bar .ai-analyzing-text').textContent = `AI가 ${label} 최적 스타일을 분석 중입니다...`;
-  document.querySelectorAll('.ai-card').forEach((c,i) => c.classList.toggle('picked', i === 0));
-  showToast(`${label} 스타일로 재분석합니다`);
-}
-function pickCard(el){
-  document.querySelectorAll('.ai-card').forEach(c => c.classList.remove('picked'));
-  el.classList.add('picked');
-  const brand = el.querySelector('.ai-card-brand').textContent;
-  const name = el.querySelector('.ai-card-name').textContent;
-  showToast(`${brand} ${name} 선택됨`);
-}
-function aiBookStyle(){
-  const picked = document.querySelector('.ai-card.picked');
-  if(!picked){ showToast('아이템을 선택해주세요'); return; }
-  goNav('checkout', 3);
-}
+  { id:3, brand:'Dior', name:'Lady Dior Medium Cannage Black', cat:'bag', price:52000, grade:'S급', stars:'★★★★★', reviewCount:41,
+    img:'https://images.unsplash.com/photo-1584917865442-de89be144b2d?auto=format&fit=crop&w=800&q=82',
+    imgs:[
+      'https://images.unsplash.com/photo-1584917865442-de89be144b2d?auto=format&fit=crop&w=800&q=82',
+      'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=82',
+      'https://images.unsplash.com/photo-1575032617751-6ddec2089882?auto=format&fit=crop&w=800&q=82'
+    ],
+    desc:'2022 시즌 S급. 레이디 디올 시그니처 카나주 스티칭 선명. 골드 DIOR 참 완벽 유지. 결혼식·갈라 디너에서 가장 주목받는 디올 클래식백.',
+    specs:['S급','블랙 램스킨','카나주 스티칭','미디엄','정품 보증서'],
+    dist:'1.8km', posted:'1시간 전', area:'청담동',
+    owner:{name:'장나연', temp:61.2, emoji:'😄', loc:'청담동 인증', img:'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=100&q=80'} },
 
-/* ── Detail ── */
-function toggleWish(){
-  const btn = document.getElementById('wishBtn');
-  btn.classList.toggle('liked');
-  showToast(btn.classList.contains('liked') ? '찜 목록에 추가됐습니다 ♥' : '찜 목록에서 제거됐습니다');
-}
-function selectDur(el, days, price){
-  document.querySelectorAll('.detail-dur-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('detailPriceDisplay').textContent = price;
-  // Sync to checkout
-  document.getElementById('coRentalPeriod').textContent = days + '일 렌탈';
-  document.getElementById('coRentalFee').textContent = price;
-  document.getElementById('coFinalPrice').textContent = price;
-}
+  // ── 시계 (watch) ──
+  { id:4, brand:'Rolex', name:'Datejust 36 Jubilee White Dial', cat:'watch', price:65000, grade:'A급', stars:'★★★★★', reviewCount:22,
+    img:'https://images.unsplash.com/photo-1526045431048-f857369baa09?auto=format&fit=crop&w=800&q=82',
+    imgs:[
+      'https://images.unsplash.com/photo-1526045431048-f857369baa09?auto=format&fit=crop&w=800&q=82',
+      'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=82',
+      'https://images.unsplash.com/photo-1548171916-c8fd5d36498a?auto=format&fit=crop&w=800&q=82'
+    ],
+    desc:'2019년 구입 A급. 롤렉스 데이저스트 36mm 화이트 다이얼 주빌레 브레이슬릿. 오이스터 케이스 무결점. 롤렉스 정품 케이스·보증서 완비.',
+    specs:['A급','롤렉스 36mm','주빌레 브레이슬릿','화이트 다이얼','정품 케이스'],
+    dist:'4.2km', posted:'7시간 전', area:'청담동',
+    owner:{name:'강민준', temp:67.5, emoji:'😄', loc:'청담동 인증', img:'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80'} },
 
-/* ── Checkout ── */
-function selectPay(el){
-  document.querySelectorAll('.co-pay-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-}
-function submitOrder(){
-  const num = 'CND-' + new Date().toISOString().slice(0,10).replace(/-/g,'') + '-' + String(Math.floor(Math.random()*9000)+1000);
-  document.getElementById('orderNum').textContent = num;
-  document.getElementById('co-success').classList.add('show');
-  // Update step indicator
-  const steps = document.querySelectorAll('.checkout-step');
-  steps[1].classList.remove('active');
-  steps[1].classList.add('done');
-  steps[1].querySelector('.checkout-step-circle').textContent = '✓';
-  steps[2].classList.add('active');
-}
-function resetOrder(){
-  document.getElementById('co-success').classList.remove('show');
-  goNav('home', 0);
-}
+  { id:5, brand:'Audemars Piguet', name:'Royal Oak 41mm Silver Dial', cat:'watch', price:95000, grade:'A급', stars:'★★★★★', reviewCount:14,
+    img:'https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&w=800&q=82',
+    imgs:[
+      'https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&w=800&q=82',
+      'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=82',
+      'https://images.unsplash.com/photo-1548171916-c8fd5d36498a?auto=format&fit=crop&w=800&q=82'
+    ],
+    desc:'2018년 구입 A급. AP 로얄 오크 41mm 실버 다이얼. 그랑드 타피스리 패턴 무결점. VIP 행사에서 가장 주목받는 타임피스.',
+    specs:['A급','41mm 스틸','로얄 오크 브레이슬릿','셀프와인딩','정품 케이스'],
+    dist:'5.0km', posted:'8시간 전', area:'강남구',
+    owner:{name:'권도현', temp:71.2, emoji:'😄', loc:'강남 인증', img:'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80'} },
 
-/* ── Toast ── */
-let toastTimer;
-function showToast(msg){
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
-}
+  // ── 주얼리 (jewelry) ──
+  { id:6, brand:'Cartier', name:'Love Necklace 18K Yellow Gold', cat:'jewelry', price:35000, grade:'S급', stars:'★★★★★', reviewCount:53,
+    img:'https://images.unsplash.com/photo-1611107683227-e9060eccd846?auto=format&fit=crop&w=800&q=82',
+    imgs:[
+      'https://images.unsplash.com/photo-1611107683227-e9060eccd846?auto=format&fit=crop&w=800&q=82',
+      'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=800&q=82',
+      'https://images.unsplash.com/photo-1573408301185-9519f94816b5?auto=format&fit=crop&w=800&q=82'
+    ],
+    desc:'까르띠에 러브 네크리스 18K 옐로우 골드. 2022년 구입. 까르띠에 공식 케이스·보증서 완비. 결혼식·소개팅 화룡점정 아이템.',
+    specs:['S급','18K 옐로우 골드','러브 컬렉션','케이스·보증서','정품 인증'],
+    dist:'3.7km', posted:'5시간 전', area:'도산공원',
+    owner:{name:'손예진', temp:61.0, emoji:'😄', loc:'도산공원 인증', img:'https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?auto=format&fit=crop&w=100&q=80'} },
 
-/* ══════════════════════════════
-   FAIRY MODE
-══════════════════════════════ */
-const fairyScreenMap = {
-  home:'fscreen-home',
-  register:'fscreen-register',
-  reservations:'fscreen-reservations',
-  settlement:'fscreen-settlement',
-  my:'fscreen-my'
+  { id:7, brand:'Van Cleef & Arpels', name:'Alhambra Long Necklace MOP', cat:'jewelry', price:48000, grade:'S급', stars:'★★★★★', reviewCount:31,
+    img:'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=82',
+    imgs:[
+      'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=82',
+      'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=800&q=82',
+      'https://images.unsplash.com/photo-1611085583191-a3b181a88401?auto=format&fit=crop&w=800&q=82'
+    ],
+    desc:'반클리프&아펠 알함브라 롱 네크리스. 화이트 MOP 10모티프. 2021년 구입. VCA 보증서·케이스 완비.',
+    specs:['S급','18K 옐로우 골드','MOP 10모티프','알함브라 롱','VCA 보증서'],
+    dist:'4.0km', posted:'6시간 전', area:'청담동',
+    owner:{name:'박서준', temp:58.3, emoji:'😄', loc:'청담동 인증', img:'https://images.unsplash.com/photo-1524250502761-1ac6f2e30d43?auto=format&fit=crop&w=100&q=80'} },
+
+  { id:8, brand:'Tiffany & Co.', name:'T Wire Bracelet 18K Rose Gold', cat:'jewelry', price:20000, grade:'S급', stars:'★★★★★', reviewCount:44,
+    img:'https://images.unsplash.com/photo-1573408301185-9519f94816b5?auto=format&fit=crop&w=800&q=82',
+    imgs:[
+      'https://images.unsplash.com/photo-1573408301185-9519f94816b5?auto=format&fit=crop&w=800&q=82',
+      'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=82',
+      'https://images.unsplash.com/photo-1611085583191-a3b181a88401?auto=format&fit=crop&w=800&q=82'
+    ],
+    desc:'티파니 T 와이어 브레이슬릿 18K 로즈 골드 파베 다이아몬드. 2023년 구입 착용 2회. 티파니 블루박스·보증서 완비.',
+    specs:['S급','18K 로즈 골드','파베 다이아몬드','티파니 T','블루박스 포함'],
+    dist:'2.9km', posted:'4시간 전', area:'역삼동',
+    owner:{name:'정유나', temp:49.2, emoji:'😊', loc:'역삼동 인증', img:'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=100&q=80'} },
+
+  // ── 슈즈 (shoes) ──
+  { id:9, brand:'Gucci', name:'Signoria Pump 100mm Black', cat:'shoes', price:18000, grade:'S급', stars:'★★★★★', reviewCount:39,
+    img:'https://images.unsplash.com/photo-1553145478-5b0fee29e4fc?auto=format&fit=crop&w=800&q=82',
+    imgs:[
+      'https://images.unsplash.com/photo-1553145478-5b0fee29e4fc?auto=format&fit=crop&w=800&q=82',
+      'https://images.unsplash.com/photo-1445088803572-b7b975c96e12?auto=format&fit=crop&w=800&q=82',
+      'https://images.unsplash.com/photo-1551489186-ccb95a1ea6a3?auto=format&fit=crop&w=800&q=82'
+    ],
+    desc:'2023년 구입 S급. 착화 2회, 굽 보호대 부착으로 스크래치 없음. 구찌 레드·그린 라인 선명. 결혼식·소개팅·파티에 완벽.',
+    specs:['S급','힐 100mm','구찌 시그니처 라인','블랙 레더','사이즈 37.5'],
+    dist:'2.4km', posted:'2시간 전', area:'압구정동',
+    owner:{name:'최민지', temp:44.8, emoji:'😊', loc:'압구정동 인증', img:'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=100&q=80'} },
+
+  { id:10, brand:'Christian Louboutin', name:'So Kate 120mm Nude Patent', cat:'shoes', price:22000, grade:'S급', stars:'★★★★★', reviewCount:57,
+    img:'https://images.unsplash.com/photo-1551489186-ccb95a1ea6a3?auto=format&fit=crop&w=800&q=82',
+    imgs:[
+      'https://images.unsplash.com/photo-1551489186-ccb95a1ea6a3?auto=format&fit=crop&w=800&q=82',
+      'https://images.unsplash.com/photo-1553145478-5b0fee29e4fc?auto=format&fit=crop&w=800&q=82',
+      'https://images.unsplash.com/photo-1445088803572-b7b975c96e12?auto=format&fit=crop&w=800&q=82'
+    ],
+    desc:'2022년 구입 S급. 착화 1회. 루부탱 시그니처 레드 솔 완벽 유지. 누드 페이턴트로 다리 길어 보이는 효과 최고.',
+    specs:['S급','힐 120mm','루부탱 레드 솔','누드 페이턴트','사이즈 37'],
+    dist:'3.1km', posted:'3시간 전', area:'강남구',
+    owner:{name:'한소희', temp:49.2, emoji:'😊', loc:'강남 인증', img:'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=100&q=80'} },
+
+  // ── 의류 (dress) ──
+  { id:11, brand:'Valentino', name:'Garavani Silk Evening Gown Rose', cat:'dress', price:55000, grade:'S급', stars:'★★★★★', reviewCount:21,
+    img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=82',
+    imgs:[
+      'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=82',
+      'https://images.unsplash.com/photo-1572804013427-4d7ca7268217?auto=format&fit=crop&w=800&q=82',
+      'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=800&q=82'
+    ],
+    desc:'2023 F/W S급. 발렌티노 가라바니 로즈 핑크 프리미엄 실크 이브닝 가운. 드라이클리닝 완벽 관리. 착용 1회. 갈라 디너·결혼 하객룩에 완벽.',
+    specs:['S급','프리미엄 실크','이브닝 가운','로즈 핑크','사이즈 36'],
+    dist:'3.2km', posted:'3시간 전', area:'신사동',
+    owner:{name:'정유나', temp:49.2, emoji:'😊', loc:'신사동 인증', img:'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=100&q=80'} },
+
+  { id:12, brand:'Givenchy', name:'Mini Dress Black Crepe', cat:'dress', price:42000, grade:'S급', stars:'★★★★☆', reviewCount:17,
+    img:'https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=800&q=82',
+    imgs:[
+      'https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=800&q=82',
+      'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=82',
+      'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=800&q=82'
+    ],
+    desc:'2022 컬렉션 S급. 지방시 미니 드레스 블랙 크레이프. 착용 1회. 갈라 파티·클럽 디너. 사이즈 38. 지방시 특유의 스트럭처드 실루엣.',
+    specs:['S급','블랙 크레이프','스트럭처드','미니 드레스','사이즈 38'],
+    dist:'3.5km', posted:'5시간 전', area:'압구정동',
+    owner:{name:'최은지', temp:42.0, emoji:'😊', loc:'압구정동 인증', img:'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=100&q=80'} }
+];
+
+// ═══════════════════════════════════
+// AI 스타일 추천 데이터
+// ═══════════════════════════════════
+const LOOKS = {
+  wedding: [
+    {
+      name:'Wedding Elegance',
+      occasion:'결혼식 하객 완벽 착장',
+      heroImg:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=82',
+      items:[11, 6, 10],  // 발렌티노 드레스, 까르띠에 목걸이, 루부탱 힐
+      totalDesc:'발렌티노 로즈 실크 가운 + 까르띠에 러브 네크리스 + 루부탱 누드 힐'
+    },
+    {
+      name:'Classic Chanel Moment',
+      occasion:'결혼식 세미포멀 착장',
+      heroImg:'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=82',
+      items:[1, 7, 9],  // 샤넬 백, VCA 목걸이, 구찌 힐
+      totalDesc:'샤넬 클래식 플랩 블랙 + VCA 알함브라 네크리스 + 구찌 시그니처 펌프스'
+    }
+  ],
+  date: [
+    {
+      name:'Romantic Date Look',
+      occasion:'소개팅·데이트 착장',
+      heroImg:'https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=800&q=82',
+      items:[12, 8, 9],  // 지방시 드레스, 티파니 팔찌, 구찌 힐
+      totalDesc:'지방시 블랙 미니 드레스 + 티파니 로즈골드 팔찌 + 구찌 펌프스'
+    },
+    {
+      name:'City Chic Look',
+      occasion:'캐주얼 데이트 착장',
+      heroImg:'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=82',
+      items:[0, 8, 10],  // LV 가방, 티파니 팔찌, 루부탱
+      totalDesc:'LV 네버풀 모노그램 + 티파니 T 와이어 팔찌 + 루부탱 누드 힐'
+    }
+  ],
+  gala: [
+    {
+      name:'Gala Dinner Royale',
+      occasion:'갈라 파티·VIP 이벤트 착장',
+      heroImg:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=82',
+      items:[11, 7, 10],  // 발렌티노 드레스, VCA 목걸이, 루부탱
+      totalDesc:'발렌티노 로즈 실크 이브닝 가운 + VCA 알함브라 롱 네크리스 + 루부탱 소 케이트 120mm'
+    },
+    {
+      name:'Power Gala Look',
+      occasion:'갈라 디너 강렬 착장',
+      heroImg:'https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=800&q=82',
+      items:[12, 6, 5],  // 지방시 드레스, 까르띠에, AP 시계
+      totalDesc:'지방시 블랙 미니 드레스 + 까르띠에 러브 네크리스 + AP 로얄 오크'
+    }
+  ],
+  biz: [
+    {
+      name:'Executive Luxe',
+      occasion:'비즈니스 미팅 착장',
+      heroImg:'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=82',
+      items:[0, 4, 8],  // LV 가방, 롤렉스, 티파니
+      totalDesc:'LV 네버풀 MM + 롤렉스 데이저스트 36 + 티파니 T 와이어'
+    }
+  ],
+  casual: [
+    {
+      name:'Luxury Casual',
+      occasion:'캐주얼 고급스러운 착장',
+      heroImg:'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=800&q=82',
+      items:[0, 8, 9],  // LV, 티파니, 구찌
+      totalDesc:'LV 네버풀 + 티파니 팔찌 + 구찌 펌프스'
+    }
+  ]
 };
-const fairyNavBtns = document.querySelectorAll('.fairy-nav .nav-btn');
 
-function enterFairyMode(){
-  document.body.classList.add('fairy-mode');
-  // Reset to fairy home
-  document.querySelectorAll('.fairy-screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('fscreen-home').classList.add('active');
-  fairyNavBtns.forEach((b,i) => b.classList.toggle('active', i === 0));
-  showToast('🧚 요정 모드로 전환됐습니다');
+// ═══════════════════════════════════
+// 상태
+// ═══════════════════════════════════
+let curItem=0, wishlisted=false, calYear=2026, calMonth=4, selHours=4;
+let homeCatFilter='all', homeBrandFilter='all', searchBrandFilter='all';
+let curImgs=[], curImgIdx=0;
+let curEvent='wedding';
+
+// ═══════════════════════════════════
+// 렌더링
+// ═══════════════════════════════════
+function renderList(id, items) {
+  const el = document.getElementById(id);
+  if (!items.length) {
+    el.innerHTML='<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-txt">조건에 맞는 아이템이 없습니다</div></div>';
+    return;
+  }
+  el.innerHTML = items.map(it => `
+    <div class="item-row" onclick="openDetail(${it.id})">
+      <div class="item-thumb">
+        <img src="${it.imgs[0].replace('w=800','w=300')}" alt="${it.brand} ${it.name}" loading="lazy"/>
+        <div class="item-grade-badge">${it.grade}</div>
+        <div class="item-wish-btn" onclick="event.stopPropagation();showToast('좋아요에 추가됐습니다 ♥')">♡</div>
+      </div>
+      <div class="item-info">
+        <div class="item-brand">${it.brand}</div>
+        <div class="item-name">${it.name}</div>
+        <div class="item-location">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          ${it.area} · ${it.dist} · ${it.posted}
+        </div>
+        <div class="item-price-row">
+          <div class="item-price">₩${it.price.toLocaleString()}</div>
+          <div class="item-per">/ 4시간~</div>
+        </div>
+        <div class="item-stats">
+          <div class="item-stars">${it.stars}</div>
+          <div class="item-review-cnt">(${it.reviewCount})</div>
+        </div>
+      </div>
+    </div>`).join('');
 }
 
-function exitFairyMode(){
-  document.body.classList.remove('fairy-mode');
-  // Return to cinderella my page
+function renderLooks(eventKey) {
+  const looks = LOOKS[eventKey] || LOOKS.wedding;
+  const el = document.getElementById('look-cards');
+  el.innerHTML = looks.map(look => {
+    const itemsHtml = look.items.map(id => {
+      const it = ITEMS[id];
+      return `<div class="look-item" onclick="openDetail(${it.id})">
+        <div class="look-item-thumb"><img src="${it.imgs[0].replace('w=800','w=200')}" alt="${it.brand} ${it.name}" loading="lazy"/></div>
+        <div class="look-item-info">
+          <div class="look-item-brand">${it.brand}</div>
+          <div class="look-item-name">${it.name}</div>
+          <div class="look-item-price">₩${it.price.toLocaleString()} / 4h~</div>
+        </div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A09589" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>`;
+    }).join('');
+    const total = look.items.reduce((s,id) => s + ITEMS[id].price, 0);
+    return `<div class="look-card">
+      <img class="look-hero-img" src="${look.heroImg}" alt="${look.name}" loading="lazy"/>
+      <div class="look-body">
+        <div class="look-occasion">${look.occasion}</div>
+        <div class="look-name">${look.name}</div>
+        <div class="look-items">${itemsHtml}</div>
+        <button class="look-total-btn" onclick="showToast('전체 예약 기능 준비 중입니다')">총 ₩${total.toLocaleString()} / 4h · 전체 빌리기</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════
+// 화면 전환
+// ═══════════════════════════════════
+function doLogin() {
+  document.getElementById('screen-login').classList.remove('active');
+  document.getElementById('navbar').style.display = 'flex';
+  goScreen('home', 0);
+  refreshHome();
+  renderList('search-list', ITEMS);
+  document.getElementById('search-count').textContent = ITEMS.length + '개 아이템';
+  renderLooks('wedding');
+  showToast('Google 계정으로 로그인되었습니다');
+}
+
+function refreshHome() {
+  let items = ITEMS;
+  if (homeCatFilter !== 'all') items = items.filter(it => it.cat === homeCatFilter);
+  if (homeBrandFilter !== 'all') items = items.filter(it => it.brand === homeBrandFilter);
+  renderList('home-list', items);
+  document.getElementById('home-count').textContent = items.length + '개 아이템';
+}
+
+function goScreen(id, idx) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-my').classList.add('active');
-  navBtns.forEach((b,i) => b.classList.toggle('active', i === 4));
-  showToast('👸 신데렐라 모드로 돌아왔습니다');
+  document.getElementById('screen-' + id).classList.add('active');
+  if (idx !== null && idx !== undefined)
+    document.querySelectorAll('.nav-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
 }
+function goBack() { goScreen('home', 0); }
 
-function goFairyNav(id, idx){
-  document.querySelectorAll('.fairy-screen').forEach(s => s.classList.remove('active'));
-  const el = document.getElementById(fairyScreenMap[id]);
-  if(el) el.classList.add('active');
-  fairyNavBtns.forEach((b,i) => b.classList.toggle('active', i === idx));
-  window.scrollTo(0,0);
+function setCat(el, cat) {
+  document.getElementById('home-cat-pills').querySelectorAll('.cat-pill').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  homeCatFilter = cat;
+  refreshHome();
 }
-
-/* ── Fairy Register ── */
-function selectFairyCat(el){
-  document.querySelectorAll('.f-cat-btn').forEach(b => b.classList.remove('active'));
+function setBrand(el, brand) {
+  document.getElementById('home-brand-pills').querySelectorAll('.brand-pill').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  homeBrandFilter = brand;
+  refreshHome();
+}
+function setSort(el) {
+  el.closest('.sort-pills').querySelectorAll('.sort-pill').forEach(c => c.classList.remove('active'));
   el.classList.add('active');
 }
-
-function updateFairyPrice(val){
-  const formatted = '₩' + parseInt(val).toLocaleString('ko-KR');
-  document.getElementById('fairyPriceDisplay').textContent = formatted;
-  // Update slider gradient
-  const pct = ((val - 10000) / (200000 - 10000)) * 100;
-  document.querySelector('.f-slider').style.background =
-    `linear-gradient(to right, var(--gold) ${pct}%, rgba(184,150,62,.2) ${pct}%)`;
+function doSearch() {
+  const q = (document.getElementById('search-q').value || '').toLowerCase();
+  let items = ITEMS;
+  if (searchBrandFilter !== 'all') items = items.filter(it => it.brand === searchBrandFilter);
+  if (q) items = items.filter(it => it.name.toLowerCase().includes(q) || it.brand.toLowerCase().includes(q));
+  renderList('search-list', items);
+  document.getElementById('search-count').textContent = items.length + '개 아이템';
+}
+function setSearchBrand(el, brand) {
+  el.closest('.brand-pills').querySelectorAll('.brand-pill').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  searchBrandFilter = brand;
+  doSearch();
+}
+function setEvent(el, eventKey) {
+  document.getElementById('event-pills').querySelectorAll('.event-pill').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  curEvent = eventKey;
+  renderLooks(eventKey);
 }
 
-function toggleFairyAuth(){
-  const t = document.getElementById('authToggle');
-  t.classList.toggle('on');
-  showToast(t.classList.contains('on') ? '진품 보증서 첨부 활성화' : '진품 보증서 첨부 비활성화');
+// ═══════════════════════════════════
+// 상세 화면
+// ═══════════════════════════════════
+function openDetail(idx) {
+  curItem = idx; wishlisted = false;
+  const it = ITEMS[idx];
+  curImgs = it.imgs;
+  curImgIdx = 0;
+  // 이미지
+  document.getElementById('det-img').src = curImgs[0];
+  renderDots();
+  // 정보
+  document.getElementById('det-brand').textContent = it.brand;
+  document.getElementById('det-grade').textContent = it.grade;
+  document.getElementById('det-name').textContent = it.name;
+  document.getElementById('det-stars').textContent = it.stars;
+  document.getElementById('det-reviews').textContent = `(${it.reviewCount}개 후기)`;
+  document.getElementById('det-price').textContent = '₩' + it.price.toLocaleString();
+  document.getElementById('det-desc').textContent = it.desc;
+  document.getElementById('det-specs').innerHTML = it.specs.map(s => `<div class="spec-chip">${s}</div>`).join('');
+  document.getElementById('det-owner-name').textContent = it.owner.name + ' 요정';
+  document.getElementById('det-owner-img').src = it.owner.img;
+  document.getElementById('det-temp').textContent = it.owner.temp + '°';
+  document.getElementById('det-temp-emoji').textContent = it.owner.emoji;
+  document.getElementById('det-temp-bar').style.width = Math.min(it.owner.temp, 100) + '%';
+  document.getElementById('det-owner-loc').textContent = it.owner.loc + ' · ' + it.dist;
+  document.getElementById('det-wish-btn').textContent = '♡';
+  document.getElementById('cta-wish-btn').textContent = '♡';
+  renderCal();
+  goScreen('detail', null);
+  document.getElementById('screen-detail').scrollTop = 0;
 }
 
-function selectPickup(el){
-  document.querySelectorAll('.f-pickup-btn').forEach(b => b.classList.remove('active'));
+function renderDots() {
+  document.getElementById('img-dots').innerHTML =
+    curImgs.map((_, i) => `<div class="dot${i===curImgIdx?' on':''}"></div>`).join('');
+}
+function prevImg() {
+  if (curImgIdx > 0) { curImgIdx--; document.getElementById('det-img').src = curImgs[curImgIdx]; renderDots(); }
+}
+function nextImg() {
+  if (curImgIdx < curImgs.length-1) { curImgIdx++; document.getElementById('det-img').src = curImgs[curImgIdx]; renderDots(); }
+}
+
+// 터치 스와이프
+(function(){
+  let tx=0;
+  document.addEventListener('DOMContentLoaded',()=>{
+    const w = document.getElementById('det-img-wrap');
+    if (!w) return;
+    w.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, {passive:true});
+    w.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - tx;
+      if (Math.abs(dx) > 50) dx < 0 ? nextImg() : prevImg();
+    }, {passive:true});
+  });
+})();
+
+function toggleWish() {
+  wishlisted = !wishlisted;
+  const h = wishlisted ? '♥' : '♡';
+  document.getElementById('det-wish-btn').textContent = h;
+  document.getElementById('cta-wish-btn').textContent = h;
+  if (wishlisted) showToast('좋아요에 추가됐습니다 ♥');
+}
+
+// ═══════════════════════════════════
+// 캘린더
+// ═══════════════════════════════════
+function renderCal() {
+  const days=['일','월','화','수','목','금','토'];
+  document.getElementById('cal-labels').innerHTML = days.map(d=>`<div class="cal-grid-label">${d}</div>`).join('');
+  document.getElementById('cal-month-txt').textContent = `${calYear}년 ${calMonth+1}월`;
+  const first = new Date(calYear, calMonth, 1).getDay();
+  const daysIn = new Date(calYear, calMonth+1, 0).getDate();
+  const taken = [3,7,8,14,15,16,21,22];
+  let html='';
+  for (let i=0;i<first;i++) html+='<div></div>';
+  for (let d=1;d<=daysIn;d++) {
+    const t=taken.includes(d), today=d===27&&calMonth===4&&calYear===2026;
+    html+=`<div class="cal-cell${t?' taken':''}${today?' today':''}" onclick="selDate(this)">${d}</div>`;
+  }
+  document.getElementById('cal-cells').innerHTML=html;
+}
+function selDate(el){document.querySelectorAll('.cal-cell').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');}
+function calPrev(){calMonth===0?(calYear--,calMonth=11):calMonth--;renderCal();}
+function calNext(){calMonth===11?(calYear++,calMonth=0):calMonth++;renderCal();}
+
+// ═══════════════════════════════════
+// 예약 시트 (최소 4시간)
+// ═══════════════════════════════════
+function showSheet() {
+  const it = ITEMS[curItem];
+  document.getElementById('sheet-name').textContent = it.brand + ' · ' + it.name;
+  document.getElementById('sh-rate').textContent = '₩' + it.price.toLocaleString();
+  updateSheet(it.price);
+  document.getElementById('sheet-overlay').classList.add('show');
+}
+function hideSheet(e) { if(e.target.id==='sheet-overlay') document.getElementById('sheet-overlay').classList.remove('show'); }
+function selHour(el, h) {
+  selHours = h;
+  document.querySelectorAll('.hour-btn').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('sh-hrs').textContent = h<24?h+'시간':h===24?'1일':'2일';
+  updateSheet(ITEMS[curItem].price);
+}
+function updateSheet(basePrice4h) {
+  // basePrice4h = 4시간 기준 가격, 비례 계산
+  const sub = Math.round(basePrice4h * selHours / 4);
+  const fee = Math.round(sub * .15);
+  const total = sub + fee;
+  document.getElementById('sh-fee').textContent = '₩'+fee.toLocaleString();
+  document.getElementById('sh-total').textContent = '₩'+total.toLocaleString();
+}
+function confirmBook() {
+  document.getElementById('sheet-overlay').classList.remove('show');
+  showToast('예약이 완료됐습니다 ✓');
+}
+
+// ═══════════════════════════════════
+// 유틸
+// ═══════════════════════════════════
+function showToast(msg) {
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2400);
+}
+function switchRole(el) {
+  el.closest('.my-role-row').querySelectorAll('.role-card').forEach(c=>c.classList.remove('active'));
   el.classList.add('active');
 }
-
-function registerFairyItem(){
-  showToast('✦ 아이템이 등록됐습니다');
-  setTimeout(() => goFairyNav('home', 0), 800);
+function selChip(el, group) {
+  el.closest(group==='grade'?'.grade-row':'.chip-row').querySelectorAll(group==='grade'?'.grade-btn':'.chip').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
 }
-
-/* ── Fairy Reservation ── */
-function acceptRequest(el){
-  const card = el.closest('.f-req-card');
-  card.style.transition = 'opacity .3s, transform .3s';
-  card.style.opacity = '0';
-  card.style.transform = 'translateX(20px)';
-  showToast('✓ 렌탈 요청을 수락했습니다');
-  setTimeout(() => card.remove(), 300);
-}
-
-function rejectRequest(el){
-  const card = el.closest('.f-req-card');
-  card.style.transition = 'opacity .3s, transform .3s';
-  card.style.opacity = '0';
-  card.style.transform = 'translateX(-20px)';
-  showToast('렌탈 요청을 거절했습니다');
-  setTimeout(() => card.remove(), 300);
+function updateEarn() {
+  const v = parseInt(document.getElementById('price-input').value)||0;
+  const day = Math.round(v*2*.85), month = day*20;
+  document.getElementById('earn-day').textContent='₩'+day.toLocaleString();
+  document.getElementById('earn-month').textContent='₩'+month.toLocaleString();
 }
 </script>
 </body>
