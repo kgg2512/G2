@@ -1,0 +1,1058 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>MyFit — AI 가상 피팅</title>
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<style>
+  :root {
+    --bg:#0a0a0a; --bg2:#141414; --bg3:#1e1e1e;
+    --accent:#00e5ff; --accent2:#7c4dff;
+    --text:#ffffff; --text2:#aaaaaa;
+    --card:#1a1a1a; --border:#2a2a2a;
+    --success:#00e676; --warn:#ffab40; --danger:#ff5252;
+    --r:16px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;overflow-x:hidden}
+  .screen{display:none;min-height:100vh;flex-direction:column;animation:fadeIn .3s ease}
+  .screen.active{display:flex}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .header{display:flex;align-items:center;gap:12px;padding:20px 20px 0}
+  .back-btn{width:36px;height:36px;border-radius:50%;background:var(--bg3);border:none;color:var(--text);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .header-title{font-size:18px;font-weight:700}
+  .btn{width:100%;padding:16px;border-radius:var(--r);border:none;font-size:16px;font-weight:700;cursor:pointer;transition:.2s}
+  .btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000}
+  .btn-primary:active{opacity:.8;transform:scale(.98)}
+  .btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--text)}
+
+  /* S1 LOGIN */
+  #s-login{background:radial-gradient(ellipse at 50% 0%,#0d1f3c 0%,var(--bg) 70%);align-items:center;justify-content:center;padding:40px 28px}
+  .logo-icon{width:80px;height:80px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:24px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:36px;box-shadow:0 0 40px rgba(0,229,255,.3)}
+  .logo-name{font-size:36px;font-weight:900;letter-spacing:-1px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center}
+  .logo-sub{font-size:14px;color:var(--text2);margin-top:6px;text-align:center}
+  .feature-list{margin:36px 0;display:flex;flex-direction:column;gap:16px}
+  .feature-item{display:flex;align-items:center;gap:14px}
+  .feat-icon{width:44px;height:44px;border-radius:12px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+  .feat-text strong{display:block;font-size:14px}
+  .feat-text span{font-size:12px;color:var(--text2)}
+  .google-btn{width:100%;padding:16px;border-radius:var(--r);background:#fff;color:#222;font-size:15px;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:.2s}
+  .google-btn:active{opacity:.85}
+
+  /* S2 PHOTO */
+  .photo-guide{background:linear-gradient(135deg,rgba(0,229,255,.08),rgba(124,77,255,.08));border:1px solid rgba(0,229,255,.2);border-radius:var(--r);padding:14px 16px;margin:16px 0 20px;font-size:13px;color:var(--text2);line-height:1.6}
+  .photo-guide strong{color:var(--accent)}
+  .photo-slots{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+  .photo-slot{aspect-ratio:3/4;border-radius:var(--r);border:2px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;position:relative;overflow:hidden;background:var(--bg2);transition:.2s}
+  .photo-slot.captured{border-color:var(--success);border-style:solid}
+  .photo-slot .slot-icon{font-size:28px}
+  .photo-slot .slot-label{font-size:11px;color:var(--text2);font-weight:600;letter-spacing:.5px}
+  .photo-slot .checkmark{position:absolute;top:8px;right:8px;width:20px;height:20px;background:var(--success);border-radius:50%;display:none;align-items:center;justify-content:center;font-size:11px;color:#000;font-weight:900}
+  .photo-slot.captured .checkmark{display:flex}
+  .photo-slot img.preview{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .photo-slot input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+
+  /* S3 PROCESSING */
+  #s-processing{align-items:center;justify-content:center;text-align:center;padding:40px 28px}
+  .scan-container{position:relative;width:180px;height:280px;margin:0 auto 36px}
+  .scan-line{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);animation:scan 2s ease-in-out infinite;top:0}
+  @keyframes scan{0%{top:0;opacity:1}100%{top:280px;opacity:.2}}
+  .scan-glow{position:absolute;inset:0;background:radial-gradient(ellipse,rgba(0,229,255,.12) 0%,transparent 70%);animation:pulse 2s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+  .step-list{display:flex;flex-direction:column;gap:12px;text-align:left;width:100%;max-width:260px}
+  .step-item{display:flex;align-items:center;gap:12px}
+  .step-circle{width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;transition:.4s}
+  .step-circle.done{background:var(--success);border-color:var(--success);color:#000;font-weight:900}
+  .step-circle.running{border-color:var(--accent);animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .step-text{font-size:13px;color:var(--text2)}
+  .step-item.done .step-text{color:var(--text)}
+
+  /* S4 BODY */
+  .body-card{background:var(--bg2);border-radius:20px;padding:20px;margin:16px 0 16px;display:flex;gap:16px;align-items:center}
+  .measurements{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .measure-item{background:var(--bg3);border-radius:10px;padding:10px 12px}
+  .measure-label{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px}
+  .measure-value{font-size:18px;font-weight:800;color:var(--accent)}
+  .measure-unit{font-size:11px;color:var(--text2)}
+  .acc-bar{background:var(--bg2);border-radius:var(--r);padding:14px 16px;margin-bottom:16px}
+  .acc-track{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;margin-top:8px}
+  .acc-fill{height:100%;width:0;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:3px;transition:width 1.5s ease}
+
+  /* S5 SEARCH */
+  .search-bar{display:flex;align-items:center;gap:10px;background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r);padding:12px 16px;transition:.2s}
+  .search-bar:focus-within{border-color:var(--accent)}
+  .search-bar input{flex:1;background:none;border:none;color:var(--text);font-size:16px;outline:none}
+  .search-bar input::placeholder{color:var(--text2)}
+  .search-btn{padding:0 20px;height:52px;border-radius:var(--r);background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#000;font-weight:800;font-size:14px;cursor:pointer;flex-shrink:0;white-space:nowrap}
+  .search-tag{padding:6px 14px;border-radius:100px;background:var(--bg3);border:1px solid var(--border);font-size:12px;cursor:pointer;color:var(--text2);white-space:nowrap;transition:.15s}
+  .search-tag:active{border-color:var(--accent);color:var(--accent)}
+  .product-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .product-card{background:var(--bg2);border-radius:var(--r);overflow:hidden;cursor:pointer;border:1.5px solid var(--border);transition:.2s}
+  .product-card:active{border-color:var(--accent);transform:scale(.97)}
+  .product-img{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:64px;background:var(--bg3)}
+  .product-info{padding:10px 12px 12px}
+  .product-brand{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px}
+  .product-name{font-size:13px;font-weight:700;margin:2px 0 4px;line-height:1.3}
+  .product-price{font-size:14px;font-weight:800;color:var(--accent)}
+
+  /* S6 FITTING */
+  .fitting-canvas-wrap{position:relative;background:var(--bg2);margin:12px 20px;border-radius:20px;overflow:hidden;height:380px}
+  .fitting-canvas-wrap canvas{display:block;width:100%!important;height:100%!important}
+  .fitting-overlay-top{position:absolute;top:14px;right:14px;display:flex;gap:8px;align-items:center}
+  .fitting-overlay-bottom{position:absolute;bottom:14px;left:50%;transform:translateX(-50%)}
+  .size-badge{background:rgba(0,229,255,.18);border:1.5px solid var(--accent);border-radius:100px;padding:5px 14px;font-size:13px;font-weight:800;color:var(--accent)}
+  .fit-badge{background:rgba(0,0,0,.8);border-radius:100px;padding:7px 18px;font-size:12px;font-weight:700;white-space:nowrap}
+  .drag-hint{position:absolute;top:14px;left:14px;font-size:11px;color:rgba(255,255,255,.4);pointer-events:none}
+  .size-selector{padding:0 20px;margin-bottom:14px}
+  .size-label{font-size:12px;color:var(--text2);margin-bottom:10px}
+  .size-btns{display:flex;gap:8px;flex-wrap:wrap}
+  .size-btn{padding:10px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg2);color:var(--text);font-size:13px;font-weight:700;cursor:pointer;transition:.2s;min-width:48px;text-align:center;position:relative}
+  .size-btn.active{background:rgba(0,229,255,.12);border-color:var(--accent);color:var(--accent)}
+  .size-rec-dot{position:absolute;top:3px;right:4px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
+  .fit-score-card{background:var(--bg2);border-radius:var(--r);padding:16px;margin:0 20px 16px}
+  .fit-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .fit-bar-label{font-size:12px;width:48px;color:var(--text2)}
+  .fit-bar-track{flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+  .fit-bar-fill{height:100%;border-radius:3px;transition:width .6s ease}
+  .fit-bar-val{font-size:12px;font-weight:700;width:30px;text-align:right}
+  .buy-section{padding:0 20px 32px}
+  .product-detail-row{display:flex;align-items:center;gap:12px;background:var(--bg2);border-radius:var(--r);padding:14px;margin-bottom:12px}
+  .pd-emoji{font-size:32px;width:50px;height:50px;background:var(--bg3);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .pd-price{margin-left:auto;font-size:16px;font-weight:900;color:var(--accent);white-space:nowrap}
+
+  /* S7 PURCHASE */
+  #s-purchase{align-items:center;justify-content:center;text-align:center;padding:40px 28px}
+  .purchase-icon{width:80px;height:80px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:24px;font-size:36px;display:flex;align-items:center;justify-content:center;margin:0 auto 24px}
+  .retailer-btn{width:100%;padding:16px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--bg2);color:var(--text);font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:12px;transition:.2s;text-decoration:none;margin-bottom:10px}
+  .retailer-btn:active{border-color:var(--accent)}
+
+  /* NAV */
+  .nav{display:flex;justify-content:space-around;padding:12px 0 max(12px,env(safe-area-inset-bottom));background:var(--bg2);border-top:1px solid var(--border);position:fixed;bottom:0;left:0;right:0;z-index:100}
+  .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10px;color:var(--text2);cursor:pointer;padding:4px 16px}
+  .nav-item.active{color:var(--accent)}
+  .nav-icon{font-size:20px}
+
+  /* TOAST */
+  .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--success);color:#000;padding:12px 24px;border-radius:100px;font-size:13px;font-weight:700;opacity:0;transition:.3s;pointer-events:none;z-index:999;white-space:nowrap}
+  .toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<!-- S1: LOGIN -->
+<div id="s-login" class="screen active">
+  <div style="margin:auto;width:100%;max-width:420px;padding:60px 28px 40px">
+    <div style="margin-bottom:40px">
+      <div class="logo-icon">👗</div>
+      <div class="logo-name">MyFit</div>
+      <div class="logo-sub">AI 기반 가상 피팅 · 완벽한 사이즈 선택</div>
+    </div>
+    <div class="feature-list">
+      <div class="feature-item">
+        <div class="feat-icon">📸</div>
+        <div class="feat-text"><strong>사진 3장으로 3D 신체 생성</strong><span>정면·측면·후면 촬영으로 정밀 분석</span></div>
+      </div>
+      <div class="feature-item">
+        <div class="feat-icon">🎮</div>
+        <div class="feat-text"><strong>실시간 3D 가상 피팅</strong><span>Three.js 기반 실제 3D 신체에 옷 입혀보기</span></div>
+      </div>
+      <div class="feature-item">
+        <div class="feat-icon">🛒</div>
+        <div class="feat-text"><strong>사이즈 확신, 바로 구매</strong><span>Nike·무신사·Zara 등 즉시 구매 연동</span></div>
+      </div>
+    </div>
+    <button class="google-btn" onclick="doGoogleLogin()">
+      <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Google로 계속하기
+    </button>
+    <p style="text-align:center;font-size:11px;color:var(--text2);margin-top:16px">계속하면 이용약관 및 개인정보처리방침에 동의합니다</p>
+  </div>
+</div>
+
+<!-- S2: PHOTO CAPTURE -->
+<div id="s-photo" class="screen">
+  <div class="header"><button class="back-btn" onclick="goTo('s-login')">←</button><div class="header-title">신체 사진 촬영</div></div>
+  <div style="flex:1;padding:0 20px 100px;max-width:500px;margin:0 auto;width:100%">
+    <div class="photo-guide">
+      <strong>📋 촬영 가이드</strong><br>
+      • 전신이 나오도록 · 단색 배경 권장<br>
+      • 꽉 끼지 않는 옷 착용 · 밝은 환경<br>
+      • <strong>3장 모두 촬영</strong>해야 3D 신체가 정확하게 생성됩니다
+    </div>
+    <div class="photo-slots">
+      <div class="photo-slot" id="slot-front">
+        <span class="slot-icon">🧍</span><span class="slot-label">정면</span>
+        <span class="checkmark">✓</span>
+        <img id="prev-front" class="preview" style="display:none">
+        <input type="file" id="inp-front" accept="image/*" capture="user" onchange="photoUploaded('front',this)">
+      </div>
+      <div class="photo-slot" id="slot-side">
+        <span class="slot-icon">🚶</span><span class="slot-label">측면</span>
+        <span class="checkmark">✓</span>
+        <img id="prev-side" class="preview" style="display:none">
+        <input type="file" id="inp-side" accept="image/*" onchange="photoUploaded('side',this)">
+      </div>
+      <div class="photo-slot" id="slot-back">
+        <span class="slot-icon">🔙</span><span class="slot-label">후면</span>
+        <span class="checkmark">✓</span>
+        <img id="prev-back" class="preview" style="display:none">
+        <input type="file" id="inp-back" accept="image/*" onchange="photoUploaded('back',this)">
+      </div>
+    </div>
+    <p id="photo-count" style="text-align:center;font-size:13px;color:var(--text2);margin-bottom:16px">0 / 3장 촬영됨 — 모두 촬영하거나 데모로 진행하세요</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:8px;background:var(--bg2);border-radius:var(--r);padding:12px 14px">
+        <span style="font-size:13px;color:var(--text2);white-space:nowrap">키 (cm)</span>
+        <input type="number" id="inp-height" min="140" max="220" value="175" style="flex:1;background:#1a1a1a;border:1px solid var(--border);border-radius:8px;padding:8px 8px;color:var(--text);font-size:15px;font-weight:600;text-align:center">
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;background:var(--bg2);border-radius:var(--r);padding:12px 14px">
+        <span style="font-size:13px;color:var(--text2);white-space:nowrap">몸무게 (kg)</span>
+        <input type="number" id="inp-weight" min="30" max="200" value="70" style="flex:1;background:#1a1a1a;border:1px solid var(--border);border-radius:8px;padding:8px 8px;color:var(--text);font-size:15px;font-weight:600;text-align:center">
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="startAnalysis()" id="analyze-btn">▶ 3D 신체 분석 시작</button>
+    <p style="text-align:center;font-size:12px;color:var(--text2);margin-top:10px">📌 PC에서는 파일 선택으로 업로드 · 모바일에서는 카메라 직접 촬영</p>
+  </div>
+</div>
+
+<!-- S3: PROCESSING -->
+<div id="s-processing" class="screen">
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center">
+    <div class="scan-container">
+      <div class="scan-glow"></div>
+      <svg width="180" height="280" viewBox="0 0 100 200" fill="none">
+        <ellipse cx="50" cy="18" rx="14" ry="14" stroke="#00e5ff" stroke-width="1.5" opacity=".8"/>
+        <rect x="34" y="34" width="32" height="52" rx="8" stroke="#00e5ff" stroke-width="1.5" opacity=".8"/>
+        <rect x="14" y="36" width="18" height="44" rx="7" stroke="#7c4dff" stroke-width="1.5" opacity=".7"/>
+        <rect x="68" y="36" width="18" height="44" rx="7" stroke="#7c4dff" stroke-width="1.5" opacity=".7"/>
+        <rect x="36" y="88" width="12" height="58" rx="7" stroke="#00e5ff" stroke-width="1.5" opacity=".8"/>
+        <rect x="52" y="88" width="12" height="58" rx="7" stroke="#00e5ff" stroke-width="1.5" opacity=".8"/>
+        <circle cx="50" cy="18" r="3" fill="#00e5ff" opacity=".6"/>
+        <circle cx="34" cy="55" r="2" fill="#7c4dff"/>
+        <circle cx="66" cy="55" r="2" fill="#7c4dff"/>
+        <circle cx="44" cy="145" r="2" fill="#00e5ff" opacity=".6"/>
+        <circle cx="56" cy="145" r="2" fill="#00e5ff" opacity=".6"/>
+      </svg>
+      <div class="scan-line"></div>
+    </div>
+    <div style="font-size:24px;font-weight:800;margin-bottom:8px">3D 신체 생성 중</div>
+    <div style="color:var(--text2);font-size:14px;margin-bottom:32px">AI가 신체를 분석하고 있습니다</div>
+    <div class="step-list" id="step-list">
+      <div class="step-item" id="step-1"><div class="step-circle running" id="sc-1">◌</div><span class="step-text">키포인트 추출 (MediaPipe)</span></div>
+      <div class="step-item" id="step-2"><div class="step-circle" id="sc-2">2</div><span class="step-text">실루엣 분석 및 치수 계산</span></div>
+      <div class="step-item" id="step-3"><div class="step-circle" id="sc-3">3</div><span class="step-text">3D 메쉬 생성 (Three.js)</span></div>
+      <div class="step-item" id="step-4"><div class="step-circle" id="sc-4">4</div><span class="step-text">신체 프로필 완성</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- S4: BODY PROFILE -->
+<div id="s-body" class="screen">
+  <div class="header"><button class="back-btn" onclick="goTo('s-photo')">←</button><div class="header-title">내 신체 프로필</div><span style="margin-left:auto;background:rgba(0,230,118,.12);color:var(--success);font-size:11px;font-weight:700;padding:5px 12px;border-radius:100px;border:1px solid rgba(0,230,118,.3)">✓ 분석완료</span></div>
+  <div style="flex:1;padding:0 20px 100px;max-width:500px;margin:0 auto;width:100%">
+    <div class="body-card">
+      <div id="body-avatar" style="width:80px;height:160px;border-radius:12px;overflow:hidden;border:2px solid var(--accent);flex-shrink:0;position:relative;background:var(--bg3)">
+        <img id="body-avatar-img" style="width:100%;height:100%;object-fit:cover;object-position:top;display:none" src="" alt="내 사진">
+        <div id="body-avatar-svg" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center">
+          <svg width="72" height="148" viewBox="0 0 100 200" fill="none">
+            <ellipse cx="50" cy="16" rx="13" ry="15" fill="rgba(0,229,255,.1)" stroke="#00e5ff" stroke-width="2"/>
+            <path d="M26 34 Q26 28 50 28 Q74 28 74 34 L78 90 Q78 100 68 100 L32 100 Q22 100 22 90 Z" fill="rgba(0,229,255,.08)" stroke="#00e5ff" stroke-width="1.5"/>
+            <rect x="13" y="32" width="14" height="54" rx="7" fill="rgba(124,77,255,.08)" stroke="#7c4dff" stroke-width="1.5"/>
+            <rect x="73" y="32" width="14" height="54" rx="7" fill="rgba(124,77,255,.08)" stroke="#7c4dff" stroke-width="1.5"/>
+            <rect id="body-svg-leg-l" x="32" y="102" width="14" height="62" rx="7" fill="rgba(0,229,255,.08)" stroke="#00e5ff" stroke-width="1.5"/>
+            <rect id="body-svg-leg-r" x="54" y="102" width="14" height="62" rx="7" fill="rgba(0,229,255,.08)" stroke="#00e5ff" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div style="position:absolute;bottom:4px;left:0;right:0;text-align:center;font-size:9px;color:var(--accent);font-weight:700" id="avatar-label">내 몸</div>
+      </div>
+      <div class="measurements">
+        <div class="measure-item"><div class="measure-label">키</div><span class="measure-value" id="profile-height">175</span><span class="measure-unit">cm</span></div>
+        <div class="measure-item"><div class="measure-label">몸무게</div><span class="measure-value" id="profile-weight">70</span><span class="measure-unit">kg</span></div>
+        <div class="measure-item"><div class="measure-label">어깨</div><span class="measure-value" id="profile-shoulder">43</span><span class="measure-unit">cm</span></div>
+        <div class="measure-item"><div class="measure-label">가슴</div><span class="measure-value" id="profile-chest">94</span><span class="measure-unit">cm</span></div>
+        <div class="measure-item"><div class="measure-label">허리</div><span class="measure-value" id="profile-waist">78</span><span class="measure-unit">cm</span></div>
+        <div class="measure-item"><div class="measure-label">BMI</div><span class="measure-value" id="profile-bmi">22.9</span><span class="measure-unit"></span></div>
+      </div>
+    </div>
+    <div class="acc-bar">
+      <div style="font-size:12px;color:var(--text2)">측정 정확도 <span style="float:right;color:var(--success);font-weight:700">94.2%</span></div>
+      <div class="acc-track"><div class="acc-fill" id="acc-fill"></div></div>
+    </div>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:10px">추천 사이즈</div>
+    <div style="display:flex;gap:8px;margin-bottom:24px">
+      <div style="flex:1;background:rgba(0,229,255,.1);border:1.5px solid var(--accent);border-radius:12px;padding:12px;text-align:center"><div style="font-size:10px;color:var(--text2)">상의</div><div style="font-size:22px;font-weight:900;color:var(--accent)">L</div></div>
+      <div style="flex:1;background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:12px;text-align:center"><div style="font-size:10px;color:var(--text2)">하의</div><div style="font-size:22px;font-weight:900">32</div></div>
+      <div style="flex:1;background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:12px;text-align:center"><div style="font-size:10px;color:var(--text2)">신발</div><div style="font-size:22px;font-weight:900">270</div></div>
+    </div>
+    <button class="btn btn-primary" onclick="goTo('s-search')">👗 의류 검색 & 가상 피팅 →</button>
+  </div>
+  <div class="nav">
+    <div class="nav-item active" onclick="goTo('s-body')"><div class="nav-icon">🧍</div>내 몸</div>
+    <div class="nav-item" onclick="goTo('s-search')"><div class="nav-icon">🔍</div>검색</div>
+    <div class="nav-item"><div class="nav-icon">❤️</div>저장</div>
+    <div class="nav-item"><div class="nav-icon">👤</div>프로필</div>
+  </div>
+</div>
+
+<!-- S5: SEARCH -->
+<div id="s-search" class="screen">
+  <div class="header" style="padding-bottom:0"><div class="header-title" style="font-size:20px">👗 의류 검색</div></div>
+  <div style="flex:1;padding:0 20px 100px;max-width:500px;margin:0 auto;width:100%">
+    <p style="font-size:13px;color:var(--text2);margin:12px 0 10px">원하는 의류를 검색하면 3D 가상 피팅을 해드립니다</p>
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <div class="search-bar" style="flex:1;margin:0">
+        <span style="font-size:18px">🔍</span>
+        <input id="search-input" type="text" placeholder="예: 나이키 트레이닝, 무신사 청바지..." onkeydown="if(event.key==='Enter')doSearch()">
+      </div>
+      <button class="search-btn" onclick="doSearch()">검색</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:16px">
+      <span style="font-size:11px;color:var(--text2);flex-shrink:0">추천:</span>
+      <span class="search-tag" onclick="quickSearch('나이키 트레이닝')">나이키 트레이닝</span>
+      <span class="search-tag" onclick="quickSearch('무신사 청바지')">무신사 청바지</span>
+      <span class="search-tag" onclick="quickSearch('아디다스 후디')">아디다스 후디</span>
+      <span class="search-tag" onclick="quickSearch('나이키 조던')">나이키 조던</span>
+      <span class="search-tag" onclick="quickSearch('자라 셔츠')">자라 셔츠</span>
+    </div>
+    <div id="search-result-label" style="font-size:12px;color:var(--text2);margin-bottom:12px">전체 15개 제품</div>
+    <div class="product-grid" id="product-grid"></div>
+  </div>
+  <div class="nav">
+    <div class="nav-item" onclick="goTo('s-body')"><div class="nav-icon">🧍</div>내 몸</div>
+    <div class="nav-item active"><div class="nav-icon">🔍</div>검색</div>
+    <div class="nav-item"><div class="nav-icon">❤️</div>저장</div>
+    <div class="nav-item"><div class="nav-icon">👤</div>프로필</div>
+  </div>
+</div>
+
+<!-- S6: FITTING (Three.js 3D) -->
+<div id="s-fitting" class="screen">
+  <div class="header"><button class="back-btn" onclick="goTo('s-search')">←</button><div class="header-title" id="fitting-title">가상 피팅</div></div>
+  <div style="flex:1;max-width:500px;margin:0 auto;width:100%;padding-bottom:20px">
+
+    <!-- Three.js Canvas -->
+    <div class="fitting-canvas-wrap" id="three-wrap">
+      <div id="three-mount" style="width:100%;height:380px"></div>
+      <div class="fitting-overlay-top">
+        <div class="size-badge" id="size-badge">L</div>
+      </div>
+      <div class="fitting-overlay-bottom">
+        <div class="fit-badge" id="fit-badge" style="color:var(--success)">✓ 완벽한 핏</div>
+      </div>
+      <div class="drag-hint">← 드래그 회전 →</div>
+    </div>
+
+    <!-- Size Selector -->
+    <div class="size-selector">
+      <div class="size-label">사이즈 선택 — 추천: <strong style="color:var(--accent)" id="rec-size-label">L</strong></div>
+      <div class="size-btns" id="size-btns"></div>
+    </div>
+
+    <!-- Fit Analysis -->
+    <div class="fit-score-card">
+      <div style="font-size:12px;color:var(--text2);margin-bottom:12px">핏 분석</div>
+      <div id="fit-bars"></div>
+      <div id="fit-comment" style="font-size:13px;color:var(--text2);margin-top:12px;padding-top:12px;border-top:1px solid var(--border)"></div>
+    </div>
+
+    <!-- Buy Button -->
+    <div class="buy-section" style="padding:0 20px 0">
+      <div class="product-detail-row">
+        <div class="pd-emoji" id="pd-emoji" style="overflow:hidden;padding:0;flex-shrink:0">
+        <img id="pd-img" style="width:100%;height:100%;object-fit:cover" src="" alt=""
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <span id="pd-emoji-fb" style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:28px">👕</span>
+      </div>
+        <div><div id="pd-name" style="font-size:14px;font-weight:700"></div><div id="pd-size" style="font-size:12px;color:var(--text2)">사이즈: L</div></div>
+        <div class="pd-price" id="pd-price">₩99,000</div>
+      </div>
+      <button class="btn btn-primary" onclick="goToPurchase()">🛒 이 옷 구매하기 →</button>
+    </div>
+  </div>
+</div>
+
+<!-- S7: PURCHASE -->
+<div id="s-purchase" class="screen">
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center;max-width:480px;margin:0 auto;width:100%">
+    <div class="purchase-icon">🛒</div>
+    <div style="font-size:24px;font-weight:800;margin-bottom:8px">구매처 선택</div>
+    <div id="purchase-sub" style="font-size:14px;color:var(--text2);margin-bottom:28px;line-height:1.6"></div>
+    <div id="retailer-list" style="width:100%;margin-bottom:20px"></div>
+    <button class="btn btn-outline" onclick="goTo('s-search')">다른 옷 피팅하기</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== PRODUCT DATABASE =====
+const PRODUCTS = [
+  {id:1,  brand:'Nike',   name:'드라이핏 트레이닝 티셔츠',   emoji:'👕', img:'https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=400&q=80', price:'₩55,000',  sizes:['S','M','L','XL'],              url:'https://www.nike.com/kr',     keywords:'나이키 nike training tshirt 반팔 드라이핏 트레이닝', clothType:'tshirt', clothColor:0x1565C0},
+  {id:2,  brand:'Nike',   name:'테크 플리스 풀집 후디',       emoji:'🧥', img:'https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=400&q=80', price:'₩149,000', sizes:['S','M','L','XL','2XL'],        url:'https://www.nike.com/kr',     keywords:'나이키 nike hoodie 후디 후드 테크플리스 집업',       clothType:'jacket', clothColor:0x212121},
+  {id:3,  brand:'Nike',   name:'에어 포스 1 \'07 화이트',     emoji:'👟', img:'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80', price:'₩129,000', sizes:['250','260','270','280'],        url:'https://www.nike.com/kr',     keywords:'나이키 nike air force 에어포스 스니커즈 신발',       clothType:'shoe',   clothColor:0xF5F5F5},
+  {id:4,  brand:'Nike',   name:'조던 1 레트로 하이 OG',       emoji:'👟', img:'https://images.unsplash.com/photo-1600269452121-4f2416e55c28?w=400&q=80', price:'₩219,000', sizes:['255','260','265','270','275','280'], url:'https://www.nike.com/kr', keywords:'나이키 nike jordan 조던 농구화 하이탑',              clothType:'shoe',   clothColor:0xC62828},
+  {id:5,  brand:'Nike',   name:'드라이핏 런닝 하프팬츠',      emoji:'👖', img:'https://images.unsplash.com/photo-1565084888279-aca607ecce0c?w=400&q=80', price:'₩59,000',  sizes:['S','M','L','XL'],              url:'https://www.nike.com/kr',     keywords:'나이키 nike pants 런닝 반바지 하의 드라이핏',        clothType:'pants',  clothColor:0x1A237E},
+  {id:6,  brand:'Adidas', name:'트레포일 후디 그레이',         emoji:'🧥', img:'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&q=80', price:'₩99,000',  sizes:['S','M','L','XL','2XL'],        url:'https://www.adidas.co.kr',    keywords:'아디다스 adidas hoodie 후디 트레이닝 트레포일',      clothType:'jacket', clothColor:0x616161},
+  {id:7,  brand:'Adidas', name:'울트라부스트 23 런닝화',       emoji:'👟', img:'https://images.unsplash.com/photo-1608231387042-66d1773d3028?w=400&q=80', price:'₩189,000', sizes:['250','260','270','280'],        url:'https://www.adidas.co.kr',    keywords:'아디다스 adidas ultraboost 울트라부스트 런닝화 신발', clothType:'shoe',   clothColor:0x1B5E20},
+  {id:8,  brand:'Adidas', name:'슈퍼스타 클래식 스니커즈',     emoji:'👟', img:'https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?w=400&q=80', price:'₩109,000', sizes:['250','260','270','280'],        url:'https://www.adidas.co.kr',    keywords:'아디다스 adidas superstar 슈퍼스타 클래식 스니커즈', clothType:'shoe',   clothColor:0xFAFAFA},
+  {id:9,  brand:'무신사', name:'오버핏 와이드 청바지',         emoji:'👖', img:'https://images.unsplash.com/photo-1542574271-7f3b92e6c821?w=400&q=80', price:'₩59,000',  sizes:['28','30','32','34'],            url:'https://www.musinsa.com',     keywords:'무신사 청바지 데님 jeans denim 와이드 오버핏',       clothType:'pants',  clothColor:0x1565C0},
+  {id:10, brand:'무신사', name:'베이직 오버사이즈 티셔츠',     emoji:'👕', img:'https://images.unsplash.com/photo-1503341733017-1901578f9f1e?w=400&q=80', price:'₩29,000',  sizes:['S','M','L','XL','2XL'],        url:'https://www.musinsa.com',     keywords:'무신사 basic tshirt 반팔 오버핏 면 베이직',          clothType:'tshirt', clothColor:0xE0E0E0},
+  {id:11, brand:'무신사', name:'스탠다드 슬림핏 슬랙스',       emoji:'👖', img:'https://images.unsplash.com/photo-1594938298603-c8148c4b5a59?w=400&q=80', price:'₩49,000',  sizes:['28','30','32','34','36'],       url:'https://www.musinsa.com',     keywords:'무신사 슬랙스 pants 바지 슬림 슬랙스',               clothType:'pants',  clothColor:0x37474F},
+  {id:12, brand:'Zara',   name:'슬림핏 옥스포드 셔츠',         emoji:'👔', img:'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&q=80', price:'₩79,000',  sizes:['XS','S','M','L','XL'],         url:'https://www.zara.com/kr',     keywords:'자라 zara shirt 셔츠 옥스포드 슬림',                 clothType:'shirt',  clothColor:0xEEEEEE},
+  {id:13, brand:'Zara',   name:'트러커 데님 재킷',             emoji:'🧥', img:'https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=400&q=80', price:'₩119,000', sizes:['S','M','L','XL'],              url:'https://www.zara.com/kr',     keywords:'자라 zara jacket 재킷 데님 트러커',                  clothType:'jacket', clothColor:0x3949AB},
+  {id:14, brand:'H&M',   name:'오버사이즈 린넨 셔츠',         emoji:'🎽', img:'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=400&q=80', price:'₩39,000',  sizes:['XS','S','M','L','XL','XXL'],   url:'https://www2.hm.com/ko_kr',   keywords:'HM 린넨 셔츠 shirt 오버사이즈 반팔',                 clothType:'shirt',  clothColor:0xF9A825},
+  {id:15, brand:'H&M',   name:'슬림 치노 팬츠',               emoji:'👖', img:'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=400&q=80', price:'₩34,000',  sizes:['28','30','32','34','36'],       url:'https://www2.hm.com/ko_kr',   keywords:'HM 치노 chino pants 바지 슬림',                     clothType:'pants',  clothColor:0x8D6E63},
+];
+
+const FIT = {
+  'XS' :{c:38,s:35,w:60, comment:'<strong style="color:#ff5252">너무 작음</strong> — 착용이 불편할 수 있습니다. 반품 가능성 높음.',      badge:'⚠️ 사이즈업 필요', color:'#ff5252'},
+  'S'  :{c:55,s:48,w:72, comment:'<strong style="color:#ffab40">약간 타이트</strong> — 가슴·어깨 여유가 적습니다. 슬림핏 선호 시 적합.',  badge:'약간 타이트',      color:'#ffab40'},
+  'M'  :{c:72,s:68,w:85, comment:'<strong style="color:#69f0ae">잘 맞음</strong> — 전반적으로 잘 맞습니다. 레이어링에도 적합.',           badge:'✓ 잘 맞음',        color:'#69f0ae'},
+  'L'  :{c:94,s:91,w:96, comment:'<strong style="color:#00e676">완벽한 핏</strong> — 신체 측정값과 가장 잘 맞는 사이즈입니다.',           badge:'✓ 완벽한 핏',      color:'#00e676'},
+  'XL' :{c:80,s:75,w:88, comment:'<strong style="color:#40c4ff">약간 여유</strong> — 루즈핏·레이어링에 적합.',                            badge:'여유있는 핏',      color:'#40c4ff'},
+  '2XL':{c:62,s:58,w:72, comment:'<strong style="color:#b388ff">오버핏</strong> — 스트리트·힙합 스타일 연출에 적합.',                    badge:'오버핏',           color:'#b388ff'},
+  'XXL':{c:55,s:50,w:65, comment:'<strong style="color:#b388ff">빅실루엣</strong> — 드레이프 효과·빅 실루엣 연출.',                       badge:'빅실루엣',         color:'#b388ff'},
+  '28' :{c:92,s:90,w:94, comment:'<strong style="color:#00e676">완벽한 핏</strong> — 허리 측정값과 잘 맞습니다.',                         badge:'✓ 완벽한 핏',      color:'#00e676'},
+  '30' :{c:82,s:80,w:87, comment:'<strong style="color:#69f0ae">잘 맞음</strong> — 적당한 여유.',                                          badge:'✓ 잘 맞음',        color:'#69f0ae'},
+  '32' :{c:94,s:91,w:96, comment:'<strong style="color:#00e676">완벽한 핏</strong> — 허리 측정값과 가장 잘 맞습니다.',                    badge:'✓ 완벽한 핏',      color:'#00e676'},
+  '34' :{c:80,s:78,w:85, comment:'<strong style="color:#40c4ff">약간 여유</strong> — 편안한 착화감.',                                     badge:'여유있는 핏',      color:'#40c4ff'},
+  '36' :{c:65,s:63,w:72, comment:'<strong style="color:#b388ff">여유 있음</strong> — 오버사이즈 스타일.',                                  badge:'오버핏',           color:'#b388ff'},
+  '240':{c:60,s:55,w:70, comment:'<strong style="color:#ff5252">작음</strong> — 발볼이 좁게 느껴질 수 있습니다.',                          badge:'⚠️ 작음',          color:'#ff5252'},
+  '250':{c:72,s:68,w:82, comment:'<strong style="color:#ffab40">약간 작음</strong> — 발가락 끝 여유 부족.',                                badge:'약간 작음',        color:'#ffab40'},
+  '255':{c:80,s:78,w:88, comment:'<strong style="color:#69f0ae">잘 맞음</strong>.',                                                        badge:'✓ 잘 맞음',        color:'#69f0ae'},
+  '260':{c:85,s:82,w:92, comment:'<strong style="color:#69f0ae">잘 맞음</strong> — 적당한 여유가 있어 편안합니다.',                        badge:'✓ 잘 맞음',        color:'#69f0ae'},
+  '265':{c:90,s:88,w:95, comment:'<strong style="color:#00e676">거의 완벽</strong> — 신체 데이터와 잘 맞습니다.',                          badge:'✓ 추천 사이즈',    color:'#00e676'},
+  '270':{c:94,s:93,w:97, comment:'<strong style="color:#00e676">완벽한 핏</strong> — 측정 발 길이와 가장 잘 맞는 사이즈입니다.',           badge:'✓ 완벽한 핏',      color:'#00e676'},
+  '275':{c:82,s:80,w:88, comment:'<strong style="color:#40c4ff">약간 여유</strong> — 두꺼운 양말 착용에 적합.',                            badge:'여유있는 핏',      color:'#40c4ff'},
+  '280':{c:70,s:68,w:78, comment:'<strong style="color:#40c4ff">여유 있음</strong> — 편안한 착화감, 인솔 추가 가능.',                      badge:'여유있음',         color:'#40c4ff'},
+};
+
+let selProduct = null, selSize = 'L';
+let scene3d, camera3d, renderer3d, bodyGroup, clothingGroup, animFrameId3d;
+let userBodyMeasurements = null;
+
+// ===== NAVIGATION =====
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+  if (id === 's-body') {
+    setTimeout(() => { document.getElementById('acc-fill').style.width = '94.2%'; }, 300);
+    // 업로드된 정면 사진 → 아바타로
+    const frontImg = document.getElementById('prev-front');
+    const avatarImg = document.getElementById('body-avatar-img');
+    const avatarSvg = document.getElementById('body-avatar-svg');
+    if (frontImg && frontImg.src && !frontImg.src.endsWith(location.href)) {
+      avatarImg.src = frontImg.src;
+      avatarImg.style.display = 'block';
+      avatarSvg.style.display = 'none';
+    } else {
+      avatarImg.style.display = 'none';
+      avatarSvg.style.display = 'flex';
+    }
+    // 측정값 업데이트
+    if (userBodyMeasurements) {
+      document.getElementById('profile-height').textContent = Math.round(userBodyMeasurements.height_cm);
+      document.getElementById('profile-weight').textContent = Math.round(userBodyMeasurements.weight_kg || 70);
+      document.getElementById('profile-shoulder').textContent = Math.round(userBodyMeasurements.shoulder_width_cm);
+      document.getElementById('profile-chest').textContent = Math.round(userBodyMeasurements.chest_cm);
+      document.getElementById('profile-waist').textContent = Math.round(userBodyMeasurements.waist_cm);
+      document.getElementById('profile-bmi').textContent = (userBodyMeasurements.bmi || 22.9).toFixed(1);
+    }
+  }
+  if (id === 's-search') renderProducts(PRODUCTS);
+}
+
+// ===== S1 LOGIN =====
+function doGoogleLogin() {
+  showToast('Google 계정으로 로그인 중...');
+  setTimeout(() => { showToast('강경구님 환영합니다! 👋'); goTo('s-photo'); }, 1200);
+}
+
+// ===== S2 PHOTO =====
+let photoCnt = 0;
+function photoUploaded(side, inp) {
+  if (!inp.files[0]) return;
+  const r = new FileReader();
+  r.onload = e => {
+    const p = document.getElementById('prev-' + side);
+    p.src = e.target.result; p.style.display = 'block';
+    const slot = document.getElementById('slot-' + side);
+    if (!slot.classList.contains('captured')) { photoCnt++; slot.classList.add('captured'); }
+    const labels = { front:'정면', side:'측면', back:'후면' };
+    showToast(labels[side] + ' 촬영 완료 ✓');
+    document.getElementById('photo-count').textContent = photoCnt + ' / 3장 촬영됨';
+    if (photoCnt === 3) {
+      showToast('3장 완료! 분석을 시작하세요 🎉');
+      document.getElementById('analyze-btn').textContent = '▶ 3D 신체 분석 시작 (3장 완료)';
+    }
+  };
+  r.readAsDataURL(inp.files[0]);
+}
+
+async function startAnalysis() {
+  const heightCm = parseFloat(document.getElementById('inp-height').value) || 175;
+  const weightKg = parseFloat(document.getElementById('inp-weight').value) || 70;
+  goTo('s-processing');
+
+  const steps = [{id:1,d:600},{id:2,d:1400},{id:3,d:2200},{id:4,d:3000}];
+  steps.forEach(({id,d}) => {
+    setTimeout(() => {
+      const sc = document.getElementById('sc-' + id);
+      sc.textContent = '✓'; sc.classList.remove('running'); sc.classList.add('done');
+      document.getElementById('step-' + id).classList.add('done');
+      if (id < 4) document.getElementById('sc-' + (id+1)).classList.add('running');
+    }, d);
+  });
+
+  // Try real API call with user's photos
+  try {
+    const frontFile = document.getElementById('inp-front').files[0];
+    const sideFile  = document.getElementById('inp-side').files[0];
+    const backFile  = document.getElementById('inp-back').files[0];
+    if (frontFile && sideFile) {
+      const fd = new FormData();
+      fd.append('front', frontFile);
+      fd.append('side',  sideFile);
+      fd.append('back',  backFile || sideFile);
+      fd.append('height_cm', heightCm);
+      const res = await fetch('http://localhost:8000/analyze/body', { method:'POST', body:fd });
+      const data = await res.json();
+      if (data.success && data.measurements) {
+        userBodyMeasurements = data.measurements;
+      }
+    }
+  } catch(e) {
+    // API not running — use proportional defaults based on height & weight
+    const s = heightCm / 175;
+    const bmi = weightKg / ((heightCm / 100) ** 2);
+    const bf = bmi < 20 ? 0.88 : bmi < 25 ? 1.0 : bmi < 30 ? 1.13 : 1.28;
+    userBodyMeasurements = {
+      height_cm: heightCm,
+      weight_kg: weightKg,
+      bmi: Math.round(bmi * 10) / 10,
+      shoulder_width_cm: Math.round(44 * s * (bf * 0.9 + 0.1)),
+      chest_cm: Math.round(95 * s * bf),
+      waist_cm: Math.round(78 * s * bf),
+      hip_cm: Math.round(95 * s * bf),
+      inseam_cm: Math.round(80 * s),
+      arm_length_cm: Math.round(58 * s)
+    };
+  }
+
+  setTimeout(() => goTo('s-body'), 4000);
+}
+
+// ===== S5 SEARCH =====
+function doSearch() {
+  const raw = document.getElementById('search-input').value.trim();
+  if (!raw) { renderProducts(PRODUCTS); document.getElementById('search-result-label').textContent = '전체 ' + PRODUCTS.length + '개 제품'; return; }
+  const q = raw.toLowerCase()
+    .replace(/나이키/g,'nike').replace(/아디다스/g,'adidas').replace(/자라/g,'zara')
+    .replace(/조던/g,'jordan').replace(/에어포스/g,'air force').replace(/울트라부스트/g,'ultraboost')
+    .replace(/트레이닝/g,'training').replace(/후디|후드/g,'hoodie')
+    .replace(/청바지|데님|진$|진\s/g,'jeans denim').replace(/티셔츠|반팔/g,'tshirt')
+    .replace(/셔츠/g,'shirt').replace(/팬츠|바지|슬랙스/g,'pants')
+    .replace(/신발|슈즈|스니커즈/g,'shoe');
+  const tokens = q.split(/\s+/).filter(Boolean);
+  const scored = PRODUCTS.map(p => {
+    const target = (p.name + ' ' + p.brand + ' ' + p.keywords).toLowerCase();
+    const score = tokens.filter(t => target.includes(t)).length;
+    return { p, score };
+  }).filter(({score}) => score > 0).sort((a,b) => b.score - a.score).map(({p}) => p);
+  const results = scored.length > 0 ? scored : PRODUCTS.filter(p =>
+    p.name.includes(raw) || p.brand.includes(raw) || p.keywords.includes(raw)
+  );
+  document.getElementById('search-result-label').textContent =
+    results.length > 0 ? '"' + raw + '" 검색 결과 ' + results.length + '개' : '검색 결과 없음 — 전체 제품 표시';
+  renderProducts(results.length > 0 ? results : PRODUCTS);
+}
+
+function quickSearch(q) {
+  document.getElementById('search-input').value = q;
+  doSearch();
+}
+
+function renderProducts(list) {
+  document.getElementById('product-grid').innerHTML = list.map(p => `
+    <div class="product-card" onclick="openFitting(${p.id})">
+      <div class="product-img" style="position:relative;overflow:hidden;padding:0">
+        <img src="${p.img}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;display:block"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:56px;position:absolute;inset:0;background:var(--bg3)">${p.emoji}</div>
+      </div>
+      <div class="product-info">
+        <div class="product-brand">${p.brand}</div>
+        <div class="product-name">${p.name}</div>
+        <div class="product-price">${p.price}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ===== S6 FITTING =====
+function getRecSize(product) {
+  if (product.sizes.includes('L')) return 'L';
+  if (product.sizes.includes('32')) return '32';
+  if (product.sizes.includes('270')) return '270';
+  return product.sizes[Math.floor(product.sizes.length / 2)];
+}
+
+function openFitting(id) {
+  selProduct = PRODUCTS.find(p => p.id === id);
+  selSize = getRecSize(selProduct);
+  document.getElementById('fitting-title').textContent = selProduct.name;
+  document.getElementById('pd-img').src = selProduct.img || '';
+  document.getElementById('pd-emoji-fb').textContent = selProduct.emoji;
+  document.getElementById('pd-name').textContent = selProduct.name;
+  document.getElementById('pd-price').textContent = selProduct.price;
+  document.getElementById('rec-size-label').textContent = selSize;
+  renderSizes(); updateFit(selSize);
+  goTo('s-fitting');
+  setTimeout(() => init3DFitting(selProduct), 80);
+}
+
+function renderSizes() {
+  const rec = getRecSize(selProduct);
+  document.getElementById('size-btns').innerHTML = selProduct.sizes.map(s => `
+    <button class="size-btn${s === selSize ? ' active' : ''}" onclick="selectSize('${s}')">
+      ${s}${s === rec ? '<span class="size-rec-dot"></span>' : ''}
+    </button>`).join('');
+}
+
+function selectSize(s) {
+  selSize = s;
+  document.getElementById('pd-size').textContent = '사이즈: ' + s;
+  document.getElementById('size-badge').textContent = s;
+  renderSizes(); updateFit(s); updateClothingScale(s);
+}
+
+function updateFit(s) {
+  const f = FIT[s] || FIT['L'];
+  const isShoe = selProduct && selProduct.clothType === 'shoe';
+  const isPants = selProduct && selProduct.clothType === 'pants';
+  const bars = isShoe
+    ? [{l:'길이',v:f.c},{l:'발볼',v:f.s},{l:'뒤꿈치',v:f.w}]
+    : isPants
+    ? [{l:'허리',v:f.w},{l:'힙',v:f.c},{l:'허벅지',v:f.s}]
+    : [{l:'가슴',v:f.c},{l:'어깨',v:f.s},{l:'허리',v:f.w}];
+  document.getElementById('fit-bars').innerHTML = bars.map(b => {
+    const col = b.v >= 90 ? '#00e676' : b.v >= 75 ? '#69f0ae' : b.v >= 60 ? '#ffab40' : '#ff5252';
+    return `<div class="fit-bar-row"><span class="fit-bar-label">${b.l}</span><div class="fit-bar-track"><div class="fit-bar-fill" style="width:${b.v}%;background:${col}"></div></div><span class="fit-bar-val" style="color:${col}">${b.v}%</span></div>`;
+  }).join('');
+  document.getElementById('fit-comment').innerHTML = f.comment;
+  const badge = document.getElementById('fit-badge');
+  badge.textContent = f.badge; badge.style.color = f.color;
+}
+
+// ===== THREE.JS 3D FITTING =====
+function init3DFitting(product) {
+  if (typeof THREE === 'undefined') {
+    document.getElementById('three-mount').innerHTML =
+      '<div style="color:var(--text2);text-align:center;padding:160px 20px">3D 엔진 로딩 중...<br><small>잠시 후 다시 시도하세요</small></div>';
+    return;
+  }
+  const mount = document.getElementById('three-mount');
+  if (!mount) return;
+
+  // Cleanup previous
+  if (animFrameId3d) cancelAnimationFrame(animFrameId3d);
+  if (renderer3d) { try { renderer3d.dispose(); } catch(e){} }
+  mount.innerHTML = '';
+
+  const W = mount.offsetWidth || 360;
+  const H = 380;
+
+  scene3d = new THREE.Scene();
+  scene3d.background = new THREE.Color(0x141414);
+
+  camera3d = new THREE.PerspectiveCamera(42, W / H, 0.1, 50);
+  camera3d.position.set(0, 0.9, 3.2);
+  camera3d.lookAt(0, 0.88, 0);
+
+  renderer3d = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+  renderer3d.setSize(W, H);
+  renderer3d.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer3d.shadowMap.enabled = true;
+  renderer3d.shadowMap.type = THREE.PCFSoftShadowMap;
+  mount.appendChild(renderer3d.domElement);
+  renderer3d.domElement.style.width = '100%';
+  renderer3d.domElement.style.height = '100%';
+
+  // Lighting
+  scene3d.add(new THREE.AmbientLight(0xffffff, 0.55));
+  const key = new THREE.DirectionalLight(0xffffff, 0.9);
+  key.position.set(2, 5, 3); key.castShadow = true;
+  key.shadow.camera.near = 0.1; key.shadow.camera.far = 20;
+  scene3d.add(key);
+  const fill = new THREE.DirectionalLight(0x88aaff, 0.4);
+  fill.position.set(-2, 2, -1);
+  scene3d.add(fill);
+  const rim = new THREE.DirectionalLight(0x00e5ff, 0.18);
+  rim.position.set(0, 0.5, -3);
+  scene3d.add(rim);
+
+  // Ground plane
+  const groundMat = new THREE.MeshPhongMaterial({ color: 0x1a1a1a });
+  const ground = new THREE.Mesh(new THREE.CircleGeometry(2, 36), groundMat);
+  ground.rotation.x = -Math.PI / 2;
+  ground.position.y = -0.02;
+  ground.receiveShadow = true;
+  scene3d.add(ground);
+
+  // Build body & clothing
+  bodyGroup = buildBody3D(userBodyMeasurements);
+  scene3d.add(bodyGroup);
+  clothingGroup = buildClothing3D(product, userBodyMeasurements);
+  scene3d.add(clothingGroup);
+
+  // Update clothing scale for current size
+  updateClothingScale(selSize);
+
+  // Rotation interaction
+  let isDragging = false, lastX = 0, rotY = 0, autoSpin = true, resumeTimer;
+
+  function pauseAuto() {
+    autoSpin = false;
+    clearTimeout(resumeTimer);
+    resumeTimer = setTimeout(() => { autoSpin = true; }, 3500);
+  }
+
+  const el = renderer3d.domElement;
+  el.addEventListener('mousedown',  e => { isDragging = true; lastX = e.clientX; pauseAuto(); });
+  el.addEventListener('mousemove',  e => {
+    if (!isDragging) return;
+    rotY += (e.clientX - lastX) * 0.013;
+    lastX = e.clientX;
+    bodyGroup.rotation.y = rotY;
+    clothingGroup.rotation.y = rotY;
+  });
+  el.addEventListener('mouseup',    () => { isDragging = false; });
+  el.addEventListener('mouseleave', () => { isDragging = false; });
+  el.addEventListener('touchstart', e => { lastX = e.touches[0].clientX; pauseAuto(); }, { passive:true });
+  el.addEventListener('touchmove',  e => {
+    rotY += (e.touches[0].clientX - lastX) * 0.013;
+    lastX = e.touches[0].clientX;
+    bodyGroup.rotation.y = rotY;
+    clothingGroup.rotation.y = rotY;
+  }, { passive:true });
+
+  // Animate
+  let tick = 0;
+  (function loop() {
+    animFrameId3d = requestAnimationFrame(loop);
+    if (autoSpin) {
+      tick += 0.005;
+      const r = Math.sin(tick) * 0.55;
+      bodyGroup.rotation.y = r;
+      clothingGroup.rotation.y = r;
+    }
+    renderer3d.render(scene3d, camera3d);
+  })();
+}
+
+function mkMesh(geo, mat) {
+  const m = new THREE.Mesh(geo, mat);
+  m.castShadow = true; m.receiveShadow = true;
+  return m;
+}
+
+function buildBody3D(m) {
+  m = m || { height_cm:175, shoulder_width_cm:44, chest_cm:95, waist_cm:78, hip_cm:95, inseam_cm:80, arm_length_cm:58 };
+
+  const S  = 1.75 / m.height_cm;  // scene units per cm
+  const TH = 1.75;                 // total height
+
+  // Derived scene-unit measurements
+  const shW  = m.shoulder_width_cm * S;  // shoulder width
+  const shR  = shW / 2;                  // shoulder half-width
+  const chR  = (m.chest_cm   * S) / (2 * Math.PI);
+  const wR   = (m.waist_cm   * S) / (2 * Math.PI);
+  const hipR = (m.hip_cm     * S) / (2 * Math.PI);
+  const inseam  = m.inseam_cm    * S;
+  const armLen  = m.arm_length_cm * S;
+
+  // Segment heights
+  const headH      = TH * 0.132;
+  const neckH      = TH * 0.038;
+  const torsoH     = TH * 0.335;
+  const pelvisH    = TH * 0.095;
+  const upperLegH  = inseam * 0.56;
+  const lowerLegH  = inseam * 0.44;
+  const upperArmH  = armLen * 0.50;
+  const lowerArmH  = armLen * 0.50;
+
+  // Y positions (bottom of each segment)
+  const groundY    = 0;
+  const ankleY     = groundY + lowerLegH * 0.08;
+  const kneeY      = ankleY  + lowerLegH;
+  const crotchY    = kneeY   + upperLegH;
+  const pelvisTopY = crotchY + pelvisH;
+  const torsoTopY  = pelvisTopY + torsoH;
+  const shoulderY  = torsoTopY;
+  const neckBotY   = torsoTopY - neckH * 0.1;
+  const headCenterY = neckBotY + neckH + headH * 0.5;
+  const armTopY    = shoulderY - neckH * 0.5;
+  const elbowY     = armTopY   - upperArmH;
+  const wristY     = elbowY    - lowerArmH;
+
+  const g = new THREE.Group();
+
+  const skin = new THREE.MeshPhongMaterial({
+    color: 0xF0C8A0, shininess: 12, specular: new THREE.Color(0.08, 0.05, 0.04)
+  });
+
+  function add(mesh) { mesh.castShadow = true; g.add(mesh); return mesh; }
+
+  // ── Head ──
+  add(Object.assign(new THREE.Mesh(new THREE.SphereGeometry(headH * 0.52, 32, 24), skin),
+      { position: new THREE.Vector3(0, headCenterY, 0) }));
+
+  // ── Neck ──
+  add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(neckH * 0.55, neckH * 0.65, neckH, 16), skin),
+      { position: new THREE.Vector3(0, neckBotY + neckH / 2, 0) }));
+
+  // ── Torso — LatheGeometry profile (half cross-section, revolved) ──
+  const tH = torsoH + pelvisH;
+  const torsoProfile = [
+    new THREE.Vector2(shR,          tH),
+    new THREE.Vector2(chR * 1.05,   tH * 0.82),
+    new THREE.Vector2(chR,          tH * 0.70),
+    new THREE.Vector2(wR  * 1.02,   tH * 0.52),
+    new THREE.Vector2(wR,           tH * 0.42),
+    new THREE.Vector2(hipR * 0.88,  tH * 0.25),
+    new THREE.Vector2(hipR,         tH * 0.10),
+    new THREE.Vector2(hipR * 0.80,  0),
+  ];
+  const torsoMesh = new THREE.Mesh(new THREE.LatheGeometry(torsoProfile, 36), skin);
+  torsoMesh.position.set(0, crotchY, 0);
+  torsoMesh.castShadow = true;
+  g.add(torsoMesh);
+
+  // ── Arms ──
+  const armX    = shR + 0.018;
+  const uArmR   = shR * 0.195;
+  const lArmR   = uArmR * 0.82;
+  const handR   = lArmR * 0.88;
+
+  [-1, 1].forEach(side => {
+    const ax = armX * side;
+    // upper arm
+    add(Object.assign(new THREE.Mesh(new THREE.CapsuleGeometry(uArmR, upperArmH, 8, 16), skin),
+        { position: new THREE.Vector3(ax, armTopY - upperArmH / 2, 0) }));
+    // lower arm
+    add(Object.assign(new THREE.Mesh(new THREE.CapsuleGeometry(lArmR, lowerArmH, 8, 16), skin),
+        { position: new THREE.Vector3(ax, elbowY - lowerArmH / 2, 0) }));
+    // hand
+    const hand = new THREE.Mesh(new THREE.SphereGeometry(handR, 14, 10), skin);
+    hand.scale.set(1, 1.35, 0.62);
+    hand.position.set(ax, wristY, 0);
+    add(hand);
+  });
+
+  // ── Legs ──
+  const legX   = hipR * 0.46;
+  const uLegR  = hipR * 0.30;
+  const lLegR  = uLegR * 0.78;
+  const ankR   = lLegR * 0.68;
+
+  [-1, 1].forEach(side => {
+    const lx = legX * side;
+    // upper leg
+    add(Object.assign(new THREE.Mesh(new THREE.CapsuleGeometry(uLegR, upperLegH, 8, 16), skin),
+        { position: new THREE.Vector3(lx, kneeY + upperLegH / 2, 0) }));
+    // lower leg
+    add(Object.assign(new THREE.Mesh(new THREE.CapsuleGeometry(lLegR, lowerLegH, 8, 16), skin),
+        { position: new THREE.Vector3(lx, ankleY + lowerLegH / 2, 0) }));
+    // foot
+    const foot = new THREE.Mesh(new THREE.BoxGeometry(ankR * 2.2, ankR * 1.1, ankR * 4.8), skin);
+    foot.position.set(lx, groundY + ankR * 0.55, ankR * 1.4);
+    add(foot);
+  });
+
+  return g;
+}
+
+function buildClothing3D(product, m) {
+  m = m || { height_cm:175, shoulder_width_cm:44, chest_cm:95, waist_cm:78, hip_cm:95, inseam_cm:80, arm_length_cm:58 };
+
+  // Same proportions as buildBody3D
+  const S = 1.75 / m.height_cm;
+  const TH = 1.75;
+  const shR  = (m.shoulder_width_cm * S) / 2;
+  const chR  = (m.chest_cm   * S) / (2 * Math.PI);
+  const wR   = (m.waist_cm   * S) / (2 * Math.PI);
+  const hipR = (m.hip_cm     * S) / (2 * Math.PI);
+  const inseam = m.inseam_cm * S;
+  const armLen = m.arm_length_cm * S;
+  const torsoH   = TH * 0.335;
+  const pelvisH  = TH * 0.095;
+  const upperLegH = inseam * 0.56;
+  const lowerLegH = inseam * 0.44;
+  const upperArmH = armLen * 0.50;
+  const lowerArmH = armLen * 0.50;
+  const neckH     = TH * 0.038;
+  const ankleY    = lowerLegH * 0.08;
+  const kneeY     = ankleY + lowerLegH;
+  const crotchY   = kneeY + upperLegH;
+  const pelvisTopY = crotchY + pelvisH;
+  const shoulderY  = pelvisTopY + torsoH;
+  const armTopY    = shoulderY - neckH * 0.5;
+  const elbowY     = armTopY - upperArmH;
+  const armX       = shR + 0.018;
+  const legX       = hipR * 0.46;
+  const tH         = torsoH + pelvisH;
+  const uArmR      = shR * 0.195;
+  const lArmR      = uArmR * 0.82;
+  const uLegR      = hipR * 0.30;
+  const lLegR      = uLegR * 0.78;
+  const ankR       = lLegR * 0.68;
+
+  const g = new THREE.Group();
+  const c = product.clothColor || 0x2196F3;
+  const mat  = new THREE.MeshPhongMaterial({ color: c, shininess: 50 });
+  const dark = new THREE.MeshPhongMaterial({ color: 0x0d0d0d, shininess: 5 });
+  const gold = new THREE.MeshPhongMaterial({ color: 0xFFD700, shininess: 80 });
+  const white = new THREE.MeshPhongMaterial({ color: 0xFFFFFF, shininess: 30 });
+
+  function add(geo, m2, x, y, z, rz) {
+    const mesh = mkMesh(geo, m2 || mat);
+    mesh.position.set(x, y, z);
+    if (rz) mesh.rotation.z = rz;
+    g.add(mesh); return mesh;
+  }
+
+  const t = product.clothType;
+  const torsoMidY = crotchY + tH * 0.56;  // chest center
+  const waistY    = crotchY + tH * 0.42;
+  const hipTopY   = crotchY + tH * 0.10;
+
+  // ── T-SHIRT ──
+  if (t === 'tshirt') {
+    add(new THREE.CylinderGeometry(chR * 1.08, wR  * 1.06, tH * 0.60, 24), null, 0, crotchY + tH * 0.50, 0);
+    add(new THREE.CylinderGeometry(chR * 1.10, chR * 1.08, tH * 0.25, 24), null, 0, crotchY + tH * 0.825, 0);
+    [-1, 1].forEach(s => add(new THREE.CylinderGeometry(uArmR * 1.12, uArmR * 1.08, upperArmH * 0.45, 14),
+        null, armX * s, armTopY - upperArmH * 0.22, 0));
+  }
+
+  // ── SHIRT ──
+  if (t === 'shirt') {
+    add(new THREE.CylinderGeometry(chR * 1.08, wR  * 1.06, tH * 0.60, 24), null, 0, crotchY + tH * 0.50, 0);
+    add(new THREE.CylinderGeometry(chR * 1.10, chR * 1.08, tH * 0.25, 24), null, 0, crotchY + tH * 0.825, 0);
+    [-1, 1].forEach(s => {
+      add(new THREE.CylinderGeometry(uArmR * 1.12, uArmR * 1.08, upperArmH, 14), null, armX * s, armTopY - upperArmH / 2, 0);
+      add(new THREE.CylinderGeometry(lArmR * 1.10, lArmR * 1.08, lowerArmH, 14), null, armX * s, elbowY - lowerArmH / 2, 0);
+    });
+    const collarMat = new THREE.MeshPhongMaterial({ color: c, shininess: 60 });
+    add(new THREE.TorusGeometry(shR * 0.27, shR * 0.06, 8, 20), collarMat, 0, shoulderY - neckH, 0);
+    add(new THREE.BoxGeometry(0.012, tH * 0.62, 0.012), dark, 0, crotchY + tH * 0.50, chR * 1.09);
+  }
+
+  // ── JACKET ──
+  if (t === 'jacket') {
+    add(new THREE.CylinderGeometry(chR * 1.12, wR  * 1.09, tH * 0.60, 24), null, 0, crotchY + tH * 0.50, 0);
+    add(new THREE.CylinderGeometry(chR * 1.14, chR * 1.12, tH * 0.26, 24), null, 0, crotchY + tH * 0.83, 0);
+    [-1, 1].forEach(s => {
+      add(new THREE.CylinderGeometry(uArmR * 1.14, uArmR * 1.10, upperArmH, 14), null, armX * s, armTopY - upperArmH / 2, 0);
+      add(new THREE.CylinderGeometry(lArmR * 1.12, lArmR * 1.09, lowerArmH, 14), null, armX * s, elbowY - lowerArmH / 2, 0);
+      const cuffMat = new THREE.MeshPhongMaterial({ color: darken(c, 0.7), shininess: 20 });
+      add(new THREE.CylinderGeometry(lArmR * 1.14, lArmR * 1.14, lowerArmH * 0.08, 14), cuffMat, armX * s, elbowY - lowerArmH + lowerArmH * 0.04, 0);
+    });
+    add(new THREE.BoxGeometry(0.015, tH * 0.64, 0.010), gold, 0, crotchY + tH * 0.50, chR * 1.13);
+  }
+
+  // ── PANTS ──
+  if (t === 'pants') {
+    add(new THREE.CylinderGeometry(hipR * 1.06, hipR * 1.04, tH * 0.18, 24), null, 0, crotchY + tH * 0.09, 0);
+    [-1, 1].forEach(s => {
+      add(new THREE.CylinderGeometry(uLegR * 1.10, uLegR * 1.06, upperLegH, 16), null, legX * s, kneeY + upperLegH / 2, 0);
+      add(new THREE.CylinderGeometry(lLegR * 1.08, lLegR * 1.04, lowerLegH, 14), null, legX * s, ankleY + lowerLegH / 2, 0);
+    });
+    const beltMat = new THREE.MeshPhongMaterial({ color: darken(c, 0.5), shininess: 30 });
+    add(new THREE.CylinderGeometry(hipR * 1.07, hipR * 1.07, tH * 0.04, 24), beltMat, 0, crotchY + tH * 0.18, 0);
+    add(new THREE.BoxGeometry(hipR * 0.3, tH * 0.05, 0.012), gold, 0, crotchY + tH * 0.18, hipR * 1.08);
+  }
+
+  // ── SHOE ──
+  if (t === 'shoe') {
+    const fw = ankR * 2.4, fh = ankR * 1.2, fd = ankR * 5.0;
+    [-1, 1].forEach(s => {
+      const lx = legX * s;
+      add(new THREE.BoxGeometry(fw, fh, fd), null, lx, ankleY * 0.5 + fh / 2, ankR * 1.5);
+      add(new THREE.BoxGeometry(fw + 0.006, fh * 0.28, fd + 0.006), dark, lx, ankleY * 0.5, ankR * 1.5);
+      const toeMat = new THREE.MeshPhongMaterial({ color: lighten(c, 1.3), shininess: 60 });
+      add(new THREE.BoxGeometry(fw, fh * 0.7, fd * 0.22), toeMat, lx, ankleY * 0.5 + fh * 0.65, ankR * 2.55);
+      for (let i = 0; i < 4; i++)
+        add(new THREE.BoxGeometry(fw * 0.55, fh * 0.09, 0.010), white, lx, ankleY * 0.5 + fh * 1.0, ankR * (1.1 + i * 0.28));
+    });
+  }
+
+  return g;
+}
+
+function darken(hex, factor) {
+  const r = ((hex >> 16) & 0xff) * factor;
+  const gv = ((hex >> 8) & 0xff) * factor;
+  const b = (hex & 0xff) * factor;
+  return (Math.round(r) << 16) | (Math.round(gv) << 8) | Math.round(b);
+}
+function lighten(hex, factor) {
+  const r = Math.min(255, ((hex >> 16) & 0xff) * factor);
+  const gv = Math.min(255, ((hex >> 8) & 0xff) * factor);
+  const b = Math.min(255, (hex & 0xff) * factor);
+  return (Math.round(r) << 16) | (Math.round(gv) << 8) | Math.round(b);
+}
+
+function updateClothingScale(size) {
+  if (!clothingGroup) return;
+  const map = {
+    'XS':0.92,'S':0.96,'M':1.00,'L':1.04,'XL':1.09,'2XL':1.15,'XXL':1.21,
+    '28':0.96,'30':0.99,'32':1.02,'34':1.06,'36':1.11,
+    '250':0.96,'255':0.98,'260':1.01,'265':1.03,'270':1.05,'275':1.07,'280':1.10,
+  };
+  const s = map[size] || 1.0;
+  clothingGroup.scale.set(s, 1.0, s);
+}
+
+// ===== S7 PURCHASE =====
+function goToPurchase() {
+  const p = selProduct;
+  if (!p) return;
+  const retailers = [
+    { n: p.brand + ' 공식몰', sub: p.price + ' · 무료배송',         icon: '🏪', url: p.url },
+    { n: '무신사',             sub: disc(p.price,8) + ' · 회원 8%', icon: '🛍', url: 'https://www.musinsa.com' },
+    { n: '네이버쇼핑',         sub: disc(p.price,5) + ' · 포인트',  icon: '🟢', url: 'https://shopping.naver.com' },
+    { n: '카카오쇼핑',         sub: disc(p.price,3) + ' · 카카오페이', icon:'🟡', url: 'https://shopping.kakao.com' },
+  ];
+  document.getElementById('purchase-sub').innerHTML =
+    '<strong style="color:var(--accent)">' + p.name + ' · ' + selSize + '</strong><br>가장 저렴한 가격을 찾았습니다.';
+  document.getElementById('retailer-list').innerHTML = retailers.map(r => `
+    <a class="retailer-btn" href="${r.url}" target="_blank" rel="noopener">
+      <span style="font-size:24px">${r.icon}</span>
+      <div style="text-align:left">
+        <div style="font-size:14px;font-weight:700">${r.n}</div>
+        <div style="font-size:12px;color:var(--text2)">${r.sub}</div>
+      </div>
+      <span style="margin-left:auto;color:var(--text2)">→</span>
+    </a>`).join('');
+  goTo('s-purchase');
+}
+
+function disc(p, pct) {
+  const n = parseInt(p.replace(/[^0-9]/g,''));
+  return '₩' + Math.round(n * (1 - pct / 100)).toLocaleString();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Init
+renderProducts(PRODUCTS);
+</script>
+</body>
+</html>
+
