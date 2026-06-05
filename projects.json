@@ -1,23 +1,31 @@
 {
   "owner": "kgg2512",
   "company": "G2 Company Ltd",
-  "updated": "2026-05-27",
+  "updated": "2026-06-05",
   "projects": [
     {
       "name": "MyFit",
-      "description": "AI 기반 가상 피팅 앱 - 사진 3장으로 3D 신체 측정 후 나이키/아디다스 등 실제 의류 가상 피팅",
-      "status": "Phase 1 진행 중",
+      "description": "AI 가상 피팅 Chrome Extension — 무신사·Nike·Zara 등 쇼핑몰에서 내 몸에 옷을 가상으로 입혀보는 MV3 크롬 익스텐션. FASHN AI 기반.",
+      "status": "Chrome Extension MV3 완성 — CWS 제출 대기",
       "url": "https://kgg2512.github.io/MyFit/",
       "repo": "https://github.com/kgg2512/MyFit",
-      "type": "AI / 패션테크"
+      "type": "AI / 패션테크 / Chrome Extension"
     },
     {
-      "name": "Cinderella",
-      "description": "명품 P2P 렌탈 앱 - 럭셔리 패션 아이템을 빌리고 빌려주는 플랫폼 (당근마켓 구조)",
-      "status": "프로토타입 완성",
+      "name": "신데렐라 (Cinderella)",
+      "description": "명품 P2P 렌탈 플랫폼 — 럭셔리 패션 아이템을 동네 기반으로 빌리고 빌려주는 당근마켓형 커뮤니티. Next.js 16 + Supabase.",
+      "status": "Next.js 앱 개발 완료 — Vercel 배포 및 Supabase 연동 대기",
       "url": "https://kgg2512.github.io/Cinderella/",
       "repo": "https://github.com/kgg2512/Cinderella",
-      "type": "P2P / 럭셔리 렌탈"
+      "type": "P2P / 럭셔리 렌탈 / PWA"
+    },
+    {
+      "name": "Adult Running Club (ARC)",
+      "description": "서울 럭셔리 러닝 멤버스클럽 앱 — 강남·한강·여의도 코스 기반 프리미엄 러닝 커뮤니티. PWA로 iOS/Android 설치 가능.",
+      "status": "GitHub Pages 배포 완료 — EmailJS CF Worker 프록시 배포 대기",
+      "url": "https://kgg2512.github.io/AdultRunningClub/",
+      "repo": "https://github.com/kgg2512/AdultRunningClub",
+      "type": "PWA / 피트니스 / 멤버십"
     }
   ]
 }
