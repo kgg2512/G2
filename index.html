@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>G2 Company — Small ideas. Big change.</title>
 <meta name="description" content="G2 Company Ltd — AI-First Studio. 1 Human. 8 AI. Infinite possibilities. Seoul, 2026." />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="G2 Company — Small ideas. Big change." />
+<meta property="og:description" content="AI-First Studio. 1 Human. 8 AI. Infinite possibilities. Seoul, 2026." />
+<meta property="og:url" content="https://kgg2512.github.io/G2/" />
+<meta property="og:site_name" content="G2 Company Ltd" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="G2 Company — Small ideas. Big change." />
+<meta name="twitter:description" content="AI-First Studio. 1 Human. 8 AI. Seoul, 2026." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
@@ -645,7 +654,7 @@
 
 <!-- Hero -->
 <header class="hero">
-  <canvas id="heroCanvas"></canvas>
+  <canvas id="heroCanvas" aria-hidden="true"></canvas>
   <div class="hero-meta">
     <div class="l fade-up d1">
       <span><span class="dot"></span>Est. Seoul · 2026</span>
@@ -972,6 +981,10 @@
     initPts();
     draw();
     window.addEventListener('resize', function(){ resize(); initPts(); });
+    document.addEventListener('visibilitychange', function(){
+      if(document.hidden){ cancelAnimationFrame(RAF); }
+      else { RAF = requestAnimationFrame(draw); }
+    });
   }
 
   /* ---- Mega menu ---- */
