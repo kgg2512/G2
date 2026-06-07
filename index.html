@@ -230,6 +230,7 @@
     font-family:var(--serif);font-style:italic;font-size:clamp(18px,2vw,26px);
     font-weight:300;color:#fff;max-width:520px;line-height:1.4;
   }
+  .hero-bottom .signature em{font-style:normal;color:rgba(255,255,255,.55)}
   .hero-bottom .scroll-hint{
     font-family:var(--mono);font-size:10px;letter-spacing:.3em;text-transform:uppercase;
     color:rgba(255,255,255,.5);display:flex;align-items:center;gap:10px;
@@ -337,6 +338,7 @@
     display:block;font-family:var(--mono);font-size:10px;letter-spacing:.24em;text-transform:uppercase;
     color:var(--ink-mute);margin-top:4px;
   }
+  .chairman .who em{font-style:italic;color:var(--ink-mute)}
 
   /* ---------- Organization ---------- */
   .org{background:var(--bg-dark);color:#fff;overflow:hidden}
@@ -626,6 +628,131 @@
   footer .footer-contact{color:inherit}
   footer .footer-links{display:flex;gap:16px;align-items:center}
 
+  /* ---------- Method Section ---------- */
+  .method{background:var(--bg)}
+  .method .lead{
+    margin-top:24px;font-family:var(--serif);font-style:italic;
+    font-size:clamp(18px,2vw,24px);color:var(--ink-soft);max-width:60ch;
+  }
+  .method-grid{
+    margin-top:clamp(48px,7vw,96px);
+    display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+    background:var(--line);border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  }
+  @media(max-width:860px){.method-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:480px){.method-grid{grid-template-columns:1fr}}
+  .method-card{
+    background:var(--bg);
+    padding:clamp(32px,4vw,56px) clamp(20px,3vw,36px);
+    display:flex;flex-direction:column;gap:20px;
+    min-height:260px;position:relative;overflow:hidden;
+  }
+  .method-card::before{
+    content:"";position:absolute;bottom:0;left:0;right:0;
+    height:2px;background:var(--gold);transform:scaleX(0);transform-origin:left;
+    transition:transform .45s cubic-bezier(.2,.7,.2,1);
+  }
+  .method-card:hover::before{transform:scaleX(1)}
+  .method-card .step{
+    font-family:var(--mono);font-size:10px;letter-spacing:.28em;text-transform:uppercase;
+    color:var(--ink-mute);display:flex;align-items:center;gap:10px;
+  }
+  .method-card .step .step-no{
+    width:24px;height:24px;border:1px solid var(--line);border-radius:50%;
+    display:inline-grid;place-items:center;
+    font-size:9px;letter-spacing:0;color:var(--ink-soft);flex-shrink:0;
+  }
+  .method-card .ai-tag{
+    display:inline-flex;align-items:center;gap:5px;
+    font-family:var(--mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--ink-mute);border:1px solid var(--line);padding:2px 8px;border-radius:2px;
+    width:fit-content;
+  }
+  .method-card .ai-tag::before{
+    content:"";width:5px;height:5px;border-radius:50%;background:#7fd190;flex-shrink:0;
+  }
+  .method-card .card-title{
+    font-family:var(--serif);font-weight:300;
+    font-size:clamp(32px,4vw,52px);
+    line-height:1.05;letter-spacing:-.02em;color:var(--ink);
+  }
+  .method-card .card-title em{font-style:italic;color:var(--ink-soft)}
+  .method-card .card-desc{
+    font-family:var(--serif);font-style:italic;font-size:15px;
+    color:var(--ink-mute);line-height:1.55;margin-top:auto;
+  }
+
+  /* ---------- Proof Section ---------- */
+  .proof{background:var(--bg-soft)}
+  .proof .label{color:#7d7d7d}
+  .proof-metrics{
+    margin-top:clamp(48px,7vw,96px);
+    display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+    background:var(--line);border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  }
+  @media(max-width:720px){.proof-metrics{grid-template-columns:1fr}}
+  .proof-metric{
+    background:var(--bg-soft);
+    padding:clamp(36px,5vw,60px) clamp(20px,3vw,36px);
+    display:flex;flex-direction:column;gap:12px;
+  }
+  .proof-metric .m-val{
+    font-family:var(--serif);font-weight:300;
+    font-size:clamp(56px,8vw,120px);
+    line-height:.9;letter-spacing:-.04em;color:var(--ink);
+  }
+  .proof-metric .m-val .m-unit{
+    font-size:.3em;vertical-align:text-top;
+    font-family:var(--mono);font-weight:400;letter-spacing:.06em;
+    margin-left:4px;color:var(--ink-mute);
+  }
+  .proof-metric .m-label{
+    font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+  .proof-metric .m-desc{
+    font-family:var(--serif);font-style:italic;font-size:14px;color:var(--ink-mute);
+    line-height:1.5;
+  }
+  .proof-stack{
+    margin-top:clamp(48px,6vw,80px);display:flex;flex-direction:column;gap:20px;
+  }
+  .proof-stack .stack-label{
+    font-family:var(--mono);font-size:10px;letter-spacing:.28em;text-transform:uppercase;
+    color:var(--ink-mute);
+  }
+  .proof-badges{
+    display:flex;flex-wrap:wrap;gap:10px;
+  }
+  .badge{
+    font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+    padding:7px 14px;border:1px solid var(--line);background:var(--bg);
+    color:var(--ink-soft);display:inline-flex;align-items:center;gap:8px;
+    -webkit-user-select:none;
+    user-select:none;
+  }
+  .badge .badge-dot{width:6px;height:6px;border-radius:50%;background:var(--ink-mute);flex-shrink:0}
+  .badge.b-github .badge-dot{background:#1a1a1a}
+  .badge.b-cf .badge-dot{background:#f6821f}
+  .badge.b-claude .badge-dot{background:#c97b4b}
+  .badge.b-gpt .badge-dot{background:#10a37f}
+  .badge.b-line .badge-dot{background:#06c755}
+  .badge.b-stripe .badge-dot{background:#635bff}
+  .proof-foot{
+    margin-top:clamp(40px,5vw,64px);display:flex;justify-content:space-between;align-items:flex-end;
+    flex-wrap:wrap;gap:16px;
+    border-top:1px solid var(--line);padding-top:24px;
+  }
+  .proof-foot .pf-date{
+    font-family:var(--mono);font-size:10px;letter-spacing:.24em;text-transform:uppercase;
+    color:var(--ink-mute);
+  }
+  .proof-foot .pf-disclaimer{
+    font-family:var(--mono);font-size:9px;letter-spacing:.12em;
+    color:var(--ink-mute);max-width:52ch;text-align:right;line-height:1.6;
+  }
+  @media(max-width:640px){.proof-foot .pf-disclaimer{text-align:left}}
+
   /* ---------- Reduced motion ---------- */
   @media(prefers-reduced-motion:reduce){
     *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
@@ -643,6 +770,7 @@
   <ul>
     <li><a href="#chairman">Chairman</a></li>
     <li><a href="#org">Organization</a></li>
+    <li><a href="#method">Method</a></li>
     <li class="has-mega" id="megaTrigger">
       <a href="#projects" aria-haspopup="true">Projects <span class="caret">▾</span></a>
     </li>
@@ -722,7 +850,7 @@
     <a class="hero-cta fade-up d5" href="#projects">See our work <span class="hero-cta-arrow">↓</span></a>
   </div>
   <div class="hero-bottom">
-    <div class="signature fade-up d5">1 Human. 8 AI. <em style="font-style:normal;color:rgba(255,255,255,.55)">Infinite possibilities.</em></div>
+    <div class="signature fade-up d5">1 Human. 8 AI. <em>Infinite possibilities.</em></div>
     <div class="scroll-hint fade-up d5"><span>Scroll</span><span class="bar"></span></div>
   </div>
 </header>
@@ -783,7 +911,7 @@
       <div class="meta">
         <div class="avatar">姜</div>
         <div class="who">
-          강경구 <em style="font-style:italic;color:var(--ink-mute)">Kang Kyung-koo</em>
+          강경구 <em>Kang Kyung-koo</em>
           <small>Chairman · G2 Company Ltd.</small>
         </div>
       </div>
@@ -850,6 +978,39 @@
         <div class="name">Theta</div>
         <div class="domain">Legal &amp; regulation.</div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- How We Work -->
+<section class="method" id="method">
+  <div class="reveal">
+    <div class="label">How We Work</div>
+    <h2 class="section-title">One vision,<br/><em>infinite execution.</em></h2>
+    <p class="lead">1명의 회장이 방향을 정하면, 8명의 AI C-suite가 실제 기업처럼 분업·협업·실행합니다.</p>
+  </div>
+  <div class="method-grid reveal">
+    <div class="method-card">
+      <div class="step"><span class="step-no">01</span>Think</div>
+      <div class="card-title">Strategy<br/><em>first.</em></div>
+      <p class="card-desc">회장이 비전과 목표를 설정합니다. G2의 모든 결정은 "Small ideas. Big change." 원칙에서 시작합니다.</p>
+    </div>
+    <div class="method-card">
+      <div class="step"><span class="step-no">02</span>Delegate</div>
+      <div class="ai-tag">AI</div>
+      <div class="card-title">Assign<br/><em>to the right mind.</em></div>
+      <p class="card-desc">Alpha CEO가 8명의 C-Level AI에게 도메인별로 업무를 분배합니다. 보안·법무·기술이 병렬로 동시에 검토됩니다.</p>
+    </div>
+    <div class="method-card">
+      <div class="step"><span class="step-no">03</span>Execute</div>
+      <div class="ai-tag">AI</div>
+      <div class="card-title">Build<br/><em>without friction.</em></div>
+      <p class="card-desc">CTO·CDO·CMO가 코드·디자인·마케팅을 동시에 실행합니다. 인간의 대기 시간 없이 의사결정이 코드로 변환됩니다.</p>
+    </div>
+    <div class="method-card">
+      <div class="step"><span class="step-no">04</span>Ship</div>
+      <div class="card-title">Launch<br/><em>fast. Iterate faster.</em></div>
+      <p class="card-desc">GitHub Pages · Cloudflare Workers로 즉시 배포. 회장이 최종 승인 후 전 세계에 동시 출시됩니다.</p>
     </div>
   </div>
 </section>
@@ -928,6 +1089,46 @@
   </ul>
 
   <p class="ventures-foot reveal">새로운 생각이 있으신가요? 함께 만들어 나갈 수 있습니다.</p>
+</section>
+
+<!-- Built With / Social Proof -->
+<section class="proof" id="proof">
+  <div class="reveal">
+    <div class="label">Built With</div>
+    <h2 class="section-title">Real products,<br/><em>zero overhead.</em></h2>
+  </div>
+  <div class="proof-metrics reveal">
+    <div class="proof-metric">
+      <div class="m-val">4<span class="m-unit">Products</span></div>
+      <div class="m-label">In active development</div>
+      <p class="m-desc">MyFit · 신데렐라 · Adult Running Club · 命星 AI — 모두 2026년 출시.</p>
+    </div>
+    <div class="proof-metric">
+      <div class="m-val">$0<span class="m-unit">Ext. Capital</span></div>
+      <div class="m-label">External investment raised</div>
+      <p class="m-desc">4개 제품, 외부 투자 없이 전량 자체 구축. AI 오케스트레이션이 팀 비용을 대체합니다.</p>
+    </div>
+    <div class="proof-metric">
+      <div class="m-val">$0<span class="m-unit">/month</span></div>
+      <div class="m-label">Infrastructure cost</div>
+      <p class="m-desc">GitHub Pages + Cloudflare Workers 무료 티어로 한국·일본·동남아시아에 동시 서비스 중.</p>
+    </div>
+  </div>
+  <div class="proof-stack reveal">
+    <div class="stack-label">Technology Stack</div>
+    <div class="proof-badges">
+      <span class="badge b-github"><span class="badge-dot"></span>GitHub Pages</span>
+      <span class="badge b-cf"><span class="badge-dot"></span>Cloudflare Workers</span>
+      <span class="badge b-claude"><span class="badge-dot"></span>Claude Code</span>
+      <span class="badge b-gpt"><span class="badge-dot"></span>GPT-4o</span>
+      <span class="badge b-line"><span class="badge-dot"></span>LINE</span>
+      <span class="badge b-stripe"><span class="badge-dot"></span>Stripe</span>
+    </div>
+  </div>
+  <div class="proof-foot reveal">
+    <span class="pf-date">As of June 2026</span>
+    <span class="pf-disclaimer">* AI agents are software systems, not human employees.</span>
+  </div>
 </section>
 
 <!-- Venture preview cursor follower -->
