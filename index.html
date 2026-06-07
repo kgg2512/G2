@@ -629,7 +629,8 @@
   footer .footer-links{display:flex;gap:16px;align-items:center}
 
   /* ---------- Method Section ---------- */
-  .method{background:var(--bg)}
+  .method{background:var(--bg-soft)}
+  .method .label{color:#7d7d7d}
   .method .lead{
     margin-top:24px;font-family:var(--serif);font-style:italic;
     font-size:clamp(18px,2vw,24px);color:var(--ink-soft);max-width:60ch;
@@ -642,11 +643,13 @@
   @media(max-width:860px){.method-grid{grid-template-columns:repeat(2,1fr)}}
   @media(max-width:480px){.method-grid{grid-template-columns:1fr}}
   .method-card{
-    background:var(--bg);
+    background:var(--bg-soft);
     padding:clamp(32px,4vw,56px) clamp(20px,3vw,36px);
     display:flex;flex-direction:column;gap:20px;
     min-height:260px;position:relative;overflow:hidden;
+    transition:background .25s ease,transform .25s ease;
   }
+  .method-card:hover{background:var(--bg);transform:translateY(-2px)}
   .method-card::before{
     content:"";position:absolute;bottom:0;left:0;right:0;
     height:2px;background:var(--gold);transform:scaleX(0);transform-origin:left;
@@ -730,7 +733,9 @@
     color:var(--ink-soft);display:inline-flex;align-items:center;gap:8px;
     -webkit-user-select:none;
     user-select:none;
+    transition:border-color .2s ease,color .2s ease;
   }
+  .badge:hover{border-color:#b0b0b0;color:var(--ink)}
   .badge .badge-dot{width:6px;height:6px;border-radius:50%;background:var(--ink-mute);flex-shrink:0}
   .badge.b-github .badge-dot{background:#1a1a1a}
   .badge.b-cf .badge-dot{background:#f6821f}
@@ -748,7 +753,7 @@
     color:var(--ink-mute);
   }
   .proof-foot .pf-disclaimer{
-    font-family:var(--mono);font-size:9px;letter-spacing:.12em;
+    font-family:var(--mono);font-size:10px;letter-spacing:.12em;
     color:var(--ink-mute);max-width:52ch;text-align:right;line-height:1.6;
   }
   @media(max-width:640px){.proof-foot .pf-disclaimer{text-align:left}}
@@ -1111,7 +1116,7 @@
     <div class="proof-metric">
       <div class="m-val">$0<span class="m-unit">/month</span></div>
       <div class="m-label">Infrastructure cost</div>
-      <p class="m-desc">GitHub Pages + Cloudflare Workers 무료 티어로 한국·일본·동남아시아에 동시 서비스 중.</p>
+      <p class="m-desc">GitHub Pages + Cloudflare Workers 무료 티어로 전 세계 접근 가능. 별도 인프라 비용 없음.</p>
     </div>
   </div>
   <div class="proof-stack reveal">
