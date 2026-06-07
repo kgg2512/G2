@@ -109,8 +109,7 @@
     transition:color .2s,border-color .2s;
   }
   .mega-all:hover{color:#fff;border-color:#fff}
-  .mega-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-  @media(max-width:920px){.mega-grid{grid-template-columns:1fr 1fr}}
+  .mega-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
   @media(max-width:640px){.mega-grid{grid-template-columns:1fr}}
   .mega-item{
     display:flex;gap:16px;text-decoration:none;color:#fff;
@@ -539,6 +538,44 @@
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' fill='none'><text x='50%25' y='20' font-family='monospace' font-size='7' fill='%23C9A84C' opacity='0.35' text-anchor='middle' letter-spacing='3'>ADULT RUNNING CLUB</text><path d='M20 160 Q 60 130, 100 140 Q 140 150, 180 120' stroke='%23C9A84C' stroke-width='0.8' stroke-dasharray='3 4' opacity='0.45' fill='none'/><path d='M20 148 Q 60 118, 100 128 Q 140 138, 180 108' stroke='%23C9A84C' stroke-width='0.5' stroke-dasharray='2 5' opacity='0.25' fill='none'/><path d='M20 172 Q 60 142, 100 152 Q 140 162, 180 132' stroke='%23C9A84C' stroke-width='0.5' stroke-dasharray='2 5' opacity='0.2' fill='none'/><g transform='translate(88,72)' stroke='%23C9A84C' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='0' r='5' stroke-width='1.4' opacity='0.9'/><line x1='12' y1='5' x2='10' y2='16' stroke-width='1.4' opacity='0.9'/><path d='M10 16 L 4 26' stroke-width='1.3' opacity='0.85'/><path d='M10 16 L 16 28' stroke-width='1.3' opacity='0.85'/><path d='M7 10 L 1 14' stroke-width='1.2' opacity='0.8'/><path d='M13 10 L 20 8' stroke-width='1.2' opacity='0.8'/></g><circle cx='100' cy='140' r='2' fill='%23C9A84C' opacity='0.5'/><circle cx='60' cy='130' r='1.5' fill='%23C9A84C' opacity='0.35'/><circle cx='140' cy='148' r='1.5' fill='%23C9A84C' opacity='0.35'/></svg>");
   }
 
+  /* ---------- Saju art ---------- */
+  .art.saju-thumb,.vp-art.saju{
+    background:
+      radial-gradient(50% 55% at 50% 45%,rgba(124,92,191,.45),transparent 60%),
+      radial-gradient(30% 35% at 72% 65%,rgba(90,60,160,.2),transparent 70%),
+      linear-gradient(160deg,#0c0520 0%,#060118 100%);
+  }
+  .art.saju-thumb::before,.vp-art.saju::before{
+    content:"";position:absolute;inset:0;
+    background-image:
+      radial-gradient(1px 1px at 20% 30%,rgba(160,143,232,.8),transparent),
+      radial-gradient(1.5px 1.5px at 60% 15%,rgba(160,143,232,.7),transparent),
+      radial-gradient(1px 1px at 85% 45%,rgba(160,143,232,.6),transparent),
+      radial-gradient(1.2px 1.2px at 15% 65%,rgba(160,143,232,.75),transparent),
+      radial-gradient(1px 1px at 75% 75%,rgba(160,143,232,.65),transparent),
+      radial-gradient(1.5px 1.5px at 40% 85%,rgba(160,143,232,.7),transparent),
+      radial-gradient(1px 1px at 90% 20%,rgba(160,143,232,.5),transparent),
+      radial-gradient(1.2px 1.2px at 55% 55%,rgba(180,160,240,.4),transparent);
+  }
+  .art.saju-thumb::after,.vp-art.saju::after{
+    content:"";position:absolute;inset:0;
+    background-repeat:no-repeat;background-position:center;background-size:65% auto;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' fill='none'><circle cx='100' cy='100' r='72' stroke='%237C5CBF' stroke-width='0.6' opacity='0.35'/><circle cx='100' cy='100' r='52' stroke='%237C5CBF' stroke-width='0.4' opacity='0.25' stroke-dasharray='2 5'/><circle cx='100' cy='100' r='30' stroke='%23a08fe8' stroke-width='0.7' opacity='0.5'/><line x1='100' y1='28' x2='100' y2='172' stroke='%237C5CBF' stroke-width='0.4' opacity='0.25'/><line x1='28' y1='100' x2='172' y2='100' stroke='%237C5CBF' stroke-width='0.4' opacity='0.25'/><line x1='51' y1='51' x2='149' y2='149' stroke='%237C5CBF' stroke-width='0.3' opacity='0.18'/><line x1='149' y1='51' x2='51' y2='149' stroke='%237C5CBF' stroke-width='0.3' opacity='0.18'/><circle cx='100' cy='28' r='3' fill='%23a08fe8' opacity='0.75'/><circle cx='172' cy='100' r='2.5' fill='%23a08fe8' opacity='0.65'/><circle cx='100' cy='172' r='3' fill='%23a08fe8' opacity='0.7'/><circle cx='28' cy='100' r='2.5' fill='%23a08fe8' opacity='0.65'/><text x='100' y='108' font-family='serif' font-size='22' fill='%23c4b5f7' stroke='none' text-anchor='middle' opacity='0.9'>命</text><text x='100' y='122' font-family='monospace' font-size='6' fill='%237C5CBF' stroke='none' text-anchor='middle' opacity='0.55' letter-spacing='2'>MEISEI AI</text></svg>");
+  }
+
+  /* ---------- Hero CTA ---------- */
+  .hero-cta{
+    display:inline-flex;align-items:center;gap:10px;
+    margin-top:clamp(20px,3vw,36px);
+    font-family:var(--mono);font-size:11px;letter-spacing:.28em;text-transform:uppercase;
+    color:rgba(255,255,255,.85);text-decoration:none;
+    border:1px solid rgba(255,255,255,.28);padding:12px 28px;
+    transition:background .25s,border-color .25s,color .25s,transform .2s;
+  }
+  .hero-cta:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.6);transform:translateY(-1px)}
+  .hero-cta-arrow{transition:transform .25s}
+  .hero-cta:hover .hero-cta-arrow{transform:translateY(3px)}
+
   /* ---------- Contact ---------- */
   .contact{background:#fff;padding-bottom:clamp(60px,8vw,100px)}
   .contact .lead{
@@ -648,6 +685,15 @@
           <div class="mega-tag"><span class="dot"></span>PWA · Live</div>
         </div>
       </a>
+      <a class="mega-item" href="https://kgg2512.github.io/mureupak-dosa/" target="_blank" rel="noopener noreferrer">
+        <div class="mega-thumb"><div class="art saju-thumb"></div></div>
+        <div class="mega-meta">
+          <div class="mega-no">04</div>
+          <div class="mega-name">命星 AI <em>Meisei</em></div>
+          <div class="mega-sub">글로벌 AI 사주 플랫폼</div>
+          <div class="mega-tag"><span class="dot wip"></span>WIP · Japan Phase 1</div>
+        </div>
+      </a>
     </div>
     <div class="mega-foot">
       <span>작은 생각, 세상을 바꿉니다.</span>
@@ -673,6 +719,7 @@
     <h1 class="wordmark fade-up d2">G<span class="two">2</span><span class="dot-mark"></span></h1>
     <p class="hero-tagline fade-up d3">Small ideas. Big change.</p>
     <p class="hero-sub fade-up d4">생각대로 · 합니다 — Think it. Do it.</p>
+    <a class="hero-cta fade-up d5" href="#projects">See our work <span class="hero-cta-arrow">↓</span></a>
   </div>
   <div class="hero-bottom">
     <div class="signature fade-up d5">1 Human. 8 AI. <em style="font-style:normal;color:rgba(255,255,255,.55)">Infinite possibilities.</em></div>
@@ -689,7 +736,7 @@
   <div class="grid reveal">
     <div class="cell">
       <div>
-        <div class="num" data-count="3">0</div>
+        <div class="num" data-count="4">0</div>
         <div class="desc">Active products in flight</div>
       </div>
       <div class="cap">Projects</div>
@@ -816,7 +863,7 @@
     </div>
     <div class="ventures-note">
       <div class="k">Total ventures</div>
-      <div class="v"><span id="vCount">3</span> active</div>
+      <div class="v"><span id="vCount">4</span> active</div>
       <div class="hint">Hover to preview</div>
     </div>
   </div>
@@ -856,6 +903,20 @@
         <span class="vr-name">Adult Running Club</span>
         <span class="vr-sub">럭셔리 러닝 멤버스클럽 — 함께 달리는 특별한 경험</span>
         <span class="vr-tag"><span class="dot"></span>PWA · Live</span>
+        <span class="vr-year">2026</span>
+        <span class="vr-arrow">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M2 12L12 2M12 2H5M12 2v7"/>
+          </svg>
+        </span>
+      </a>
+    </li>
+    <li class="venture-row" data-preview="saju">
+      <a href="https://kgg2512.github.io/mureupak-dosa/" target="_blank" rel="noopener noreferrer">
+        <span class="vr-no">04</span>
+        <span class="vr-name">命星 <em>AI</em></span>
+        <span class="vr-sub">글로벌 AI 사주 플랫폼 — あなたの命、AIが読み解く。</span>
+        <span class="vr-tag"><span class="dot wip"></span>WIP · Japan Phase 1</span>
         <span class="vr-year">2026</span>
         <span class="vr-arrow">
           <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -914,6 +975,7 @@
   <div class="mark">G2<span class="dot"></span></div>
   <span>© 2026 G2 Company Ltd. · 대표: 강경구 · <a class="footer-contact" href="mailto:kgg2512@gmail.com">kgg2512@gmail.com</a></span>
   <span class="footer-links">
+    <a href="https://github.com/kgg2512" target="_blank" rel="noopener noreferrer">GitHub</a>
     <a href="terms.html">이용약관</a>
     <a href="privacy.html">개인정보처리방침</a>
   </span>
