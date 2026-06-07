@@ -312,7 +312,7 @@
   .chairman .mark{
     font-family:var(--serif);font-style:italic;font-weight:300;
     font-size:clamp(180px,22vw,320px);
-    line-height:.7;color:var(--ink);user-select:none;letter-spacing:-.06em;
+    line-height:.7;color:var(--ink);-webkit-user-select:none;user-select:none;letter-spacing:-.06em;
   }
   .chairman .mark span{display:block;margin-top:-.12em;color:var(--ink-mute);opacity:.35;font-size:.5em}
   .chairman .quote{
@@ -494,8 +494,8 @@
     content:"";position:absolute;inset:0;
     background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);
     background-size:14px 14px;
-    mask-image:radial-gradient(60% 70% at 50% 50%,#000 50%,transparent 100%);
     -webkit-mask-image:radial-gradient(60% 70% at 50% 50%,#000 50%,transparent 100%);
+    mask-image:radial-gradient(60% 70% at 50% 50%,#000 50%,transparent 100%);
   }
   .art.myfit-thumb::after,.vp-art.myfit::after{
     content:"";position:absolute;inset:0;
@@ -529,8 +529,8 @@
       linear-gradient(rgba(201,168,76,.10) 1px, transparent 1px),
       linear-gradient(90deg, rgba(201,168,76,.04) 1px, transparent 1px);
     background-size:18px 18px;
-    -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 80%, #000 40%, transparent 100%);
-    mask-image:radial-gradient(ellipse 80% 60% at 50% 80%, #000 40%, transparent 100%);
+    -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 80%,#000 40%,transparent 100%);
+    mask-image:radial-gradient(ellipse 80% 60% at 50% 80%,#000 40%,transparent 100%);
   }
   .art.arc-thumb::after,.vp-art.arc::after{
     content:"";position:absolute;inset:0;
