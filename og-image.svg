@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&amp;display=swap');
+    </style>
+    <radialGradient id="bg-glow" cx="50%" cy="42%" r="55%">
+      <stop offset="0%" stop-color="#1a1a1a"/>
+      <stop offset="100%" stop-color="#0a0a0a"/>
+    </radialGradient>
+    <radialGradient id="center-glow" cx="50%" cy="40%" r="40%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.06)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg-glow)"/>
+  <rect width="1200" height="630" fill="url(#center-glow)"/>
+
+  <!-- Top border accent -->
+  <rect x="0" y="0" width="1200" height="1" fill="rgba(255,255,255,0.12)"/>
+
+  <!-- Grid lines -->
+  <line x1="80" y1="0" x2="80" y2="630" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+  <line x1="1120" y1="0" x2="1120" y2="630" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+  <line x1="0" y1="80" x2="1200" y2="80" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+  <line x1="0" y1="550" x2="1200" y2="550" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+
+  <!-- Top-left metadata -->
+  <text x="80" y="52" font-family="ui-monospace,Menlo,monospace" font-size="11" letter-spacing="4" fill="rgba(255,255,255,0.45)" text-anchor="start" text-transform="uppercase">EST. SEOUL · 2026</text>
+
+  <!-- Top-right metadata -->
+  <text x="1120" y="52" font-family="ui-monospace,Menlo,monospace" font-size="11" letter-spacing="4" fill="rgba(255,255,255,0.45)" text-anchor="end">AI-FIRST STUDIO</text>
+
+  <!-- G2 wordmark -->
+  <text x="600" y="355" font-family="Georgia,'Times New Roman',serif" font-size="280" font-weight="300" letter-spacing="-8" fill="transparent" stroke="none" text-anchor="middle">
+    <tspan fill="white" opacity="0.92">G</tspan><tspan font-style="italic" font-weight="400" fill="white" opacity="0.92">2</tspan>
+  </text>
+
+  <!-- Dot after G2 -->
+  <circle cx="720" cy="300" r="12" fill="white" opacity="0.85"/>
+
+  <!-- Tagline -->
+  <text x="600" y="420" font-family="Georgia,'Times New Roman',serif" font-size="26" font-weight="300" font-style="italic" letter-spacing="1" fill="rgba(255,255,255,0.75)" text-anchor="middle">Small ideas. Big change.</text>
+
+  <!-- Sub label -->
+  <text x="600" y="456" font-family="ui-monospace,Menlo,monospace" font-size="11" letter-spacing="5" fill="rgba(255,255,255,0.4)" text-anchor="middle">1 HUMAN · 8 AI · INFINITE POSSIBILITIES</text>
+
+  <!-- Bottom project badges -->
+  <g transform="translate(80, 575)">
+    <!-- MyFit -->
+    <rect x="0" y="0" width="160" height="28" rx="3" fill="rgba(34,197,94,0.15)" stroke="rgba(34,197,94,0.3)" stroke-width="1"/>
+    <circle cx="14" cy="14" r="4" fill="#22c55e"/>
+    <text x="25" y="18" font-family="ui-monospace,Menlo,monospace" font-size="10" letter-spacing="2" fill="rgba(255,255,255,0.7)">MYFIT · LIVE</text>
+
+    <!-- Cinderella -->
+    <rect x="175" y="0" width="200" height="28" rx="3" fill="rgba(99,102,241,0.15)" stroke="rgba(99,102,241,0.3)" stroke-width="1"/>
+    <circle cx="189" cy="14" r="4" fill="#6366f1"/>
+    <text x="200" y="18" font-family="ui-monospace,Menlo,monospace" font-size="10" letter-spacing="2" fill="rgba(255,255,255,0.7)">CINDERELLA · BETA</text>
+
+    <!-- ARC -->
+    <rect x="390" y="0" width="200" height="28" rx="3" fill="rgba(245,158,11,0.15)" stroke="rgba(245,158,11,0.3)" stroke-width="1"/>
+    <circle cx="404" cy="14" r="4" fill="#f59e0b"/>
+    <text x="415" y="18" font-family="ui-monospace,Menlo,monospace" font-size="10" letter-spacing="2" fill="rgba(255,255,255,0.7)">ADULT RUNNING CLUB</text>
+  </g>
+
+  <!-- Company name bottom right -->
+  <text x="1120" y="592" font-family="Georgia,'Times New Roman',serif" font-size="14" font-weight="300" letter-spacing="2" fill="rgba(255,255,255,0.35)" text-anchor="end">G2 Company Ltd.</text>
+</svg>
